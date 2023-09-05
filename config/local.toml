@@ -1,0 +1,5 @@
+host = "localhost"
+port = 8080
+
+[kg_engine]
+path_search = "bread_first_search"

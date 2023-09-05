@@ -1,14 +1,20 @@
 package main
 
 import (
-	"github.com/epwr/better-science/internal/common/eplog"
+	// TODO: should these be renamed without ep on them? Probably?
+	"github.com/epwr/better-science/internal/common/eplog" 
+	"github.com/epwr/better-science/internal/common/epconfig"
 )
 
 func main(){
-	log.Info("Test log info")
-	log.Warn("Test log warn")
-	log.Error("Test log error")
-	log.Critical("Test log critical")
+
+	cfg, err := config.LoadConfig();
+	if err != nil {
+		log.Critical("Could not load a ServiceConfig, exiting...")
+		return
+	}
+
+	log.Info("Host: " + cfg.Host)
 }
 
 

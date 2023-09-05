@@ -1,17 +1,17 @@
-// A package that provides basic structured logging.
+// log provides a structured logging solution that has the same basic interface as slog, but
+// is intended to be simpler (convention > configuration) and to output jsonl lines to power
+// GCP's logging system.
+//
+// NOTE: currently, log can only handle the basic primitives as args to the log functions.
+// Check addArgs for a complete list of what is usable.
+//
+// Copywrite 2023 Eric Power - All Rights Reserved
 package log
 
-// TODOs:
-// - Add structured logging (add in data dictionaries, and display all non-message keys & values.
-// - Add timestamps
-// - Decide on default format (LEVEL - timestamp - message - record)? Just record? 
-// - Can CallerLocation and LogRecord not be public?
-// - Get logging level from the config system
-
 import (
+	"encoding/json"
 	"fmt"
 	"runtime"
-	"strconv"
 )
 
 type log_level string
@@ -23,92 +23,161 @@ const (
 	CRITICAL = "CRITICAL"
 )
 
-// A location in the code.
-// Should not be used externally to this package.
-type CallerLocation struct {
-	Function string
-	File string
-	Line int
+// code_location specifies a location in the code.
+//
+// NOTE: fields are exported so they can be encoded into JSON. 
+type code_location struct {
+	Function string `json:"function"`
+	File string `json:"file"`
+	Line int `json:"line"`
 }
 
-// A record that stores the core information for logging purposes.
-// Should not be used externally to this package.
-type LogRecord struct {
-	Level string
-	Message string
-	Caller CallerLocation
+// log_record stores the core information needed to write to the logs
+//
+// NOTE: fields are exported so they can be encoded into JSON.
+type log_record struct {
+	Level string `json:"level"`
+	Message string `json:"message"`
+	Caller code_location `json:"location"`
+	Data map[string]any `json:"data"`
 }
 
+// addArgs parses the args list into a map, then sets the record's Data field
+// to the map. It follows the behaviour of slog, in that:
+//
+// 1. If an argument is a string and this is not the last argument, the following argument is
+// treated as the value
+// 
+// 2. Otherwise, the argument is treated as a value with key "!BADKEY".
+func (r *log_record) addArgs(args... any) {
 
-// Writes an information  message to the logs.
-func Info(msg string) {
+	var data = make(map[string]any)
 
-	caller_location := get_caller_location()
+	for len(args) > 1 {
 
-	record := LogRecord {
-		Level: INFO,
-		Message: msg,
-		Caller: caller_location,
+		switch key := args[0].(type) {
+		case string:
+			value := args[1]
+			data[key] = value
+			args = args[2:]
+		default:
+			keyStr, value := createBadKeyPair(args[0])
+			data[keyStr] = value
+			args = args[1:]
+		}
+	}
+	if len(args) == 1 {
+		key, value := createBadKeyPair(args[0])
+		data[key] = value
 	}
 
-	write_log_record(record)
+	r.Data = data
 }
 
-// Writes a warning message to the logs.
-func Warn(msg string) {
+
+// createBadKeyPair returns a key, value pair where the key
+// is set to "!BADKEY" to match slog's behaviour.
+func createBadKeyPair(argument any) (string, any) {
+
+	return "!BADKEY", argument	
+}
+
+
+// Info writes a message to the logs with a severity Level of INFO.
+//
+// The first argument is a message string, and the remaining arguments
+// should be an even numbered amount of values that represent key:value
+// pairs (eg. args[0] is a key, args[1] is a value).
+func Info(msg string, args... any) {
+
+	code_location := get_location_of_caller()
+
+	record := log_record {
+		Level: INFO,
+		Message: msg,
+		Caller: code_location,
+	}
 	
-	caller_location := get_caller_location()
-
-	record := LogRecord {
-		Level: INFO,
-		Message: msg,
-		Caller: caller_location,
-	}
-
+	record.addArgs(args...)
 	write_log_record(record)
 }
 
-// Writes an error message to the logs.
-func Error(msg string) {
+// Warn writes a message to the logs with a severity Level of WARN.
+//
+// The first argument is a message string, and the remaining arguments
+// should be an even numbered amount of values that represent key:value
+// pairs (eg. args[0] is a key, args[1] is a value).
+func Warn(msg string, args... any) {
 	
-	caller_location := get_caller_location()
+	code_location := get_location_of_caller()
 
-	record := LogRecord {
-		Level: INFO,
+	record := log_record {
+		Level: WARN,
 		Message: msg,
-		Caller: caller_location,
+		Caller: code_location,
 	}
 
+	record.addArgs(args...)
+	write_log_record(record)
+}
+
+// Error writes a message to the logs with a severity Level of ERROR.
+//
+// The first argument is a message string, and the remaining arguments
+// should be an even numbered amount of values that represent key:value
+// pairs (eg. args[0] is a key, args[1] is a value).
+func Error(msg string, args... any) {
+	
+	code_location := get_location_of_caller()
+
+	record := log_record {
+		Level: ERROR,
+		Message: msg,
+		Caller: code_location,
+	}
+
+	record.addArgs(args...)
 	write_log_record(record)
 }
 
 
-// Writes a critical error message to the logs.
-func Critical(msg string) {
+// Critical writes a message to the logs with a severity Level of CRITICAL.
+//
+// The first argument is a message string, and the remaining arguments
+// should be an even numbered amount of values that represent key:value
+// pairs (eg. args[0] is a key, args[1] is a value).
+func Critical(msg string, args... any) {
 
-	caller_location := get_caller_location()
+	code_location := get_location_of_caller()
 
-	record := LogRecord {
-		Level: INFO,
+	record := log_record {
+		Level: CRITICAL,
 		Message: msg,
-		Caller: caller_location,
+		Caller: code_location,
 	}
+	
+	record.addArgs(args...)
 	write_log_record(record)
 }
 
 
-// A single function to write out the contents of a LogRecord.
-func write_log_record(record LogRecord) {
+// write_log_record writes out the contents of a log_record to stdout.
+func write_log_record(record log_record) {
+	
+	jsonData, err := json.Marshal(record)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
 
-	location_string := record.Caller.File + " - " + strconv.Itoa(record.Caller.Line)
-	fmt.Println(record.Level + " - " +  location_string + ": " + record.Message)
+	fmt.Println(string(jsonData))
 }
 
 
 
-// Get the location (function name, file, and line number) of where this function's
+// get_location_of_caller returns the code_location (function name, file, and line number) of where this function's
 // caller was called from (2 levels back down the call stack). 
-func get_caller_location() CallerLocation {
+func get_location_of_caller() code_location {
 
 	prog_counters := make([]uintptr, 1)
 	entry_count := runtime.Callers(3, prog_counters)
@@ -116,11 +185,11 @@ func get_caller_location() CallerLocation {
 
 	frame, _ := frames.Next()
 
-	caller_location := CallerLocation {
+	code_location := code_location {
 		Function: frame.Function,
 		File: frame.File,
 		Line: frame.Line,
 	}
 
-	return caller_location
+	return code_location
 }
