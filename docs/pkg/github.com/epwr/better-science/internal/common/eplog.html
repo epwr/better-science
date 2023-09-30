@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/epwr/better-science/internal/common/eplog</title>
+<link href="../../../../../../css/auto-v0.6.6.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.6.6.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>log</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../../../index.html#pkg-github.com/epwr/better-science/internal/common/eplog">github.com/epwr/better-science/internal/common/eplog</a><i> (on <a href="https://pkg.go.dev/github.com/epwr/better-science/internal/common/eplog" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../../../dep/github.com/epwr/better-science/internal/common/eplog.html">3 packages</a>, and imported by <a href="../../../../../../dep/github.com/epwr/better-science/internal/common/eplog.html#imported-by">3 packages</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<input type='checkbox' checked class="fold" id="file-0-fold-content"><label for="file-0-fold-content">  <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#doc">d</a> <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html">eplog.go</a></label><span id='file-0-fold-content-items' class="fold-items">
+<span class="md-text">		log provides a structured logging solution that has the same basic interface as slog, but
+		is intended to be simpler (convention &gt; configuration) and to output jsonl lines to power
+		GCP's logging system.
+		
+		NOTE: currently, log can only handle the basic primitives as args to the log functions.
+		Check addArgs for a complete list of what is usable.
+		
+		Copywrite 2023 Eric Power - All Rights Reserved</span></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 3, none are exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 3 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 3 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-code_location" data-popularity="75">	<input type='checkbox' class="fold" id="code_location-fold-content"><label for="code_location-fold-content"> type <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-29">code_location</a> <i>(struct)</i></label><span id='code_location-fold-content-docs' class="fold-docs">
+<span class="md-text">		code_location specifies a location in the code.
+		
+		NOTE: fields are exported so they can be encoded into JSON.</span>
+
+		<input type='checkbox' class="fold" id="code_location-fold-fields"><label for="code_location-fold-fields">Fields (<i>total 3, all are exported</i>)</label><span id='code_location-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-31">File</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-30">Function</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-32">Line</a> <i><a href="../../../../../builtin.html#name-int">int</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="code_location-fold-results"><label for="code_location-fold-results">As Outputs Of (<i>at least one unexported</i>)</label><span id='code_location-fold-results-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="code_location-showhide-inputofs"><i><label for="code_location-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="code_location-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-get_location_of_caller">get_location_of_caller</a>() <b>code_location</b></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-log_level" data-popularity="5">	<input type='checkbox' class="fold" id="log_level-fold-content"><label for="log_level-fold-content"> type <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-17">log_level</a> <a href="../../../../../builtin.html#name-string">string</a> <i>(basic type)</i></label><span id='log_level-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="log_level-fold-values"><label for="log_level-fold-values">As Types Of (<i>only one, which is exported</i>)</label><span id='log_level-fold-values-items' class="fold-items"><span>
+			const <a href="#name-DEBUG">DEBUG</a></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-log_record" data-popularity="85">	<input type='checkbox' class="fold" id="log_record-fold-content"><label for="log_record-fold-content"> type <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-38">log_record</a> <i>(struct)</i></label><span id='log_record-fold-content-docs' class="fold-docs">
+<span class="md-text">		log_record stores the core information needed to write to the logs
+		
+		NOTE: fields are exported so they can be encoded into JSON.</span>
+
+		<input type='checkbox' class="fold" id="log_record-fold-fields"><label for="log_record-fold-fields">Fields (<i>total 4, all are exported</i>)</label><span id='log_record-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-41">Caller</a> <i><a href="#name-code_location">code_location</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-42">Data</a> <i>map[<a href="../../../../../builtin.html#name-string">string</a>]<a href="../../../../../builtin.html#name-any">any</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-39">Level</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-40">Message</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="log_record-fold-methods"><label for="log_record-fold-methods">Methods (<i>only one, which is unexported</i>)</label><span id='log_record-fold-methods-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="log_record-showhide-methods"><i><label for="log_record-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="log_record-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="log_record-fold-method-addArgs"><label for="log_record-fold-method-addArgs">(*log_record) <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-52">addArgs</a>(args ...<a href="../../../../../builtin.html#name-any">any</a>)</label><span id='log_record-fold-method-addArgs-docs' class="fold-docs">
+<span class="md-text">				addArgs parses the args list into a map, then sets the record's Data field
+				to the map. It follows the behaviour of slog, in that:
+				
+				1. If an argument is a string and this is not the last argument, the following argument is
+				treated as the value
+				
+				2. Otherwise, the argument is treated as a value with key "!BADKEY".</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="log_record-fold-params"><label for="log_record-fold-params">As Inputs Of (<i>at least one unexported</i>)</label><span id='log_record-fold-params-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="log_record-showhide-outputofs"><i><label for="log_record-showhide-outputofs" class="show-inline">/* at least one unexported ... */</label><label for="log_record-showhide-outputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-write_log_record">write_log_record</a>(record <b>log_record</b>)</i></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 7, in which 4 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-Critical">	<input type='checkbox' class="fold" id="Critical-fold-content"><label for="Critical-fold-content"> func <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-149">Critical</a>(msg <a href="../../../../../builtin.html#name-string">string</a>, args ...<a href="../../../../../builtin.html#name-any">any</a>)</label><span id='Critical-fold-content-docs' class="fold-docs">
+<span class="md-text">		Critical writes a message to the logs with a severity Level of CRITICAL.
+		
+		The first argument is a message string, and the remaining arguments
+		should be an even numbered amount of values that represent key:value
+		pairs (eg. args[0] is a key, args[1] is a value).</span>
+
+</span></div><div class="anchor value-res" id="name-Error">	<input type='checkbox' class="fold" id="Error-fold-content"><label for="Error-fold-content"> func <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-129">Error</a>(msg <a href="../../../../../builtin.html#name-string">string</a>, args ...<a href="../../../../../builtin.html#name-any">any</a>)</label><span id='Error-fold-content-docs' class="fold-docs">
+<span class="md-text">		Error writes a message to the logs with a severity Level of ERROR.
+		
+		The first argument is a message string, and the remaining arguments
+		should be an even numbered amount of values that represent key:value
+		pairs (eg. args[0] is a key, args[1] is a value).</span>
+
+</span></div><div class="anchor value-res" id="name-Info">	<input type='checkbox' class="fold" id="Info-fold-content"><label for="Info-fold-content"> func <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-91">Info</a>(msg <a href="../../../../../builtin.html#name-string">string</a>, args ...<a href="../../../../../builtin.html#name-any">any</a>)</label><span id='Info-fold-content-docs' class="fold-docs">
+<span class="md-text">		Info writes a message to the logs with a severity Level of INFO.
+		
+		The first argument is a message string, and the remaining arguments
+		should be an even numbered amount of values that represent key:value
+		pairs (eg. args[0] is a key, args[1] is a value).</span>
+
+</span></div><div class="anchor value-res" id="name-Warn">	<input type='checkbox' class="fold" id="Warn-fold-content"><label for="Warn-fold-content"> func <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-110">Warn</a>(msg <a href="../../../../../builtin.html#name-string">string</a>, args ...<a href="../../../../../builtin.html#name-any">any</a>)</label><span id='Warn-fold-content-docs' class="fold-docs">
+<span class="md-text">		Warn writes a message to the logs with a severity Level of WARN.
+		
+		The first argument is a message string, and the remaining arguments
+		should be an even numbered amount of values that represent key:value
+		pairs (eg. args[0] is a key, args[1] is a value).</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 3 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 3 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-createBadKeyPair"><i>	<input type='checkbox' class="fold" id="createBadKeyPair-fold-content"><label for="createBadKeyPair-fold-content"> func <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-80">createBadKeyPair</a>(argument <a href="../../../../../builtin.html#name-any">any</a>) (<a href="../../../../../builtin.html#name-string">string</a>, <a href="../../../../../builtin.html#name-any">any</a>)</label><span id='createBadKeyPair-fold-content-docs' class="fold-docs">
+<span class="md-text">		createBadKeyPair returns a key, value pair where the key
+		is set to "!BADKEY" to match slog's behaviour.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-get_location_of_caller"><i>	<input type='checkbox' class="fold" id="get_location_of_caller-fold-content"><label for="get_location_of_caller-fold-content"> func <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-180">get_location_of_caller</a>() <a href="#name-code_location">code_location</a></label><span id='get_location_of_caller-fold-content-docs' class="fold-docs">
+<span class="md-text">		get_location_of_caller returns the code_location (function name, file, and line number) of where this function's
+		caller was called from (2 levels back down the call stack).</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-write_log_record"><i>	<input type='checkbox' class="fold" id="write_log_record-fold-content"><label for="write_log_record-fold-content"> func <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-165">write_log_record</a>(record <a href="#name-log_record">log_record</a>)</label><span id='write_log_record-fold-content-docs' class="fold-docs">
+<span class="md-text">		write_log_record writes out the contents of a log_record to stdout.</span>
+
+</span></i></div></div>
+<div id="exported-constants"><span class="title">Package-Level Constants<span class="title-stat"><i> (total 5, all are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-CRITICAL">	<span class="nodocs">const <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-23">CRITICAL</a> = "CRITICAL"</span></div><div class="anchor value-res" id="name-DEBUG">	<span class="nodocs">const <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-19">DEBUG</a> <a href="#name-log_level">log_level</a> = "DEBUG"</span></div><div class="anchor value-res" id="name-ERROR">	<span class="nodocs">const <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-22">ERROR</a> = "ERROR"</span></div><div class="anchor value-res" id="name-INFO">	<span class="nodocs">const <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-20">INFO</a> = "INFO"</span></div><div class="anchor value-res" id="name-WARN">	<span class="nodocs">const <a href="../../../../../../src/github.com/epwr/better-science/internal/common/eplog/eplog.go.html#line-21">WARN</a> = "WARN"</span></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/go101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.6.6</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>
