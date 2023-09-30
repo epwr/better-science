@@ -8,21 +8,23 @@ import (
 
 
 
-func assertNodeIsNotNil(t *testing.T, n kg.Node) {
+func assertNodeIsValueNode(t *testing.T, n kg.Node) {
 
-    if n == nil {
-	t.Errorf("The node should not be `nil`, but it is")
+    if n.GetNodeType() != "ValueNode" {
+	t.Errorf("Expected a 'ValueNode', got a '" + n.GetNodeType() + "'.")
     }
     
 }
 
-func TestValueNodesConstructorWorks(t *testing.T) {
+func TestValueNodeConstructorReturnsAValueNode(t *testing.T) {
     
     node := kg.ValueNode{
 	Name: "test_node",
 	Type: kg.IntType,
     }
     
-    assertNodeIsNotNil(t, node)
+    assertNodeIsValueNode(t, node)
 }
+
+
 
