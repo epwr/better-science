@@ -1,5 +1,5 @@
 // Copywrite 2023 Eric Power - All Rights Reserved
-package kg_engine
+package knowledge_graph
 
 
 type Graph struct {

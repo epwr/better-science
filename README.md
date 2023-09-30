@@ -19,11 +19,11 @@ Follow online guides to set this up.
 
 ### Golds (Auto Documentation)
 
-For automated documentation generation, use [Golds](https://github.com/go101/golds). Installation instructions are [here](https://go101.org/apps-and-libs/golds.html).
+For automated documentation generation, use [Golds](https://github.com/go101/golds). Installation instructions are [here](https://go101.org/apps-and-libs/golds.html). You can then use this to run a 
 
 ### Add Go Binaries to your Path
 
-Golang binaries are usually installed in `~/go/bin`. You can check this exists if you install Golds (above). Add this to your path 
+Golang binaries are usually installed in `~/go/bin`. You can check this exists if you install Golds (above). Add this to your path.
 
 ## Code Structure
 

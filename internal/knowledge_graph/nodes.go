@@ -1,5 +1,5 @@
 // Copywrite 2023 Eric Power - All Rights Reserved
-package kg_engine
+package knowledge_graph
 
 /* NOTE
  * I'm not dealing with tracking the precision of values, data lineage, or units. I would like
@@ -15,20 +15,19 @@ package kg_engine
 
 // Node represents a node in a Graph
 type Node interface {
-	GetType() string
+	GetNodeType() string	
 	GetName() string
 }
 
 // OperationNode represents an operation node in the graph.
 type OperationNode struct {
 	Name string
-	Confidence float64
 	Inputs []*ValueNode
-	Result ValueNode
+	Result *ValueNode
 }
 
-// GetType returns the type of the node.
-func (n OperationNode) GetType() string {
+// GetNodeType returns the type of the node.
+func (n OperationNode) GetNodeType() string {
 	return "OperationNode"
 }
 
@@ -37,17 +36,23 @@ func (n OperationNode) GetName() string {
 	return n.Name
 }
 
-// ValueNode represents a value node in the graph that stores an int
+// ValueNode is the description of a potential value.
+type value_type int
+const(
+	IntType value_type = iota
+	FloatType
+	EnumType
+)
+
 type ValueNode struct {
 	Name string
-	Value int
-	Confidence float64
+	Type value_type
 	CalculatedBy []*OperationNode
 	UsedBy []*OperationNode
 }
 
-// GetType returns the type of the node.
-func (n ValueNode) GetType() string {
+// GetNodeType returns the type of the node.
+func (n ValueNode) GetNodeType() string {
 	return "ValueNode"
 }
 
@@ -55,7 +60,4 @@ func (n ValueNode) GetType() string {
 func (n ValueNode) GetName() string {
 	return n.Name
 }
-
-
-
 
