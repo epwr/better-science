@@ -6,15 +6,28 @@ import (
     kg "github.com/epwr/better-science/internal/knowledge_graph"
 )
 
-func TestValueNodeConstructorReturnsAValueNode(t *testing.T) {
+func TestGetNodeTypeWorksForOperationNode(t *testing.T) {
+
+    node := kg.OperationNode{
+	Name: "test_operation",
+    }
+    
+    assertEquals(t, node.GetNodeType(), "OperationNode")
+}
+
+func TestGetNodeTypeWorksForValueNode(t *testing.T) {
     
     node := kg.ValueNode{
 	Name: "test_node",
 	Type: kg.IntType,
     }
     
-    assertNodeIsValueNode(t, node)
+    assertEquals(t, node.GetNodeType(), "ValueNode")
 }
+
+
+
+
 
 
 
