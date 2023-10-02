@@ -34,7 +34,7 @@ func (g Graph) AddNode(node Node) error {
 
     opNode, isOp := node.(OperationNode);
     if isOp {
-	g.add_operation_node(&name, &opNode)
+	g.add_operation_node(name, opNode)
 	return nil
     }
 

@@ -14,8 +14,6 @@ type Node interface {
     GetNodeType() string	
     GetName() string
     addSuccessor(Node) error
-    // GetSuccessors() []*Node
-    // GetPredecessors() []*Node
 }
 
 // OperationNode represents an operation node in the graph.
@@ -34,16 +32,6 @@ func (n OperationNode) GetNodeType() string {
 func (n OperationNode) GetName() string {
     return n.Name
 }
-
-// // GetSuccessors returns the successors of an Operation Node (which are all Value Nodes).
-// func (n OperationNode) GetSuccessors() []*Node {
-//     return []*Node{n.Successor}
-// }
-
-// // GetPredecessors returns the predecessors of an Operation Node (which are all Value Nodes).
-// func (n OperationNode) GetPredecessors() []*Node {
-//     return n.Predecessors
-// }
 
 // addSuccessor adds a successor ValueNode to the source node, and adds the source node as
 // a predecessor to the successor node.
@@ -88,16 +76,6 @@ func (n ValueNode) GetNodeType() string {
 func (n ValueNode) GetName() string {
     return n.Name
 }
-
-// // GetSuccessors returns the successors of an Value Node (which are all Operation Nodes).
-// func (n ValueNode) GetSuccessors() []*Node {
-//     return n.Successors
-// }
-
-// // GetPredecessors returns the predecessors of an Value Node (which are all Operation Nodes).
-// func (n ValueNode) GetPredecessors() []*Node {
-//     return n.Predecessors
-// }
 
 // addSuccessor adds a successor OperationNode to the source node, and adds the source node as
 // a predecessor to the successor node.
