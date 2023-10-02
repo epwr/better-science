@@ -43,11 +43,12 @@ check: fmt lint test
 # Build and run the application
 build-run: build run
 
-# Make
+# Set up and run the local auto-doc server.
 docs:
 	golds ./...
 
+# Re-create the docs 
 gen-docs:
-	golds -gen -dir=$(DOCS)/generated -nouses ./...
+	golds -gen -dir=$(DOCS) -nouses ./...
 
-.PHONY: all build run clean fmt lint test deps check build-run
+.PHONY: all build run clean fmt lint test deps check build-run docs

@@ -9,28 +9,58 @@ import (
 )
 
 
-func assertEquals(t *testing.T, object_1 any, object_2 any) {
-
-    if object_1 != object_2 {
-	t.Errorf("Expected two objects with the same value, got different values")
-    }
+func assertEquals(t *testing.T, object_1 any, object_2 any, message string) {
+    assertTrue(
+	t,
+	object_1 == object_2,
+	message,
+    )
 } 
 
-
-func assertNodeIsOperationNode(t *testing.T, n kg.Node) {
-
-    if n.GetNodeType() != "OperationNode" {
-	t.Errorf("Expected a 'ValueNode', got a '" + n.GetNodeType() + "'.")
-    }
-    
+func assertNotEquals(t *testing.T, object_1 any, object_2 any, message string) {
+    assertTrue(
+	t,
+	object_1 != object_2,
+	message,
+    )
 }
 
-func assertNodeIsValueNode(t *testing.T, n kg.Node) {
+func assertNil(t *testing.T, object any, message string) {
+    assertTrue(
+	t,
+	object == nil,
+	message,
+    )
+}
 
-    if n.GetNodeType() != "ValueNode" {
-	t.Errorf("Expected a 'ValueNode', got a '" + n.GetNodeType() + "'.")
+func assertNodeIsOperationNode(t *testing.T, n kg.Node, message string) {
+    assertTrue(
+	t,
+	n.GetNodeType() == "OperationNode",
+	message,
+    ) 
+}
+
+func assertNodeIsValueNode(t *testing.T, n kg.Node, message string) {
+    assertTrue(
+	t,
+	n.GetNodeType() == "ValueNode",
+	message,
+    )
+}
+
+func assertTrue(t *testing.T, value bool, message string) {
+    if !value {
+	t.Errorf("Assertion Failed: " + message)
     }
-    
+}
+
+func assertFalse(t *testing.T, value bool, message string) {
+    assertTrue(
+	t,
+	!value,
+	message,
+    )
 }
 
 

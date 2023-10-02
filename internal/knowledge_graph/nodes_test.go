@@ -12,7 +12,7 @@ func TestGetNodeTypeWorksForOperationNode(t *testing.T) {
 	Name: "test_operation",
     }
     
-    assertEquals(t, node.GetNodeType(), "OperationNode")
+    assertEquals(t, node.GetNodeType(), "OperationNode", "The Node type should be OperationNode.")
 }
 
 func TestGetNodeTypeWorksForValueNode(t *testing.T) {
@@ -22,12 +22,25 @@ func TestGetNodeTypeWorksForValueNode(t *testing.T) {
 	Type: kg.IntType,
     }
     
-    assertEquals(t, node.GetNodeType(), "ValueNode")
+    assertEquals(t, node.GetNodeType(), "ValueNode", "The Node type should be ValueNode.")
 }
 
+func TestGetNameWorksForOperationNode(t *testing.T) {
 
+    node := kg.OperationNode{
+	Name: "test_operation",
+    }
+    
+    assertEquals(t, node.GetName(), "test_operation", "The node's name should be test_operation.")
+}
 
-
-
-
+func TestGetNameWorksForValueNode(t *testing.T) {
+    
+    node := kg.ValueNode{
+	Name: "test_value",
+	Type: kg.IntType,
+    }
+    
+    assertEquals(t, node.GetName(), "test_value", "The node's name should be test_value.")
+}
 

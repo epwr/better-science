@@ -2,8 +2,8 @@
 *
 * Knowledge Graph
 *
-* This package provides a way of representing a knowledge graph with value nodes that represent the semantics of a value, and describes the operations that
-* can be used to calculate the values.
+* This package provides a way of representing a knowledge graph with value nodes that represent the
+* semantics of a value, and describes the operations that can be used to calculate the values.
 *
 * The Graph struct should have a lifecycle with two steps:
 * 1. Creation: start by creating the object & instantiating its nodes.
