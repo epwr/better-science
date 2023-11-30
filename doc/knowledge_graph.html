@@ -1,0 +1,100 @@
+package knowledge_graph // import "github.com/epwr/better-science/internal/knowledge_graph"
+
+    Copywrite 2023 Eric Power - All Rights Reserved
+
+* * Knowledge Graph * * This package provides a way of representing a knowledge
+graph with value nodes that represent the * semantics of a value, and describes
+the operations that can be used to calculate the values. * * The Graph struct
+should have a lifecycle with two steps: * 1. Creation: start by creating the
+object & instantiating its nodes. * 2. Use: determining pathways through the
+graph should be done on a fixed graph.
+
+# Copywrite 2023 Eric Power - All Rights Reserved
+
+# Copywrite 2023 Eric Power - All Rights Reserved
+
+The Nodes enforce the requirement that ValueNodes are only directly connected to
+OperationNodes and vice-versa.
+
+TYPES
+
+type Graph struct {
+	value_nodes     map[string]ValueNode
+	operation_nodes map[string]OperationNode
+}
+    Graph is a graph of Operation and Value Nodes.
+
+    Do not instantiate directly, instead use the NewGraph constructor.
+
+func NewGraph() Graph
+    NewGraph returns a new Graph object that has instantiated maps to store the
+    nodes of the graph.
+
+func (g Graph) AddNode(node Node) error
+    AddNode adds a Node to the Graph.
+
+func (g Graph) CreateEdge(sourceNode Node, destinationNode Node) error
+    CreateEdge takes two Nodes and creates a link between them.
+
+func (g Graph) GetNode(name string) (Node, error)
+    GetNode returns the node with the provided name, or nil when the node does
+    not exist.
+
+func (g Graph) add_operation_node(name string, node OperationNode)
+    add_operation_node adds a OperationNode to the Graph, does not check if the
+    node already exists.
+
+func (g Graph) add_value_node(name string, node ValueNode) error
+    add_value_node adds a ValueNode to the Graph, or returns an error if a node
+    already exists with that name.
+
+type Node interface {
+	GetNodeType() string
+	GetName() string
+	addSuccessor(Node) error
+}
+    Node represents a node in a Graph
+
+type OperationNode struct {
+	Name         string
+	Predecessors []*ValueNode
+	Successor    *ValueNode
+}
+    OperationNode represents an operation node in the graph.
+
+func (n OperationNode) GetName() string
+    GetName returns the type of the node.
+
+func (n OperationNode) GetNodeType() string
+    GetNodeType returns the type of the node.
+
+func (n OperationNode) addSuccessor(otherNode Node) error
+    addSuccessor adds a successor ValueNode to the source node, and adds the
+    source node as a predecessor to the successor node.
+
+type ValueNode struct {
+	Name         string
+	Type         value_type
+	Predecessors []*OperationNode
+	Successors   []*OperationNode
+}
+    ValueNode is the description of a potential value.
+
+func (n ValueNode) GetName() string
+    GetName returns the type of the node.
+
+func (n ValueNode) GetNodeType() string
+    GetNodeType returns the type of the node.
+
+func (n ValueNode) addSuccessor(otherNode Node) error
+    addSuccessor adds a successor OperationNode to the source node, and adds the
+    source node as a predecessor to the successor node.
+
+type value_type int
+    value_type is an enum of the types of value nodes.
+
+const (
+	IntType value_type = iota
+	FloatType
+	EnumType
+)

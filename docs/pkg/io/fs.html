@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Package: io/fs</title>
-<link href="../../css/auto-v0.6.6.css" rel="stylesheet">
-<script src="../../jvs/golds-v0.6.6.js"></script>
+<link href="../../css/auto-v0.6.7.css" rel="stylesheet">
+<script src="../../jvs/golds-v0.6.7.js"></script>
 <body onload="onPageLoad()"><div>
 
 <pre id="package-details"><code><span style="font-size:xx-large;">package <b>fs</b></span>
@@ -19,7 +19,8 @@
 
 <div id="files"><span class="title">Involved Source Files</span>
 
-	<input type='checkbox' checked class="fold" id="file-0-fold-content"><label for="file-0-fold-content">  <a href="../../src/io/fs/fs.go.html#doc">d</a> <a href="../../src/io/fs/fs.go.html">fs.go</a></label><span id='file-0-fold-content-items' class="fold-items">
+	<span class="nodocs">    <a href="../../src/io/fs/format.go.html">format.go</a></span>
+	<input type='checkbox' checked class="fold" id="file-1-fold-content"><label for="file-1-fold-content">  <a href="../../src/io/fs/fs.go.html#doc">d</a> <a href="../../src/io/fs/fs.go.html">fs.go</a></label><span id='file-1-fold-content-items' class="fold-items">
 <span class="md-text">		Package fs defines basic interfaces to a file system.
 		A file system can be provided by the host operating system
 		but also by other packages.</span>
@@ -58,7 +59,7 @@
 </div>
 <div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 16, in which 13 are exported)</i></span></span>
 
-<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-DirEntry" data-popularity="1545">	<input type='checkbox' class="fold" id="DirEntry-fold-content"><label for="DirEntry-fold-content"> type <a href="../../src/io/fs/fs.go.html#line-86">DirEntry</a> <b><i>(interface)</i></b></label><span id='DirEntry-fold-content-docs' class="fold-docs">
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-DirEntry" data-popularity="1580">	<input type='checkbox' class="fold" id="DirEntry-fold-content"><label for="DirEntry-fold-content"> type <a href="../../src/io/fs/fs.go.html#line-86">DirEntry</a> <b><i>(interface)</i></b></label><span id='DirEntry-fold-content-docs' class="fold-docs">
 <span class="md-text">		A DirEntry is an entry read from a directory
 		(using the ReadDir function or a ReadDirFile's ReadDir method).</span>
 
@@ -100,12 +101,13 @@
 			func os.<a href="../os.html#name-newUnixDirent">newUnixDirent</a>(parent, name <a href="../builtin.html#name-string">string</a>, typ <a href="../os.html">os</a>.<a href="../os.html#name-FileMode">FileMode</a>) (<a href="../os.html">os</a>.<b><a href="../os.html#name-DirEntry">DirEntry</a></b>, <a href="../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
 			func os.(*<a href="../os.html#name-File">File</a>).<a href="../../src/os/dir_darwin.go.html#line-27">readdir</a>(n <a href="../builtin.html#name-int">int</a>, mode <a href="../os.html">os</a>.<a href="../os.html#name-readdirMode">readdirMode</a>) (names []<a href="../builtin.html#name-string">string</a>, dirents []<a href="../os.html">os</a>.<b><a href="../os.html#name-DirEntry">DirEntry</a></b>, infos []<a href="../os.html">os</a>.<a href="../os.html#name-FileInfo">FileInfo</a>, err <a href="../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
 			func path/filepath.<a href="../path/filepath.html#name-readDir">readDir</a>(dirname <a href="../builtin.html#name-string">string</a>) ([]<b>DirEntry</b>, <a href="../builtin.html#name-error">error</a>)</i></span></span>
-		<input type='checkbox' class="fold" id="DirEntry-fold-params"><label for="DirEntry-fold-params">As Inputs Of (<i>at least 2, neither is exported</i>)</label><span id='DirEntry-fold-params-items' class="fold-items">
+		<input type='checkbox' class="fold" id="DirEntry-fold-params"><label for="DirEntry-fold-params">As Inputs Of (<i>at least 3, in which 1 is exported</i>)</label><span id='DirEntry-fold-params-items' class="fold-items"><span>
+			func <a href="#name-FormatDirEntry">FormatDirEntry</a>(dir <b>DirEntry</b>) <a href="../builtin.html#name-string">string</a></span>
 			<input type='checkbox' class="showhide" id="DirEntry-showhide-outputofs"><i><label for="DirEntry-showhide-outputofs" class="show-inline">/* 2+ unexporteds ... */</label><label for="DirEntry-showhide-outputofs" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
 			func <a href="#name-walkDir">walkDir</a>(fsys <a href="#name-FS">FS</a>, name <a href="../builtin.html#name-string">string</a>, d <b>DirEntry</b>, walkDirFn <a href="#name-WalkDirFunc">WalkDirFunc</a>) <a href="../builtin.html#name-error">error</a></i></span><span class="hidden"><i>
 			func path/filepath.<a href="../path/filepath.html#name-walkDir">walkDir</a>(path <a href="../builtin.html#name-string">string</a>, d <b>DirEntry</b>, walkDirFn <a href="#name-WalkDirFunc">WalkDirFunc</a>) <a href="../builtin.html#name-error">error</a></i></span></span>
 
-</span></div><div class="anchor type-res" id="name-File" data-popularity="1050">	<input type='checkbox' class="fold" id="File-fold-content"><label for="File-fold-content"> type <a href="../../src/io/fs/fs.go.html#line-78">File</a> <b><i>(interface)</i></b></label><span id='File-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor type-res" id="name-File" data-popularity="1200">	<input type='checkbox' class="fold" id="File-fold-content"><label for="File-fold-content"> type <a href="../../src/io/fs/fs.go.html#line-78">File</a> <b><i>(interface)</i></b></label><span id='File-fold-content-docs' class="fold-docs">
 <span class="md-text">		A File provides access to a single file.
 		The File interface is the minimum implementation required of the file.
 		Directory files should also implement ReadDirFile.
@@ -115,9 +117,11 @@
 			<span class="nodocs">( File) <a href="../../src/io/fs/fs.go.html#line-81">Close</a>() <a href="../builtin.html#name-error">error</a></span></span><span>
 			<span class="nodocs">( File) <a href="../../src/io/fs/fs.go.html#line-80">Read</a>([]<a href="../builtin.html#name-byte">byte</a>) (<a href="../builtin.html#name-int">int</a>, <a href="../builtin.html#name-error">error</a>)</span></span><span>
 			<span class="nodocs">( File) <a href="../../src/io/fs/fs.go.html#line-79">Stat</a>() (<a href="#name-FileInfo">FileInfo</a>, <a href="../builtin.html#name-error">error</a>)</span></span></span>
-		<input type='checkbox' class="fold" id="File-fold-impledby"><label for="File-fold-impledby">Implemented By (<i>at least 2, both are exported</i>)</label><span id='File-fold-impledby-items' class="fold-items"><span>
+		<input type='checkbox' class="fold" id="File-fold-impledby"><label for="File-fold-impledby">Implemented By (<i>at least 3, in which 2 are exported</i>)</label><span id='File-fold-impledby-items' class="fold-items"><span>
 			 <a href="#name-ReadDirFile">ReadDirFile</a> <i>(interface)</i></span><span>
-			*os.<a href="../os.html#name-File">File</a></span></span>
+			*os.<a href="../os.html#name-File">File</a></span>
+			<input type='checkbox' class="showhide" id="File-showhide-impedBys"><i><label for="File-showhide-impedBys" class="show-inline">/* at least one unexported ... */</label><label for="File-showhide-impedBys" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			 os.<a href="../os.html#name-fileWithoutReadFrom">fileWithoutReadFrom</a></i></span></span>
 		<input type='checkbox' class="fold" id="File-fold-impls"><label for="File-fold-impls">Implements (<i>at least 3, all are exported</i>)</label><span id='File-fold-impls-items' class="fold-items"><span>
 			 File : io.<a href="../io.html#name-Closer">Closer</a></span><span>
 			 File : io.<a href="../io.html#name-ReadCloser">ReadCloser</a></span><span>
@@ -130,7 +134,7 @@
 			func <a href="#name-StatFS">StatFS</a>.<a href="../../src/io/fs/fs.go.html#line-31">Open</a>(name <a href="../builtin.html#name-string">string</a>) (<b>File</b>, <a href="../builtin.html#name-error">error</a>)</span><span>
 			func <a href="#name-SubFS">SubFS</a>.<a href="../../src/io/fs/fs.go.html#line-31">Open</a>(name <a href="../builtin.html#name-string">string</a>) (<b>File</b>, <a href="../builtin.html#name-error">error</a>)</span></span>
 
-</span></div><div class="anchor type-res" id="name-FileInfo" data-popularity="1640">	<input type='checkbox' class="fold" id="FileInfo-fold-content"><label for="FileInfo-fold-content"> type <a href="../../src/io/fs/fs.go.html#line-151">FileInfo</a> <b><i>(interface)</i></b></label><span id='FileInfo-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor type-res" id="name-FileInfo" data-popularity="1675">	<input type='checkbox' class="fold" id="FileInfo-fold-content"><label for="FileInfo-fold-content"> type <a href="../../src/io/fs/fs.go.html#line-151">FileInfo</a> <b><i>(interface)</i></b></label><span id='FileInfo-fold-content-docs' class="fold-docs">
 <span class="md-text">		A FileInfo describes a file and is returned by Stat.</span>
 
 		<input type='checkbox' class="fold" id="FileInfo-fold-methods"><label for="FileInfo-fold-methods">Methods (<i>total 6, all are exported</i>)</label><span id='FileInfo-fold-methods-items' class="fold-items"><span>
@@ -171,8 +175,9 @@
 			func os.<a href="../os.html#name-lstatNolog">lstatNolog</a>(name <a href="../builtin.html#name-string">string</a>) (<a href="../os.html">os</a>.<b><a href="../os.html#name-FileInfo">FileInfo</a></b>, <a href="../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
 			func os.<a href="../os.html#name-statNolog">statNolog</a>(name <a href="../builtin.html#name-string">string</a>) (<a href="../os.html">os</a>.<b><a href="../os.html#name-FileInfo">FileInfo</a></b>, <a href="../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
 			func os.(*<a href="../os.html#name-File">File</a>).<a href="../../src/os/dir_darwin.go.html#line-27">readdir</a>(n <a href="../builtin.html#name-int">int</a>, mode <a href="../os.html">os</a>.<a href="../os.html#name-readdirMode">readdirMode</a>) (names []<a href="../builtin.html#name-string">string</a>, dirents []<a href="../os.html">os</a>.<a href="../os.html#name-DirEntry">DirEntry</a>, infos []<a href="../os.html">os</a>.<b><a href="../os.html#name-FileInfo">FileInfo</a></b>, err <a href="../builtin.html#name-error">error</a>)</i></span></span>
-		<input type='checkbox' class="fold" id="FileInfo-fold-params"><label for="FileInfo-fold-params">As Inputs Of (<i>at least 4, in which 2 are exported</i>)</label><span id='FileInfo-fold-params-items' class="fold-items"><span>
+		<input type='checkbox' class="fold" id="FileInfo-fold-params"><label for="FileInfo-fold-params">As Inputs Of (<i>at least 5, in which 3 are exported</i>)</label><span id='FileInfo-fold-params-items' class="fold-items"><span>
 			func <a href="#name-FileInfoToDirEntry">FileInfoToDirEntry</a>(info <b>FileInfo</b>) <a href="#name-DirEntry">DirEntry</a></span><span>
+			func <a href="#name-FormatFileInfo">FormatFileInfo</a>(info <b>FileInfo</b>) <a href="../builtin.html#name-string">string</a></span><span>
 			func os.<a href="../os.html#name-SameFile">SameFile</a>(fi1, fi2 <a href="../os.html">os</a>.<b><a href="../os.html#name-FileInfo">FileInfo</a></b>) <a href="../builtin.html#name-bool">bool</a></span>
 			<input type='checkbox' class="showhide" id="FileInfo-showhide-outputofs"><i><label for="FileInfo-showhide-outputofs" class="show-inline">/* 2+ unexporteds ... */</label><label for="FileInfo-showhide-outputofs" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
 			func os.<a href="../os.html#name-atime">atime</a>(fi <a href="../os.html">os</a>.<b><a href="../os.html#name-FileInfo">FileInfo</a></b>) <a href="../time.html">time</a>.<a href="../time.html#name-Time">Time</a></i></span><span class="hidden"><i>
@@ -221,13 +226,13 @@
 			func os.<a href="../os.html#name-MkdirAll">MkdirAll</a>(path <a href="../builtin.html#name-string">string</a>, perm <a href="../os.html">os</a>.<b><a href="../os.html#name-FileMode">FileMode</a></b>) <a href="../builtin.html#name-error">error</a></span><span>
 			func os.<a href="../os.html#name-OpenFile">OpenFile</a>(name <a href="../builtin.html#name-string">string</a>, flag <a href="../builtin.html#name-int">int</a>, perm <a href="../os.html">os</a>.<b><a href="../os.html#name-FileMode">FileMode</a></b>) (*<a href="../os.html">os</a>.<a href="../os.html#name-File">File</a>, <a href="../builtin.html#name-error">error</a>)</span><span>
 			func os.<a href="../os.html#name-WriteFile">WriteFile</a>(name <a href="../builtin.html#name-string">string</a>, data []<a href="../builtin.html#name-byte">byte</a>, perm <a href="../os.html">os</a>.<b><a href="../os.html#name-FileMode">FileMode</a></b>) <a href="../builtin.html#name-error">error</a></span><span>
-			func os.(*<a href="../os.html#name-File">File</a>).<a href="../../src/os/file.go.html#line-542">Chmod</a>(mode <a href="../os.html">os</a>.<b><a href="../os.html#name-FileMode">FileMode</a></b>) <a href="../builtin.html#name-error">error</a></span>
+			func os.(*<a href="../os.html#name-File">File</a>).<a href="../../src/os/file.go.html#line-549">Chmod</a>(mode <a href="../os.html">os</a>.<b><a href="../os.html#name-FileMode">FileMode</a></b>) <a href="../builtin.html#name-error">error</a></span>
 			<input type='checkbox' class="showhide" id="FileMode-showhide-outputofs"><i><label for="FileMode-showhide-outputofs" class="show-inline">/* 5+ unexporteds ... */</label><label for="FileMode-showhide-outputofs" class="hide-inline">/* 5+ unexporteds: */</label></i><span class="hidden"><i>
 			func os.<a href="../os.html#name-chmod">chmod</a>(name <a href="../builtin.html#name-string">string</a>, mode <a href="../os.html">os</a>.<b><a href="../os.html#name-FileMode">FileMode</a></b>) <a href="../builtin.html#name-error">error</a></i></span><span class="hidden"><i>
 			func os.<a href="../os.html#name-newUnixDirent">newUnixDirent</a>(parent, name <a href="../builtin.html#name-string">string</a>, typ <a href="../os.html">os</a>.<b><a href="../os.html#name-FileMode">FileMode</a></b>) (<a href="../os.html">os</a>.<a href="../os.html#name-DirEntry">DirEntry</a>, <a href="../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
 			func os.<a href="../os.html#name-openFileNolog">openFileNolog</a>(name <a href="../builtin.html#name-string">string</a>, flag <a href="../builtin.html#name-int">int</a>, perm <a href="../os.html">os</a>.<b><a href="../os.html#name-FileMode">FileMode</a></b>) (*<a href="../os.html">os</a>.<a href="../os.html#name-File">File</a>, <a href="../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
 			func os.<a href="../os.html#name-syscallMode">syscallMode</a>(i <a href="../os.html">os</a>.<b><a href="../os.html#name-FileMode">FileMode</a></b>) (o <a href="../builtin.html#name-uint32">uint32</a>)</i></span><span class="hidden"><i>
-			func os.(*<a href="../os.html#name-File">File</a>).<a href="../../src/os/file_posix.go.html#line-90">chmod</a>(mode <a href="../os.html">os</a>.<b><a href="../os.html#name-FileMode">FileMode</a></b>) <a href="../builtin.html#name-error">error</a></i></span></span>
+			func os.(*<a href="../os.html#name-File">File</a>).<a href="../../src/os/file_posix.go.html#line-88">chmod</a>(mode <a href="../os.html">os</a>.<b><a href="../os.html#name-FileMode">FileMode</a></b>) <a href="../builtin.html#name-error">error</a></i></span></span>
 		<input type='checkbox' class="fold" id="FileMode-fold-values"><label for="FileMode-fold-values">As Types Of (<i>total 30, all are exported</i>)</label><span id='FileMode-fold-values-items' class="fold-items"><span>
 			const <a href="#name-ModeAppend">ModeAppend</a></span><span>
 			const <a href="#name-ModeCharDevice">ModeCharDevice</a></span><span>
@@ -349,7 +354,7 @@
 			<input type='checkbox' class="showhide" id="PathError-showhide-impls"><i><label for="PathError-showhide-impls" class="show-inline">/* at least one unexported ... */</label><label for="PathError-showhide-impls" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
 			*PathError : os.<a href="../os.html#name-timeout">timeout</a></i></span></span>
 
-</span></div><div class="anchor type-res" id="name-ReadDirFile" data-popularity="550">	<input type='checkbox' class="fold" id="ReadDirFile-fold-content"><label for="ReadDirFile-fold-content"> type <a href="../../src/io/fs/fs.go.html#line-112">ReadDirFile</a> <b><i>(interface)</i></b></label><span id='ReadDirFile-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor type-res" id="name-ReadDirFile" data-popularity="700">	<input type='checkbox' class="fold" id="ReadDirFile-fold-content"><label for="ReadDirFile-fold-content"> type <a href="../../src/io/fs/fs.go.html#line-112">ReadDirFile</a> <b><i>(interface)</i></b></label><span id='ReadDirFile-fold-content-docs' class="fold-docs">
 <span class="md-text">		A ReadDirFile is a directory file whose entries can be read with the ReadDir method.
 		Every directory file should implement this interface.
 		(It is permissible for any file to implement this interface,
@@ -376,15 +381,17 @@
 				ReadDir returns the DirEntry list read until that point and a non-nil error.</span>
 </span></span><span>
 			<span class="nodocs">( ReadDirFile) <a href="../../src/io/fs/fs.go.html#line-79">Stat</a>() (<a href="#name-FileInfo">FileInfo</a>, <a href="../builtin.html#name-error">error</a>)</span></span></span>
-		<input type='checkbox' class="fold" id="ReadDirFile-fold-impledby"><label for="ReadDirFile-fold-impledby">Implemented By (<i>at least one exported</i>)</label><span id='ReadDirFile-fold-impledby-items' class="fold-items"><span>
-			*os.<a href="../os.html#name-File">File</a></span></span>
+		<input type='checkbox' class="fold" id="ReadDirFile-fold-impledby"><label for="ReadDirFile-fold-impledby">Implemented By (<i>at least 2, in which 1 is exported</i>)</label><span id='ReadDirFile-fold-impledby-items' class="fold-items"><span>
+			*os.<a href="../os.html#name-File">File</a></span>
+			<input type='checkbox' class="showhide" id="ReadDirFile-showhide-impedBys"><i><label for="ReadDirFile-showhide-impedBys" class="show-inline">/* at least one unexported ... */</label><label for="ReadDirFile-showhide-impedBys" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			 os.<a href="../os.html#name-fileWithoutReadFrom">fileWithoutReadFrom</a></i></span></span>
 		<input type='checkbox' class="fold" id="ReadDirFile-fold-impls"><label for="ReadDirFile-fold-impls">Implements (<i>at least 4, all are exported</i>)</label><span id='ReadDirFile-fold-impls-items' class="fold-items"><span>
 			 ReadDirFile : <a href="#name-File">File</a></span><span>
 			 ReadDirFile : io.<a href="../io.html#name-Closer">Closer</a></span><span>
 			 ReadDirFile : io.<a href="../io.html#name-ReadCloser">ReadCloser</a></span><span>
 			 ReadDirFile : io.<a href="../io.html#name-Reader">Reader</a></span></span>
 
-</span></div><div class="anchor type-res" id="name-ReadDirFS" data-popularity="300">	<input type='checkbox' class="fold" id="ReadDirFS-fold-content"><label for="ReadDirFS-fold-content"> type <a href="../../src/io/fs/readdir.go.html#line-14">ReadDirFS</a> <b><i>(interface)</i></b></label><span id='ReadDirFS-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor type-res" id="name-ReadDirFS" data-popularity="450">	<input type='checkbox' class="fold" id="ReadDirFS-fold-content"><label for="ReadDirFS-fold-content"> type <a href="../../src/io/fs/readdir.go.html#line-14">ReadDirFS</a> <b><i>(interface)</i></b></label><span id='ReadDirFS-fold-content-docs' class="fold-docs">
 <span class="md-text">		ReadDirFS is the interface implemented by a file system
 		that provides an optimized implementation of ReadDir.</span>
 
@@ -404,13 +411,14 @@
 <span class="md-text">				ReadDir reads the named directory
 				and returns a list of directory entries sorted by filename.</span>
 </span></span></span>
-		<input type='checkbox' class="fold" id="ReadDirFS-fold-impledby"><label for="ReadDirFS-fold-impledby">Implemented By (<i>at least one unexported</i>)</label><span id='ReadDirFS-fold-impledby-items' class="fold-items">
-			<input type='checkbox' class="showhide" id="ReadDirFS-showhide-impedBys"><i><label for="ReadDirFS-showhide-impedBys" class="show-inline">/* at least one unexported ... */</label><label for="ReadDirFS-showhide-impedBys" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
-			*<a href="#name-subFS">subFS</a></i></span></span>
+		<input type='checkbox' class="fold" id="ReadDirFS-fold-impledby"><label for="ReadDirFS-fold-impledby">Implemented By (<i>at least 2, neither is exported</i>)</label><span id='ReadDirFS-fold-impledby-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="ReadDirFS-showhide-impedBys"><i><label for="ReadDirFS-showhide-impedBys" class="show-inline">/* 2+ unexporteds ... */</label><label for="ReadDirFS-showhide-impedBys" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
+			*<a href="#name-subFS">subFS</a></i></span><span class="hidden"><i>
+			 os.<a href="../os.html#name-dirFS">dirFS</a></i></span></span>
 		<input type='checkbox' class="fold" id="ReadDirFS-fold-impls"><label for="ReadDirFS-fold-impls">Implements (<i>at least one exported</i>)</label><span id='ReadDirFS-fold-impls-items' class="fold-items"><span>
 			 ReadDirFS : <a href="#name-FS">FS</a></span></span>
 
-</span></div><div class="anchor type-res" id="name-ReadFileFS" data-popularity="300">	<input type='checkbox' class="fold" id="ReadFileFS-fold-content"><label for="ReadFileFS-fold-content"> type <a href="../../src/io/fs/readfile.go.html#line-11">ReadFileFS</a> <b><i>(interface)</i></b></label><span id='ReadFileFS-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor type-res" id="name-ReadFileFS" data-popularity="450">	<input type='checkbox' class="fold" id="ReadFileFS-fold-content"><label for="ReadFileFS-fold-content"> type <a href="../../src/io/fs/readfile.go.html#line-11">ReadFileFS</a> <b><i>(interface)</i></b></label><span id='ReadFileFS-fold-content-docs' class="fold-docs">
 <span class="md-text">		ReadFileFS is the interface implemented by a file system
 		that provides an optimized implementation of ReadFile.</span>
 
@@ -435,9 +443,10 @@
 				The caller is permitted to modify the returned byte slice.
 				This method should return a copy of the underlying data.</span>
 </span></span></span>
-		<input type='checkbox' class="fold" id="ReadFileFS-fold-impledby"><label for="ReadFileFS-fold-impledby">Implemented By (<i>at least one unexported</i>)</label><span id='ReadFileFS-fold-impledby-items' class="fold-items">
-			<input type='checkbox' class="showhide" id="ReadFileFS-showhide-impedBys"><i><label for="ReadFileFS-showhide-impedBys" class="show-inline">/* at least one unexported ... */</label><label for="ReadFileFS-showhide-impedBys" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
-			*<a href="#name-subFS">subFS</a></i></span></span>
+		<input type='checkbox' class="fold" id="ReadFileFS-fold-impledby"><label for="ReadFileFS-fold-impledby">Implemented By (<i>at least 2, neither is exported</i>)</label><span id='ReadFileFS-fold-impledby-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="ReadFileFS-showhide-impedBys"><i><label for="ReadFileFS-showhide-impedBys" class="show-inline">/* 2+ unexporteds ... */</label><label for="ReadFileFS-showhide-impedBys" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
+			*<a href="#name-subFS">subFS</a></i></span><span class="hidden"><i>
+			 os.<a href="../os.html#name-dirFS">dirFS</a></i></span></span>
 		<input type='checkbox' class="fold" id="ReadFileFS-fold-impls"><label for="ReadFileFS-fold-impls">Implements (<i>at least one exported</i>)</label><span id='ReadFileFS-fold-impls-items' class="fold-items"><span>
 			 ReadFileFS : <a href="#name-FS">FS</a></span></span>
 
@@ -490,7 +499,7 @@
 		<input type='checkbox' class="fold" id="SubFS-fold-impls"><label for="SubFS-fold-impls">Implements (<i>at least one exported</i>)</label><span id='SubFS-fold-impls-items' class="fold-items"><span>
 			 SubFS : <a href="#name-FS">FS</a></span></span>
 
-</span></div><div class="anchor type-res" id="name-WalkDirFunc" data-popularity="140">	<input type='checkbox' class="fold" id="WalkDirFunc-fold-content"><label for="WalkDirFunc-fold-content"> type <a href="../../src/io/fs/walk.go.html#line-61">WalkDirFunc</a> <i>(func)</i></label><span id='WalkDirFunc-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor type-res" id="name-WalkDirFunc" data-popularity="140">	<input type='checkbox' class="fold" id="WalkDirFunc-fold-content"><label for="WalkDirFunc-fold-content"> type <a href="../../src/io/fs/walk.go.html#line-69">WalkDirFunc</a> <i>(func)</i></label><span id='WalkDirFunc-fold-content-docs' class="fold-docs">
 <span class="md-text">		WalkDirFunc is the type of the function called by WalkDir to visit
 		each file or directory.
 		
@@ -504,8 +513,10 @@
 		The error result returned by the function controls how WalkDir
 		continues. If the function returns the special value SkipDir, WalkDir
 		skips the current directory (path if d.IsDir() is true, otherwise
-		path's parent directory). Otherwise, if the function returns a non-nil
-		error, WalkDir stops entirely and returns that error.
+		path's parent directory). If the function returns the special value
+		SkipAll, WalkDir skips all remaining files and directories. Otherwise,
+		if the function returns a non-nil error, WalkDir stops entirely and
+		returns that error.
 		
 		The err argument reports an error related to path, signaling that
 		WalkDir will not walk into that directory. The function can decide how
@@ -524,15 +535,16 @@
 		ReadDir. In this second case, the function is called twice with the
 		path of the directory: the first call is before the directory read is
 		attempted and has err set to nil, giving the function a chance to
-		return SkipDir and avoid the ReadDir entirely. The second call is
-		after a failed ReadDir and reports the error from ReadDir.
+		return SkipDir or SkipAll and avoid the ReadDir entirely. The second call
+		is after a failed ReadDir and reports the error from ReadDir.
 		(If ReadDir succeeds, there is no second call.)
 		
 		The differences between WalkDirFunc compared to filepath.WalkFunc are:
 		
 		  - The second argument has type fs.DirEntry instead of fs.FileInfo.
 		  - The function is called before reading a directory, to allow SkipDir
-		    to bypass the directory read entirely.
+		    or SkipAll to bypass the directory read entirely or skip all remaining
+		    files and directories respectively.
 		  - If a directory read fails, the function is called a second time
 		    for that directory to report the error.</span>
 
@@ -543,32 +555,40 @@
 			func <a href="#name-walkDir">walkDir</a>(fsys <a href="#name-FS">FS</a>, name <a href="../builtin.html#name-string">string</a>, d <a href="#name-DirEntry">DirEntry</a>, walkDirFn <b>WalkDirFunc</b>) <a href="../builtin.html#name-error">error</a></i></span><span class="hidden"><i>
 			func path/filepath.<a href="../path/filepath.html#name-walkDir">walkDir</a>(path <a href="../builtin.html#name-string">string</a>, d <a href="#name-DirEntry">DirEntry</a>, walkDirFn <b>WalkDirFunc</b>) <a href="../builtin.html#name-error">error</a></i></span></span>
 
-</span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 3 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 3 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-dirInfo" data-popularity="250">	<input type='checkbox' class="fold" id="dirInfo-fold-content"><label for="dirInfo-fold-content"> type <a href="../../src/io/fs/readdir.go.html#line-50">dirInfo</a> <i>(struct)</i></label><span id='dirInfo-fold-content-docs' class="fold-docs">
+</span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 3 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 3 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-dirInfo" data-popularity="400">	<input type='checkbox' class="fold" id="dirInfo-fold-content"><label for="dirInfo-fold-content"> type <a href="../../src/io/fs/readdir.go.html#line-50">dirInfo</a> <i>(struct)</i></label><span id='dirInfo-fold-content-docs' class="fold-docs">
 <span class="md-text">		dirInfo is a DirEntry based on a FileInfo.</span>
 
 		<input type='checkbox' class="fold" id="dirInfo-fold-fields"><label for="dirInfo-fold-fields">Fields (<i>only one, which is unexported</i>)</label><span id='dirInfo-fold-fields-items' class="fold-items">
 			<input type='checkbox' checked class="showhide" id="dirInfo-showhide-fields"><i><label for="dirInfo-showhide-fields" class="show-inline">/* one unexported ... */</label><label for="dirInfo-showhide-fields" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
 			<span class="nodocs"><a href="../../src/io/fs/readdir.go.html#line-51">fileInfo</a> <i><a href="#name-FileInfo">FileInfo</a></i></span></i></span></span>
-		<input type='checkbox' class="fold" id="dirInfo-fold-methods"><label for="dirInfo-fold-methods">Methods (<i>total 4, all are exported</i>)</label><span id='dirInfo-fold-methods-items' class="fold-items"><span>
+		<input type='checkbox' class="fold" id="dirInfo-fold-methods"><label for="dirInfo-fold-methods">Methods (<i>total 5, all are exported</i>)</label><span id='dirInfo-fold-methods-items' class="fold-items"><span>
 			<span class="nodocs">( dirInfo) <a href="../../src/io/fs/readdir.go.html#line-62">Info</a>() (<a href="#name-FileInfo">FileInfo</a>, <a href="../builtin.html#name-error">error</a>)</span></span><span>
 			<span class="nodocs">( dirInfo) <a href="../../src/io/fs/readdir.go.html#line-54">IsDir</a>() <a href="../builtin.html#name-bool">bool</a></span></span><span>
 			<span class="nodocs">( dirInfo) <a href="../../src/io/fs/readdir.go.html#line-66">Name</a>() <a href="../builtin.html#name-string">string</a></span></span><span>
+			<span class="nodocs">( dirInfo) <a href="../../src/io/fs/readdir.go.html#line-70">String</a>() <a href="../builtin.html#name-string">string</a></span></span><span>
 			<span class="nodocs">( dirInfo) <a href="../../src/io/fs/readdir.go.html#line-58">Type</a>() <a href="#name-FileMode">FileMode</a></span></span></span>
-		<input type='checkbox' class="fold" id="dirInfo-fold-impls"><label for="dirInfo-fold-impls">Implements (<i>at least one exported</i>)</label><span id='dirInfo-fold-impls-items' class="fold-items"><span>
-			 dirInfo : <a href="#name-DirEntry">DirEntry</a></span></span>
+		<input type='checkbox' class="fold" id="dirInfo-fold-impls"><label for="dirInfo-fold-impls">Implements (<i>at least 3, in which 2 are exported</i>)</label><span id='dirInfo-fold-impls-items' class="fold-items"><span>
+			 dirInfo : <a href="#name-DirEntry">DirEntry</a></span><span>
+			 dirInfo : fmt.<a href="../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' checked class="showhide" id="dirInfo-showhide-impls"><i><label for="dirInfo-showhide-impls" class="show-inline">/* at least one unexported ... */</label><label for="dirInfo-showhide-impls" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			 dirInfo : runtime.<a href="../runtime.html#name-stringer">stringer</a></i></span></span>
 
-</span></div><div class="anchor type-res hidden" id="name-statDirEntry" data-popularity="250">	<input type='checkbox' class="fold" id="statDirEntry-fold-content"><label for="statDirEntry-fold-content"> type <a href="../../src/io/fs/walk.go.html#line-122">statDirEntry</a> <i>(struct)</i></label><span id='statDirEntry-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor type-res hidden" id="name-statDirEntry" data-popularity="400">	<input type='checkbox' class="fold" id="statDirEntry-fold-content"><label for="statDirEntry-fold-content"> type <a href="../../src/io/fs/walk.go.html#line-130">statDirEntry</a> <i>(struct)</i></label><span id='statDirEntry-fold-content-docs' class="fold-docs">
 
 		<input type='checkbox' class="fold" id="statDirEntry-fold-fields"><label for="statDirEntry-fold-fields">Fields (<i>only one, which is unexported</i>)</label><span id='statDirEntry-fold-fields-items' class="fold-items">
 			<input type='checkbox' checked class="showhide" id="statDirEntry-showhide-fields"><i><label for="statDirEntry-showhide-fields" class="show-inline">/* one unexported ... */</label><label for="statDirEntry-showhide-fields" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
-			<span class="nodocs"><a href="../../src/io/fs/walk.go.html#line-123">info</a> <i><a href="#name-FileInfo">FileInfo</a></i></span></i></span></span>
-		<input type='checkbox' class="fold" id="statDirEntry-fold-methods"><label for="statDirEntry-fold-methods">Methods (<i>total 4, all are exported</i>)</label><span id='statDirEntry-fold-methods-items' class="fold-items"><span>
-			<span class="nodocs">(*statDirEntry) <a href="../../src/io/fs/walk.go.html#line-129">Info</a>() (<a href="#name-FileInfo">FileInfo</a>, <a href="../builtin.html#name-error">error</a>)</span></span><span>
-			<span class="nodocs">(*statDirEntry) <a href="../../src/io/fs/walk.go.html#line-127">IsDir</a>() <a href="../builtin.html#name-bool">bool</a></span></span><span>
-			<span class="nodocs">(*statDirEntry) <a href="../../src/io/fs/walk.go.html#line-126">Name</a>() <a href="../builtin.html#name-string">string</a></span></span><span>
-			<span class="nodocs">(*statDirEntry) <a href="../../src/io/fs/walk.go.html#line-128">Type</a>() <a href="#name-FileMode">FileMode</a></span></span></span>
-		<input type='checkbox' class="fold" id="statDirEntry-fold-impls"><label for="statDirEntry-fold-impls">Implements (<i>at least one exported</i>)</label><span id='statDirEntry-fold-impls-items' class="fold-items"><span>
-			*statDirEntry : <a href="#name-DirEntry">DirEntry</a></span></span>
+			<span class="nodocs"><a href="../../src/io/fs/walk.go.html#line-131">info</a> <i><a href="#name-FileInfo">FileInfo</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="statDirEntry-fold-methods"><label for="statDirEntry-fold-methods">Methods (<i>total 5, all are exported</i>)</label><span id='statDirEntry-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">(*statDirEntry) <a href="../../src/io/fs/walk.go.html#line-137">Info</a>() (<a href="#name-FileInfo">FileInfo</a>, <a href="../builtin.html#name-error">error</a>)</span></span><span>
+			<span class="nodocs">(*statDirEntry) <a href="../../src/io/fs/walk.go.html#line-135">IsDir</a>() <a href="../builtin.html#name-bool">bool</a></span></span><span>
+			<span class="nodocs">(*statDirEntry) <a href="../../src/io/fs/walk.go.html#line-134">Name</a>() <a href="../builtin.html#name-string">string</a></span></span><span>
+			<span class="nodocs">(*statDirEntry) <a href="../../src/io/fs/walk.go.html#line-139">String</a>() <a href="../builtin.html#name-string">string</a></span></span><span>
+			<span class="nodocs">(*statDirEntry) <a href="../../src/io/fs/walk.go.html#line-136">Type</a>() <a href="#name-FileMode">FileMode</a></span></span></span>
+		<input type='checkbox' class="fold" id="statDirEntry-fold-impls"><label for="statDirEntry-fold-impls">Implements (<i>at least 3, in which 2 are exported</i>)</label><span id='statDirEntry-fold-impls-items' class="fold-items"><span>
+			*statDirEntry : <a href="#name-DirEntry">DirEntry</a></span><span>
+			*statDirEntry : fmt.<a href="../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' checked class="showhide" id="statDirEntry-showhide-impls"><i><label for="statDirEntry-showhide-impls" class="show-inline">/* at least one unexported ... */</label><label for="statDirEntry-showhide-impls" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			*statDirEntry : runtime.<a href="../runtime.html#name-stringer">stringer</a></i></span></span>
 
 </span></div><div class="anchor type-res hidden" id="name-subFS" data-popularity="650">	<input type='checkbox' class="fold" id="subFS-fold-content"><label for="subFS-fold-content"> type <a href="../../src/io/fs/sub.go.html#line-47">subFS</a> <i>(struct)</i></label><span id='subFS-fold-content-docs' class="fold-docs">
 
@@ -600,11 +620,27 @@
 			*subFS : <a href="#name-SubFS">SubFS</a></span></span>
 
 </span></div></div>
-<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 18, in which 8 are exported)</i></span></span>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 20, in which 10 are exported)</i></span></span>
 
-<div class="anchor value-res" id="name-FileInfoToDirEntry">	<input type='checkbox' class="fold" id="FileInfoToDirEntry-fold-content"><label for="FileInfoToDirEntry-fold-content"> func <a href="../../src/io/fs/readdir.go.html#line-72">FileInfoToDirEntry</a>(info <a href="#name-FileInfo">FileInfo</a>) <a href="#name-DirEntry">DirEntry</a></label><span id='FileInfoToDirEntry-fold-content-docs' class="fold-docs">
+<div class="anchor value-res" id="name-FileInfoToDirEntry">	<input type='checkbox' class="fold" id="FileInfoToDirEntry-fold-content"><label for="FileInfoToDirEntry-fold-content"> func <a href="../../src/io/fs/readdir.go.html#line-76">FileInfoToDirEntry</a>(info <a href="#name-FileInfo">FileInfo</a>) <a href="#name-DirEntry">DirEntry</a></label><span id='FileInfoToDirEntry-fold-content-docs' class="fold-docs">
 <span class="md-text">		FileInfoToDirEntry returns a DirEntry that returns information from info.
 		If info is nil, FileInfoToDirEntry returns nil.</span>
+
+</span></div><div class="anchor value-res" id="name-FormatDirEntry">	<input type='checkbox' class="fold" id="FormatDirEntry-fold-content"><label for="FormatDirEntry-fold-content"> func <a href="../../src/io/fs/format.go.html#line-60">FormatDirEntry</a>(dir <a href="#name-DirEntry">DirEntry</a>) <a href="../builtin.html#name-string">string</a></label><span id='FormatDirEntry-fold-content-docs' class="fold-docs">
+<span class="md-text">		FormatDirEntry returns a formatted version of dir for human readability.
+		Implementations of DirEntry can call this from a String method.
+		The outputs for a directory named subdir and a file named hello.go are:
+		
+			d subdir/
+			- hello.go</span>
+
+</span></div><div class="anchor value-res" id="name-FormatFileInfo">	<input type='checkbox' class="fold" id="FormatFileInfo-fold-content"><label for="FormatFileInfo-fold-content"> func <a href="../../src/io/fs/format.go.html#line-17">FormatFileInfo</a>(info <a href="#name-FileInfo">FileInfo</a>) <a href="../builtin.html#name-string">string</a></label><span id='FormatFileInfo-fold-content-docs' class="fold-docs">
+<span class="md-text">		FormatFileInfo returns a formatted version of info for human readability.
+		Implementations of FileInfo can call this from a String method.
+		The output for a file named "hello.go", 100 bytes, mode 0o644, created
+		January 1, 1970 at noon is
+		
+			-rw-r--r-- 100 1970-01-01 12:00:00 hello.go</span>
 
 </span></div><div class="anchor value-res" id="name-Glob">	<input type='checkbox' class="fold" id="Glob-fold-content"><label for="Glob-fold-content"> func <a href="../../src/io/fs/glob.go.html#line-33">Glob</a>(fsys <a href="#name-FS">FS</a>, pattern <a href="../builtin.html#name-string">string</a>) (matches []<a href="../builtin.html#name-string">string</a>, err <a href="../builtin.html#name-error">error</a>)</label><span id='Glob-fold-content-docs' class="fold-docs">
 <span class="md-text">		Glob returns the names of all files matching pattern or nil
@@ -675,7 +711,7 @@
 		are accepted as valid, but those characters must never be
 		interpreted by an FS implementation as path element separators.</span>
 
-</span></div><div class="anchor value-res" id="name-WalkDir">	<input type='checkbox' class="fold" id="WalkDir-fold-content"><label for="WalkDir-fold-content"> func <a href="../../src/io/fs/walk.go.html#line-109">WalkDir</a>(fsys <a href="#name-FS">FS</a>, root <a href="../builtin.html#name-string">string</a>, fn <a href="#name-WalkDirFunc">WalkDirFunc</a>) <a href="../builtin.html#name-error">error</a></label><span id='WalkDir-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor value-res" id="name-WalkDir">	<input type='checkbox' class="fold" id="WalkDir-fold-content"><label for="WalkDir-fold-content"> func <a href="../../src/io/fs/walk.go.html#line-117">WalkDir</a>(fsys <a href="#name-FS">FS</a>, root <a href="../builtin.html#name-string">string</a>, fn <a href="#name-WalkDirFunc">WalkDirFunc</a>) <a href="../builtin.html#name-error">error</a></label><span id='WalkDir-fold-content-docs' class="fold-docs">
 <span class="md-text">		WalkDir walks the file tree rooted at root, calling fn for each file or
 		directory in the tree, including root.
 		
@@ -702,11 +738,11 @@
 <span class="md-text">		hasMeta reports whether path contains any of the magic characters
 		recognized by path.Match.</span>
 
-</span></i></div><div class="anchor value-res hidden" id="name-walkDir"><i>	<input type='checkbox' class="fold" id="walkDir-fold-content"><label for="walkDir-fold-content"> func <a href="../../src/io/fs/walk.go.html#line-64">walkDir</a>(fsys <a href="#name-FS">FS</a>, name <a href="../builtin.html#name-string">string</a>, d <a href="#name-DirEntry">DirEntry</a>, walkDirFn <a href="#name-WalkDirFunc">WalkDirFunc</a>) <a href="../builtin.html#name-error">error</a></label><span id='walkDir-fold-content-docs' class="fold-docs">
+</span></i></div><div class="anchor value-res hidden" id="name-walkDir"><i>	<input type='checkbox' class="fold" id="walkDir-fold-content"><label for="walkDir-fold-content"> func <a href="../../src/io/fs/walk.go.html#line-72">walkDir</a>(fsys <a href="#name-FS">FS</a>, name <a href="../builtin.html#name-string">string</a>, d <a href="#name-DirEntry">DirEntry</a>, walkDirFn <a href="#name-WalkDirFunc">WalkDirFunc</a>) <a href="../builtin.html#name-error">error</a></label><span id='walkDir-fold-content-docs' class="fold-docs">
 <span class="md-text">		walkDir recursively descends path, calling walkDirFn.</span>
 
 </span></i></div></div>
-<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (total 6, all are exported)</i></span></span>
+<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (total 7, all are exported)</i></span></span>
 
 <div class="anchor value-res" id="name-ErrClosed">	<input type='checkbox' class="fold" id="ErrClosed-fold-content"><label for="ErrClosed-fold-content">  var <a href="../../src/io/fs/fs.go.html#line-141">ErrClosed</a> <a href="../builtin.html#name-error">error</a> // <span class="md-text">"file already closed"</span></label><span id='ErrClosed-fold-content-docs' class="fold-docs">
 <span class="md-text">		Generic file system errors.
@@ -732,6 +768,11 @@
 <span class="md-text">		Generic file system errors.
 		Errors returned by file systems can be tested against these errors
 		using errors.Is.</span>
+
+</span></div><div class="anchor value-res" id="name-SkipAll">	<input type='checkbox' class="fold" id="SkipAll-fold-content"><label for="SkipAll-fold-content">  var <a href="../../src/io/fs/walk.go.html#line-20">SkipAll</a> <a href="../builtin.html#name-error">error</a></label><span id='SkipAll-fold-content-docs' class="fold-docs">
+<span class="md-text">		SkipAll is used as a return value from WalkDirFuncs to indicate that
+		all remaining files and directories are to be skipped. It is not returned
+		as an error by any function.</span>
 
 </span></div><div class="anchor value-res" id="name-SkipDir">	<input type='checkbox' class="fold" id="SkipDir-fold-content"><label for="SkipDir-fold-content">  var <a href="../../src/io/fs/walk.go.html#line-15">SkipDir</a> <a href="../builtin.html#name-error">error</a></label><span id='SkipDir-fold-content-docs' class="fold-docs">
 <span class="md-text">		SkipDir is used as a return value from WalkDirFuncs to indicate that
@@ -841,7 +882,7 @@
 
 </span></div></div></code></pre><pre id="footer">
 <table><tr><td><img src="../../png/go101-twitter.png"></td>
-<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.6.6</i>. (GOOS=darwin GOARCH=arm64)
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.6.7</i>. (GOOS=darwin GOARCH=arm64)
 <b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
 PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
 Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

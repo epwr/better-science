@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Package: sync</title>
-<link href="../css/auto-v0.6.6.css" rel="stylesheet">
-<script src="../jvs/golds-v0.6.6.js"></script>
+<link href="../css/auto-v0.6.7.css" rel="stylesheet">
+<script src="../jvs/golds-v0.6.7.js"></script>
 <body onload="onPageLoad()"><div>
 
 <pre id="package-details"><code><span style="font-size:xx-large;">package <b>sync</b></span>
@@ -30,6 +30,7 @@
 		Values containing the types defined in this package should not be copied.</span>
 </span>
 	<span class="nodocs">    <a href="../src/sync/once.go.html">once.go</a></span>
+	<span class="nodocs">    <a href="../src/sync/oncefunc.go.html">oncefunc.go</a></span>
 	<span class="nodocs">    <a href="../src/sync/pool.go.html">pool.go</a></span>
 	<span class="nodocs">    <a href="../src/sync/poolqueue.go.html">poolqueue.go</a></span>
 	<span class="nodocs">    <a href="../src/sync/runtime.go.html">runtime.go</a></span>
@@ -199,7 +200,7 @@
 				Wait locks c.L before returning. Unlike in other systems,
 				Wait cannot return unless awoken by Broadcast or Signal.
 				
-				Because c.L is not locked when Wait first resumes, the caller
+				Because c.L is not locked while Wait is waiting, the caller
 				typically cannot assume that the condition is true when
 				Wait returns. Instead, the caller should Wait in a loop:
 				
@@ -230,11 +231,11 @@
 			*runtime/internal/atomic.<a href="runtime/internal/atomic.html#name-noCopy">noCopy</a></i></span><span class="hidden"><i>
 			*syscall.<a href="syscall.html#name-mmapper">mmapper</a></i></span></span>
 		<input type='checkbox' class="fold" id="Locker-fold-results"><label for="Locker-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='Locker-fold-results-items' class="fold-items"><span>
-			func (*<a href="#name-RWMutex">RWMutex</a>).<a href="../src/sync/rwmutex.go.html#line-224">RLocker</a>() <b>Locker</b></span></span>
+			func (*<a href="#name-RWMutex">RWMutex</a>).<a href="../src/sync/rwmutex.go.html#line-237">RLocker</a>() <b>Locker</b></span></span>
 		<input type='checkbox' class="fold" id="Locker-fold-params"><label for="Locker-fold-params">As Inputs Of (<i>at least one exported</i>)</label><span id='Locker-fold-params-items' class="fold-items"><span>
 			func <a href="#name-NewCond">NewCond</a>(l <b>Locker</b>) *<a href="#name-Cond">Cond</a></span></span>
 
-</span></div><div class="anchor type-res" id="name-Map" data-popularity="415">	<input type='checkbox' class="fold" id="Map-fold-content"><label for="Map-fold-content"> type <a href="../src/sync/map.go.html#line-34">Map</a> <i>(struct)</i></label><span id='Map-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor type-res" id="name-Map" data-popularity="615">	<input type='checkbox' class="fold" id="Map-fold-content"><label for="Map-fold-content"> type <a href="../src/sync/map.go.html#line-35">Map</a> <i>(struct)</i></label><span id='Map-fold-content-docs' class="fold-docs">
 <span class="md-text">		Map is like a Go map[interface{}]interface{} but is safe for concurrent use
 		by multiple goroutines without additional locking or coordination.
 		Loads, stores, and deletes run in amortized constant time.
@@ -254,13 +255,15 @@
 		In the terminology of the Go memory model, Map arranges that a write operation
 		“synchronizes before” any read operation that observes the effect of the write, where
 		read and write operations are defined as follows.
-		Load, LoadAndDelete, LoadOrStore are read operations;
-		Delete, LoadAndDelete, and Store are write operations;
-		and LoadOrStore is a write operation when it returns loaded set to false.</span>
+		Load, LoadAndDelete, LoadOrStore, Swap, CompareAndSwap, and CompareAndDelete
+		are read operations; Delete, LoadAndDelete, Store, and Swap are write operations;
+		LoadOrStore is a write operation when it returns loaded set to false;
+		CompareAndSwap is a write operation when it returns swapped set to true;
+		and CompareAndDelete is a write operation when it returns deleted set to true.</span>
 
 		<input type='checkbox' class="fold" id="Map-fold-fields"><label for="Map-fold-fields">Fields (<i>total 4, none are exported</i>)</label><span id='Map-fold-fields-items' class="fold-items">
 			<input type='checkbox' class="showhide" id="Map-showhide-fields"><i><label for="Map-showhide-fields" class="show-inline">/* 4 unexporteds ... */</label><label for="Map-showhide-fields" class="hide-inline">/* 4 unexporteds: */</label></i><span class="hidden"><i>
-			<input type='checkbox' class="fold" id="Map-fold-field-dirty"><label for="Map-fold-field-dirty"><a href="../src/sync/map.go.html#line-58">dirty</a> <i>map[<a href="builtin.html#name-any">any</a>]*<a href="#name-entry">entry</a></i></label><span id='Map-fold-field-dirty-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="Map-fold-field-dirty"><label for="Map-fold-field-dirty"><a href="../src/sync/map.go.html#line-59">dirty</a> <i>map[<a href="builtin.html#name-any">any</a>]*<a href="#name-entry">entry</a></i></label><span id='Map-fold-field-dirty-docs' class="fold-docs">
 <span class="md-text">				dirty contains the portion of the map's contents that require mu to be
 				held. To ensure that the dirty map can be promoted to the read map quickly,
 				it also includes all of the non-expunged entries in the read map.
@@ -272,7 +275,7 @@
 				If the dirty map is nil, the next write to the map will initialize it by
 				making a shallow copy of the clean map, omitting stale entries.</span>
 </span></i></span><span class="hidden"><i>
-			<input type='checkbox' class="fold" id="Map-fold-field-misses"><label for="Map-fold-field-misses"><a href="../src/sync/map.go.html#line-66">misses</a> <i><a href="builtin.html#name-int">int</a></i></label><span id='Map-fold-field-misses-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="Map-fold-field-misses"><label for="Map-fold-field-misses"><a href="../src/sync/map.go.html#line-67">misses</a> <i><a href="builtin.html#name-int">int</a></i></label><span id='Map-fold-field-misses-docs' class="fold-docs">
 <span class="md-text">				misses counts the number of loads since the read map was last updated that
 				needed to lock mu to determine whether the key was present.
 				
@@ -280,8 +283,8 @@
 				map, the dirty map will be promoted to the read map (in the unamended
 				state) and the next store to the map will make a new dirty copy.</span>
 </span></i></span><span class="hidden"><i>
-			<span class="nodocs"><a href="../src/sync/map.go.html#line-35">mu</a> <i><a href="#name-Mutex">Mutex</a></i></span></i></span><span class="hidden"><i>
-			<input type='checkbox' class="fold" id="Map-fold-field-read"><label for="Map-fold-field-read"><a href="../src/sync/map.go.html#line-46">read</a> <i><a href="sync/atomic.html">atomic</a>.<a href="sync/atomic.html#name-Value">Value</a></i></label><span id='Map-fold-field-read-docs' class="fold-docs">
+			<span class="nodocs"><a href="../src/sync/map.go.html#line-36">mu</a> <i><a href="#name-Mutex">Mutex</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Map-fold-field-read"><label for="Map-fold-field-read"><a href="../src/sync/map.go.html#line-47">read</a> <i><a href="sync/atomic.html">atomic</a>.<a href="sync/atomic.html#name-Pointer">Pointer</a>[<a href="#name-readOnly">readOnly</a>]</i></label><span id='Map-fold-field-read-docs' class="fold-docs">
 <span class="md-text">				read contains the portion of the map's contents that are safe for
 				concurrent access (with or without mu held).
 				
@@ -291,27 +294,38 @@
 				Entries stored in read may be updated concurrently without mu, but updating
 				a previously-expunged entry requires that the entry be copied to the dirty
 				map and unexpunged with mu held.</span>
-<span class="md-text">				// readOnly</span>
 </span></i></span></span>
-		<input type='checkbox' class="fold" id="Map-fold-methods"><label for="Map-fold-methods">Methods (<i>total 8, in which 6 are exported</i>)</label><span id='Map-fold-methods-items' class="fold-items"><span>
-			<input type='checkbox' class="fold" id="Map-fold-method-Delete"><label for="Map-fold-method-Delete">(*Map) <a href="../src/sync/map.go.html#line-300">Delete</a>(key <a href="builtin.html#name-any">any</a>)</label><span id='Map-fold-method-Delete-docs' class="fold-docs">
+		<input type='checkbox' class="fold" id="Map-fold-methods"><label for="Map-fold-methods">Methods (<i>total 12, in which 9 are exported</i>)</label><span id='Map-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Map-fold-method-CompareAndDelete"><label for="Map-fold-method-CompareAndDelete">(*Map) <a href="../src/sync/map.go.html#line-406">CompareAndDelete</a>(key, old <a href="builtin.html#name-any">any</a>) (deleted <a href="builtin.html#name-bool">bool</a>)</label><span id='Map-fold-method-CompareAndDelete-docs' class="fold-docs">
+<span class="md-text">				CompareAndDelete deletes the entry for key if its value is equal to old.
+				The old value must be of a comparable type.
+				
+				If there is no current value for key in the map, CompareAndDelete
+				returns false (even if the old value is the nil interface value).</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Map-fold-method-CompareAndSwap"><label for="Map-fold-method-CompareAndSwap">(*Map) <a href="../src/sync/map.go.html#line-374">CompareAndSwap</a>(key, old, new <a href="builtin.html#name-any">any</a>) <a href="builtin.html#name-bool">bool</a></label><span id='Map-fold-method-CompareAndSwap-docs' class="fold-docs">
+<span class="md-text">				CompareAndSwap swaps the old and new values for key
+				if the value stored in the map is equal to old.
+				The old value must be of a comparable type.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Map-fold-method-Delete"><label for="Map-fold-method-Delete">(*Map) <a href="../src/sync/map.go.html#line-296">Delete</a>(key <a href="builtin.html#name-any">any</a>)</label><span id='Map-fold-method-Delete-docs' class="fold-docs">
 <span class="md-text">				Delete deletes the value for a key.</span>
 </span></span><span>
-			<input type='checkbox' class="fold" id="Map-fold-method-Load"><label for="Map-fold-method-Load">(*Map) <a href="../src/sync/map.go.html#line-110">Load</a>(key <a href="builtin.html#name-any">any</a>) (value <a href="builtin.html#name-any">any</a>, ok <a href="builtin.html#name-bool">bool</a>)</label><span id='Map-fold-method-Load-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="Map-fold-method-Load"><label for="Map-fold-method-Load">(*Map) <a href="../src/sync/map.go.html#line-120">Load</a>(key <a href="builtin.html#name-any">any</a>) (value <a href="builtin.html#name-any">any</a>, ok <a href="builtin.html#name-bool">bool</a>)</label><span id='Map-fold-method-Load-docs' class="fold-docs">
 <span class="md-text">				Load returns the value stored in the map for a key, or nil if no
 				value is present.
 				The ok result indicates whether value was found in the map.</span>
 </span></span><span>
-			<input type='checkbox' class="fold" id="Map-fold-method-LoadAndDelete"><label for="Map-fold-method-LoadAndDelete">(*Map) <a href="../src/sync/map.go.html#line-276">LoadAndDelete</a>(key <a href="builtin.html#name-any">any</a>) (value <a href="builtin.html#name-any">any</a>, loaded <a href="builtin.html#name-bool">bool</a>)</label><span id='Map-fold-method-LoadAndDelete-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="Map-fold-method-LoadAndDelete"><label for="Map-fold-method-LoadAndDelete">(*Map) <a href="../src/sync/map.go.html#line-272">LoadAndDelete</a>(key <a href="builtin.html#name-any">any</a>) (value <a href="builtin.html#name-any">any</a>, loaded <a href="builtin.html#name-bool">bool</a>)</label><span id='Map-fold-method-LoadAndDelete-docs' class="fold-docs">
 <span class="md-text">				LoadAndDelete deletes the value for a key, returning the previous value if any.
 				The loaded result reports whether the key was present.</span>
 </span></span><span>
-			<input type='checkbox' class="fold" id="Map-fold-method-LoadOrStore"><label for="Map-fold-method-LoadOrStore">(*Map) <a href="../src/sync/map.go.html#line-207">LoadOrStore</a>(key, value <a href="builtin.html#name-any">any</a>) (actual <a href="builtin.html#name-any">any</a>, loaded <a href="builtin.html#name-bool">bool</a>)</label><span id='Map-fold-method-LoadOrStore-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="Map-fold-method-LoadOrStore"><label for="Map-fold-method-LoadOrStore">(*Map) <a href="../src/sync/map.go.html#line-203">LoadOrStore</a>(key, value <a href="builtin.html#name-any">any</a>) (actual <a href="builtin.html#name-any">any</a>, loaded <a href="builtin.html#name-bool">bool</a>)</label><span id='Map-fold-method-LoadOrStore-docs' class="fold-docs">
 <span class="md-text">				LoadOrStore returns the existing value for the key if present.
 				Otherwise, it stores and returns the given value.
 				The loaded result is true if the value was loaded, false if stored.</span>
 </span></span><span>
-			<input type='checkbox' class="fold" id="Map-fold-method-Range"><label for="Map-fold-method-Range">(*Map) <a href="../src/sync/map.go.html#line-327">Range</a>(f func(key, value <a href="builtin.html#name-any">any</a>) <a href="builtin.html#name-bool">bool</a>)</label><span id='Map-fold-method-Range-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="Map-fold-method-Range"><label for="Map-fold-method-Range">(*Map) <a href="../src/sync/map.go.html#line-449">Range</a>(f func(key, value <a href="builtin.html#name-any">any</a>) <a href="builtin.html#name-bool">bool</a>)</label><span id='Map-fold-method-Range-docs' class="fold-docs">
 <span class="md-text">				Range calls f sequentially for each key and value present in the map.
 				If f returns false, range stops the iteration.
 				
@@ -324,12 +338,17 @@
 				Range may be O(N) with the number of elements in the map even if f returns
 				false after a constant number of calls.</span>
 </span></span><span>
-			<input type='checkbox' class="fold" id="Map-fold-method-Store"><label for="Map-fold-method-Store">(*Map) <a href="../src/sync/map.go.html#line-144">Store</a>(key, value <a href="builtin.html#name-any">any</a>)</label><span id='Map-fold-method-Store-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="Map-fold-method-Store"><label for="Map-fold-method-Store">(*Map) <a href="../src/sync/map.go.html#line-154">Store</a>(key, value <a href="builtin.html#name-any">any</a>)</label><span id='Map-fold-method-Store-docs' class="fold-docs">
 <span class="md-text">				Store sets the value for a key.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Map-fold-method-Swap"><label for="Map-fold-method-Swap">(*Map) <a href="../src/sync/map.go.html#line-330">Swap</a>(key, value <a href="builtin.html#name-any">any</a>) (previous <a href="builtin.html#name-any">any</a>, loaded <a href="builtin.html#name-bool">bool</a>)</label><span id='Map-fold-method-Swap-docs' class="fold-docs">
+<span class="md-text">				Swap swaps the value for a key and returns the previous value if any.
+				The loaded result reports whether the key was present.</span>
 </span></span>
-			<input type='checkbox' class="showhide" id="Map-showhide-methods"><i><label for="Map-showhide-methods" class="show-inline">/* 2 unexporteds ... */</label><label for="Map-showhide-methods" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
-			<span class="nodocs">(*Map) <a href="../src/sync/map.go.html#line-370">dirtyLocked</a>()</span></i></span><span class="hidden"><i>
-			<span class="nodocs">(*Map) <a href="../src/sync/map.go.html#line-360">missLocked</a>()</span></i></span></span>
+			<input type='checkbox' class="showhide" id="Map-showhide-methods"><i><label for="Map-showhide-methods" class="show-inline">/* 3 unexporteds ... */</label><label for="Map-showhide-methods" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs">(*Map) <a href="../src/sync/map.go.html#line-492">dirtyLocked</a>()</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Map) <a href="../src/sync/map.go.html#line-110">loadReadOnly</a>() <a href="#name-readOnly">readOnly</a></span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Map) <a href="../src/sync/map.go.html#line-482">missLocked</a>()</span></i></span></span>
 		<input type='checkbox' class="fold" id="Map-fold-values"><label for="Map-fold-values">As Types Of (<i>total 6, none are exported</i>)</label><span id='Map-fold-values-items' class="fold-items">
 			<input type='checkbox' class="showhide" id="Map-showhide-values"><i><label for="Map-showhide-values" class="show-inline">/* 6 unexporteds ... */</label><label for="Map-showhide-values" class="hide-inline">/* 6 unexporteds: */</label></i><span class="hidden"><i>
 			  var encoding/binary.<a href="encoding/binary.html#name-structSize">structSize</a></i></span><span class="hidden"><i>
@@ -339,7 +358,7 @@
 			  var reflect.<a href="reflect.html#name-lookupCache">lookupCache</a></i></span><span class="hidden"><i>
 			  var reflect.<a href="reflect.html#name-ptrMap">ptrMap</a></i></span></span>
 
-</span></div><div class="anchor type-res" id="name-Mutex" data-popularity="305">	<input type='checkbox' class="fold" id="Mutex-fold-content"><label for="Mutex-fold-content"> type <a href="../src/sync/mutex.go.html#line-34">Mutex</a> <i>(struct)</i></label><span id='Mutex-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor type-res" id="name-Mutex" data-popularity="310">	<input type='checkbox' class="fold" id="Mutex-fold-content"><label for="Mutex-fold-content"> type <a href="../src/sync/mutex.go.html#line-34">Mutex</a> <i>(struct)</i></label><span id='Mutex-fold-content-docs' class="fold-docs">
 <span class="md-text">		A Mutex is a mutual exclusion lock.
 		The zero value for a Mutex is an unlocked mutex.
 		
@@ -382,9 +401,10 @@
 			<span class="nodocs">(*Mutex) <a href="../src/sync/mutex.go.html#line-227">unlockSlow</a>(new <a href="builtin.html#name-int32">int32</a>)</span></i></span></span>
 		<input type='checkbox' class="fold" id="Mutex-fold-impls"><label for="Mutex-fold-impls">Implements (<i>at least one exported</i>)</label><span id='Mutex-fold-impls-items' class="fold-items"><span>
 			*Mutex : <a href="#name-Locker">Locker</a></span></span>
-		<input type='checkbox' class="fold" id="Mutex-fold-values"><label for="Mutex-fold-values">As Types Of (<i>only one, which is unexported</i>)</label><span id='Mutex-fold-values-items' class="fold-items">
-			<input type='checkbox' class="showhide" id="Mutex-showhide-values"><i><label for="Mutex-showhide-values" class="show-inline">/* one unexported ... */</label><label for="Mutex-showhide-values" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
-			  var <a href="#name-allPoolsMu">allPoolsMu</a></i></span></span>
+		<input type='checkbox' class="fold" id="Mutex-fold-values"><label for="Mutex-fold-values">As Types Of (<i>total 2, neither is exported</i>)</label><span id='Mutex-fold-values-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Mutex-showhide-values"><i><label for="Mutex-showhide-values" class="show-inline">/* 2 unexporteds ... */</label><label for="Mutex-showhide-values" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			  var <a href="#name-allPoolsMu">allPoolsMu</a></i></span><span class="hidden"><i>
+			  var reflect.<a href="reflect.html#name-funcTypesMutex">funcTypesMutex</a></i></span></span>
 
 </span></div><div class="anchor type-res" id="name-Once" data-popularity="115">	<input type='checkbox' class="fold" id="Once-fold-content"><label for="Once-fold-content"> type <a href="../src/sync/once.go.html#line-18">Once</a> <i>(struct)</i></label><span id='Once-fold-content-docs' class="fold-docs">
 <span class="md-text">		Once is an object that will perform exactly one action.
@@ -430,11 +450,12 @@
 </span></span>
 			<input type='checkbox' class="showhide" id="Once-showhide-methods"><i><label for="Once-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="Once-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
 			<span class="nodocs">(*Once) <a href="../src/sync/once.go.html#line-69">doSlow</a>(f func())</span></i></span></span>
-		<input type='checkbox' class="fold" id="Once-fold-values"><label for="Once-fold-values">As Types Of (<i>total 4, none are exported</i>)</label><span id='Once-fold-values-items' class="fold-items">
-			<input type='checkbox' class="showhide" id="Once-showhide-values"><i><label for="Once-showhide-values" class="show-inline">/* 4 unexporteds ... */</label><label for="Once-showhide-values" class="hide-inline">/* 4 unexporteds: */</label></i><span class="hidden"><i>
+		<input type='checkbox' class="fold" id="Once-fold-values"><label for="Once-fold-values">As Types Of (<i>total 5, none are exported</i>)</label><span id='Once-fold-values-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Once-showhide-values"><i><label for="Once-showhide-values" class="show-inline">/* 5 unexporteds ... */</label><label for="Once-showhide-values" class="hide-inline">/* 5 unexporteds: */</label></i><span class="hidden"><i>
 			  var internal/poll.<a href="internal/poll.html#name-serverInit">serverInit</a></i></span><span class="hidden"><i>
 			  var syscall.<a href="syscall.html#name-envOnce">envOnce</a></i></span><span class="hidden"><i>
 			  var time.<a href="time.html#name-localOnce">localOnce</a></i></span><span class="hidden"><i>
+			  var time.<a href="time.html#name-unnamedFixedZonesOnce">unnamedFixedZonesOnce</a></i></span><span class="hidden"><i>
 			  var time.<a href="time.html#name-zoneinfoOnce">zoneinfoOnce</a></i></span></span>
 
 </span></div><div class="anchor type-res" id="name-Pool" data-popularity="340">	<input type='checkbox' class="fold" id="Pool-fold-content"><label for="Pool-fold-content"> type <a href="../src/sync/pool.go.html#line-49">Pool</a> <i>(struct)</i></label><span id='Pool-fold-content-docs' class="fold-docs">
@@ -518,7 +539,7 @@
 			<span class="nodocs">(*Pool) <a href="../src/sync/pool.go.html#line-212">pinSlow</a>() (*<a href="#name-poolLocal">poolLocal</a>, <a href="builtin.html#name-int">int</a>)</span></i></span></span>
 		<input type='checkbox' class="fold" id="Pool-fold-results"><label for="Pool-fold-results">As Outputs Of (<i>at least one unexported</i>)</label><span id='Pool-fold-results-items' class="fold-items">
 			<input type='checkbox' class="showhide" id="Pool-showhide-inputofs"><i><label for="Pool-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="Pool-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
-			func reflect.<a href="reflect.html#name-funcLayout">funcLayout</a>(t *<a href="reflect.html">reflect</a>.<a href="reflect.html#name-funcType">funcType</a>, rcvr *<a href="reflect.html">reflect</a>.<a href="reflect.html#name-rtype">rtype</a>) (frametype *<a href="reflect.html">reflect</a>.<a href="reflect.html#name-rtype">rtype</a>, framePool *<b>Pool</b>, abid <a href="reflect.html">reflect</a>.<a href="reflect.html#name-abiDesc">abiDesc</a>)</i></span></span>
+			func reflect.<a href="reflect.html#name-funcLayout">funcLayout</a>(t *<a href="reflect.html">reflect</a>.<a href="reflect.html#name-funcType">funcType</a>, rcvr *<a href="internal/abi.html">abi</a>.<a href="internal/abi.html#name-Type">Type</a>) (frametype *<a href="internal/abi.html">abi</a>.<a href="internal/abi.html#name-Type">Type</a>, framePool *<b>Pool</b>, abid <a href="reflect.html">reflect</a>.<a href="reflect.html#name-abiDesc">abiDesc</a>)</i></span></span>
 		<input type='checkbox' class="fold" id="Pool-fold-values"><label for="Pool-fold-values">As Types Of (<i>total 5, none are exported</i>)</label><span id='Pool-fold-values-items' class="fold-items">
 			<input type='checkbox' class="showhide" id="Pool-showhide-values"><i><label for="Pool-showhide-values" class="show-inline">/* 5 unexporteds ... */</label><label for="Pool-showhide-values" class="hide-inline">/* 5 unexporteds: */</label></i><span class="hidden"><i>
 			  var encoding/json.<a href="encoding/json.html#name-encodeStatePool">encodeStatePool</a></i></span><span class="hidden"><i>
@@ -527,7 +548,7 @@
 			  var fmt.<a href="fmt.html#name-ssFree">ssFree</a></i></span><span class="hidden"><i>
 			  var io.<a href="io.html#name-blackHolePool">blackHolePool</a></i></span></span>
 
-</span></div><div class="anchor type-res" id="name-RWMutex" data-popularity="460">	<input type='checkbox' class="fold" id="RWMutex-fold-content"><label for="RWMutex-fold-content"> type <a href="../src/sync/rwmutex.go.html#line-36">RWMutex</a> <i>(struct)</i></label><span id='RWMutex-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor type-res" id="name-RWMutex" data-popularity="495">	<input type='checkbox' class="fold" id="RWMutex-fold-content"><label for="RWMutex-fold-content"> type <a href="../src/sync/rwmutex.go.html#line-36">RWMutex</a> <i>(struct)</i></label><span id='RWMutex-fold-content-docs' class="fold-docs">
 <span class="md-text">		A RWMutex is a reader/writer mutual exclusion lock.
 		The lock can be held by an arbitrary number of readers or a single writer.
 		The zero value for a RWMutex is an unlocked mutex.
@@ -551,13 +572,13 @@
 
 		<input type='checkbox' class="fold" id="RWMutex-fold-fields"><label for="RWMutex-fold-fields">Fields (<i>total 5, none are exported</i>)</label><span id='RWMutex-fold-fields-items' class="fold-items">
 			<input type='checkbox' class="showhide" id="RWMutex-showhide-fields"><i><label for="RWMutex-showhide-fields" class="show-inline">/* 5 unexporteds ... */</label><label for="RWMutex-showhide-fields" class="hide-inline">/* 5 unexporteds: */</label></i><span class="hidden"><i>
-			<input type='checkbox' class="fold" id="RWMutex-fold-field-readerCount"><label for="RWMutex-fold-field-readerCount"><a href="../src/sync/rwmutex.go.html#line-40">readerCount</a> <i><a href="builtin.html#name-int32">int32</a></i></label><span id='RWMutex-fold-field-readerCount-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="RWMutex-fold-field-readerCount"><label for="RWMutex-fold-field-readerCount"><a href="../src/sync/rwmutex.go.html#line-40">readerCount</a> <i><a href="sync/atomic.html">atomic</a>.<a href="sync/atomic.html#name-Int32">Int32</a></i></label><span id='RWMutex-fold-field-readerCount-docs' class="fold-docs">
 <span class="md-text">				// number of pending readers</span>
 </span></i></span><span class="hidden"><i>
 			<input type='checkbox' class="fold" id="RWMutex-fold-field-readerSem"><label for="RWMutex-fold-field-readerSem"><a href="../src/sync/rwmutex.go.html#line-39">readerSem</a> <i><a href="builtin.html#name-uint32">uint32</a></i></label><span id='RWMutex-fold-field-readerSem-docs' class="fold-docs">
 <span class="md-text">				// semaphore for readers to wait for completing writers</span>
 </span></i></span><span class="hidden"><i>
-			<input type='checkbox' class="fold" id="RWMutex-fold-field-readerWait"><label for="RWMutex-fold-field-readerWait"><a href="../src/sync/rwmutex.go.html#line-41">readerWait</a> <i><a href="builtin.html#name-int32">int32</a></i></label><span id='RWMutex-fold-field-readerWait-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="RWMutex-fold-field-readerWait"><label for="RWMutex-fold-field-readerWait"><a href="../src/sync/rwmutex.go.html#line-41">readerWait</a> <i><a href="sync/atomic.html">atomic</a>.<a href="sync/atomic.html#name-Int32">Int32</a></i></label><span id='RWMutex-fold-field-readerWait-docs' class="fold-docs">
 <span class="md-text">				// number of departing readers</span>
 </span></i></span><span class="hidden"><i>
 			<input type='checkbox' class="fold" id="RWMutex-fold-field-w"><label for="RWMutex-fold-field-w"><a href="../src/sync/rwmutex.go.html#line-37">w</a> <i><a href="#name-Mutex">Mutex</a></i></label><span id='RWMutex-fold-field-w-docs' class="fold-docs">
@@ -579,7 +600,7 @@
 				call excludes new readers from acquiring the lock. See the
 				documentation on the RWMutex type.</span>
 </span></span><span>
-			<input type='checkbox' class="fold" id="RWMutex-fold-method-RLocker"><label for="RWMutex-fold-method-RLocker">(*RWMutex) <a href="../src/sync/rwmutex.go.html#line-224">RLocker</a>() <a href="#name-Locker">Locker</a></label><span id='RWMutex-fold-method-RLocker-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="RWMutex-fold-method-RLocker"><label for="RWMutex-fold-method-RLocker">(*RWMutex) <a href="../src/sync/rwmutex.go.html#line-237">RLocker</a>() <a href="#name-Locker">Locker</a></label><span id='RWMutex-fold-method-RLocker-docs' class="fold-docs">
 <span class="md-text">				RLocker returns a Locker interface that implements
 				the Lock and Unlock methods by calling rw.RLock and rw.RUnlock.</span>
 </span></span><span>
@@ -615,12 +636,15 @@
 			<span class="nodocs">(*RWMutex) <a href="../src/sync/rwmutex.go.html#line-126">rUnlockSlow</a>(r <a href="builtin.html#name-int32">int32</a>)</span></i></span></span>
 		<input type='checkbox' class="fold" id="RWMutex-fold-impls"><label for="RWMutex-fold-impls">Implements (<i>at least one exported</i>)</label><span id='RWMutex-fold-impls-items' class="fold-items"><span>
 			*RWMutex : <a href="#name-Locker">Locker</a></span></span>
+		<input type='checkbox' class="fold" id="RWMutex-fold-params"><label for="RWMutex-fold-params">As Inputs Of (<i>at least one unexported</i>)</label><span id='RWMutex-fold-params-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="RWMutex-showhide-outputofs"><i><label for="RWMutex-showhide-outputofs" class="show-inline">/* at least one unexported ... */</label><label for="RWMutex-showhide-outputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-syscall_hasWaitingReaders">syscall_hasWaitingReaders</a>(rw *<b>RWMutex</b>) <a href="builtin.html#name-bool">bool</a></i></span></span>
 		<input type='checkbox' class="fold" id="RWMutex-fold-values"><label for="RWMutex-fold-values">As Types Of (<i>total 2, in which 1 is exported</i>)</label><span id='RWMutex-fold-values-items' class="fold-items"><span>
 			  var syscall.<a href="syscall.html#name-ForkLock">ForkLock</a></span>
 			<input type='checkbox' class="showhide" id="RWMutex-showhide-values"><i><label for="RWMutex-showhide-values" class="show-inline">/* one unexported ... */</label><label for="RWMutex-showhide-values" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
 			  var syscall.<a href="syscall.html#name-envLock">envLock</a></i></span></span>
 
-</span></div><div class="anchor type-res" id="name-WaitGroup" data-popularity="200">	<input type='checkbox' class="fold" id="WaitGroup-fold-content"><label for="WaitGroup-fold-content"> type <a href="../src/sync/waitgroup.go.html#line-23">WaitGroup</a> <i>(struct)</i></label><span id='WaitGroup-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor type-res" id="name-WaitGroup" data-popularity="150">	<input type='checkbox' class="fold" id="WaitGroup-fold-content"><label for="WaitGroup-fold-content"> type <a href="../src/sync/waitgroup.go.html#line-23">WaitGroup</a> <i>(struct)</i></label><span id='WaitGroup-fold-content-docs' class="fold-docs">
 <span class="md-text">		A WaitGroup waits for a collection of goroutines to finish.
 		The main goroutine calls Add to set the number of
 		goroutines to wait for. Then each of the goroutines
@@ -635,17 +659,12 @@
 		<input type='checkbox' class="fold" id="WaitGroup-fold-fields"><label for="WaitGroup-fold-fields">Fields (<i>total 3, none are exported</i>)</label><span id='WaitGroup-fold-fields-items' class="fold-items">
 			<input type='checkbox' class="showhide" id="WaitGroup-showhide-fields"><i><label for="WaitGroup-showhide-fields" class="show-inline">/* 3 unexporteds ... */</label><label for="WaitGroup-showhide-fields" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
 			<span class="nodocs"><a href="../src/sync/waitgroup.go.html#line-24">noCopy</a> <i><a href="#name-noCopy">noCopy</a></i></span></i></span><span class="hidden"><i>
-			<input type='checkbox' class="fold" id="WaitGroup-fold-field-state1"><label for="WaitGroup-fold-field-state1"><a href="../src/sync/waitgroup.go.html#line-32">state1</a> <i><a href="builtin.html#name-uint64">uint64</a></i></label><span id='WaitGroup-fold-field-state1-docs' class="fold-docs">
-<span class="md-text">				64-bit value: high 32 bits are counter, low 32 bits are waiter count.
-				64-bit atomic operations require 64-bit alignment, but 32-bit
-				compilers only guarantee that 64-bit fields are 32-bit aligned.
-				For this reason on 32 bit architectures we need to check in state()
-				if state1 is aligned or not, and dynamically "swap" the field order if
-				needed.</span>
-</span></i></span><span class="hidden"><i>
-			<span class="nodocs"><a href="../src/sync/waitgroup.go.html#line-33">state2</a> <i><a href="builtin.html#name-uint32">uint32</a></i></span></i></span></span>
-		<input type='checkbox' class="fold" id="WaitGroup-fold-methods"><label for="WaitGroup-fold-methods">Methods (<i>total 4, in which 3 are exported</i>)</label><span id='WaitGroup-fold-methods-items' class="fold-items"><span>
-			<input type='checkbox' class="fold" id="WaitGroup-fold-method-Add"><label for="WaitGroup-fold-method-Add">(*WaitGroup) <a href="../src/sync/waitgroup.go.html#line-62">Add</a>(delta <a href="builtin.html#name-int">int</a>)</label><span id='WaitGroup-fold-method-Add-docs' class="fold-docs">
+			<span class="nodocs"><a href="../src/sync/waitgroup.go.html#line-27">sema</a> <i><a href="builtin.html#name-uint32">uint32</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="WaitGroup-fold-field-state"><label for="WaitGroup-fold-field-state"><a href="../src/sync/waitgroup.go.html#line-26">state</a> <i><a href="sync/atomic.html">atomic</a>.<a href="sync/atomic.html#name-Uint64">Uint64</a></i></label><span id='WaitGroup-fold-field-state-docs' class="fold-docs">
+<span class="md-text">				// high 32 bits are counter, low 32 bits are waiter count.</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="WaitGroup-fold-methods"><label for="WaitGroup-fold-methods">Methods (<i>total 3, all are exported</i>)</label><span id='WaitGroup-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="WaitGroup-fold-method-Add"><label for="WaitGroup-fold-method-Add">(*WaitGroup) <a href="../src/sync/waitgroup.go.html#line-43">Add</a>(delta <a href="builtin.html#name-int">int</a>)</label><span id='WaitGroup-fold-method-Add-docs' class="fold-docs">
 <span class="md-text">				Add adds delta, which may be negative, to the WaitGroup counter.
 				If the counter becomes zero, all goroutines blocked on Wait are released.
 				If the counter goes negative, Add panics.
@@ -660,16 +679,12 @@
 				new Add calls must happen after all previous Wait calls have returned.
 				See the WaitGroup example.</span>
 </span></span><span>
-			<input type='checkbox' class="fold" id="WaitGroup-fold-method-Done"><label for="WaitGroup-fold-method-Done">(*WaitGroup) <a href="../src/sync/waitgroup.go.html#line-107">Done</a>()</label><span id='WaitGroup-fold-method-Done-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="WaitGroup-fold-method-Done"><label for="WaitGroup-fold-method-Done">(*WaitGroup) <a href="../src/sync/waitgroup.go.html#line-86">Done</a>()</label><span id='WaitGroup-fold-method-Done-docs' class="fold-docs">
 <span class="md-text">				Done decrements the WaitGroup counter by one.</span>
 </span></span><span>
-			<input type='checkbox' class="fold" id="WaitGroup-fold-method-Wait"><label for="WaitGroup-fold-method-Wait">(*WaitGroup) <a href="../src/sync/waitgroup.go.html#line-112">Wait</a>()</label><span id='WaitGroup-fold-method-Wait-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="WaitGroup-fold-method-Wait"><label for="WaitGroup-fold-method-Wait">(*WaitGroup) <a href="../src/sync/waitgroup.go.html#line-91">Wait</a>()</label><span id='WaitGroup-fold-method-Wait-docs' class="fold-docs">
 <span class="md-text">				Wait blocks until the WaitGroup counter is zero.</span>
-</span></span>
-			<input type='checkbox' class="showhide" id="WaitGroup-showhide-methods"><i><label for="WaitGroup-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="WaitGroup-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
-			<input type='checkbox' class="fold" id="WaitGroup-fold-method-state"><label for="WaitGroup-fold-method-state">(*WaitGroup) <a href="../src/sync/waitgroup.go.html#line-37">state</a>() (statep *<a href="builtin.html#name-uint64">uint64</a>, semap *<a href="builtin.html#name-uint32">uint32</a>)</label><span id='WaitGroup-fold-method-state-docs' class="fold-docs">
-<span class="md-text">				state returns pointers to the state and sema fields stored within wg.state*.</span>
-</span></i></span></span>
+</span></span></span>
 
 </span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 13 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 13 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-copyChecker" data-popularity="50">	<input type='checkbox' class="fold" id="copyChecker-fold-content"><label for="copyChecker-fold-content"> type <a href="../src/sync/cond.go.html#line-96">copyChecker</a> <a href="builtin.html#name-uintptr">uintptr</a> <i>(basic type)</i></label><span id='copyChecker-fold-content-docs' class="fold-docs">
 <span class="md-text">		copyChecker holds back pointer to itself to detect object copying.</span>
@@ -690,12 +705,12 @@
 			<span class="nodocs"><a href="../src/sync/poolqueue.go.html#line-48">typ</a> <i><a href="unsafe.html">unsafe</a>.<a href="unsafe.html#name-Pointer">Pointer</a></i></span></i></span><span class="hidden"><i>
 			<span class="nodocs"><a href="../src/sync/poolqueue.go.html#line-48">val</a> <i><a href="unsafe.html">unsafe</a>.<a href="unsafe.html#name-Pointer">Pointer</a></i></span></i></span></span>
 
-</span></div><div class="anchor type-res hidden" id="name-entry" data-popularity="425">	<input type='checkbox' class="fold" id="entry-fold-content"><label for="entry-fold-content"> type <a href="../src/sync/map.go.html#line-80">entry</a> <i>(struct)</i></label><span id='entry-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor type-res hidden" id="name-entry" data-popularity="475">	<input type='checkbox' class="fold" id="entry-fold-content"><label for="entry-fold-content"> type <a href="../src/sync/map.go.html#line-81">entry</a> <i>(struct)</i></label><span id='entry-fold-content-docs' class="fold-docs">
 <span class="md-text">		An entry is a slot in the map corresponding to a particular key.</span>
 
 		<input type='checkbox' class="fold" id="entry-fold-fields"><label for="entry-fold-fields">Fields (<i>only one, which is unexported</i>)</label><span id='entry-fold-fields-items' class="fold-items">
 			<input type='checkbox' checked class="showhide" id="entry-showhide-fields"><i><label for="entry-showhide-fields" class="show-inline">/* one unexported ... */</label><label for="entry-showhide-fields" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
-			<input type='checkbox' class="fold" id="entry-fold-field-p"><label for="entry-fold-field-p"><a href="../src/sync/map.go.html#line-100">p</a> <i><a href="unsafe.html">unsafe</a>.<a href="unsafe.html#name-Pointer">Pointer</a></i></label><span id='entry-fold-field-p-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="entry-fold-field-p"><label for="entry-fold-field-p"><a href="../src/sync/map.go.html#line-101">p</a> <i><a href="sync/atomic.html">atomic</a>.<a href="sync/atomic.html#name-Pointer">Pointer</a>[<a href="builtin.html#name-any">any</a>]</i></label><span id='entry-fold-field-p-docs' class="fold-docs">
 <span class="md-text">				p points to the interface{} value stored for the entry.
 				
 				If p == nil, the entry has been deleted, and either m.dirty == nil or
@@ -715,32 +730,39 @@
 				p != expunged. If p == expunged, an entry's associated value can be updated
 				only after first setting m.dirty[key] = e so that lookups using the dirty
 				map find the entry.</span>
-<span class="md-text">				// *interface{}</span>
 </span></i></span></span>
-		<input type='checkbox' class="fold" id="entry-fold-methods"><label for="entry-fold-methods">Methods (<i>total 7, none are exported</i>)</label><span id='entry-fold-methods-items' class="fold-items">
-			<input type='checkbox' checked class="showhide" id="entry-showhide-methods"><i><label for="entry-showhide-methods" class="show-inline">/* 7 unexporteds ... */</label><label for="entry-showhide-methods" class="hide-inline">/* 7 unexporteds: */</label></i><span class="hidden"><i>
-			<span class="nodocs">(*entry) <a href="../src/sync/map.go.html#line-304">delete</a>() (value <a href="builtin.html#name-any">any</a>, ok <a href="builtin.html#name-bool">bool</a>)</span></i></span><span class="hidden"><i>
-			<span class="nodocs">(*entry) <a href="../src/sync/map.go.html#line-135">load</a>() (value <a href="builtin.html#name-any">any</a>, ok <a href="builtin.html#name-bool">bool</a>)</span></i></span><span class="hidden"><i>
-			<input type='checkbox' class="fold" id="entry-fold-method-storeLocked"><label for="entry-fold-method-storeLocked">(*entry) <a href="../src/sync/map.go.html#line-200">storeLocked</a>(i *<a href="builtin.html#name-any">any</a>)</label><span id='entry-fold-method-storeLocked-docs' class="fold-docs">
-<span class="md-text">				storeLocked unconditionally stores a value to the entry.
+		<input type='checkbox' class="fold" id="entry-fold-methods"><label for="entry-fold-methods">Methods (<i>total 8, none are exported</i>)</label><span id='entry-fold-methods-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="entry-showhide-methods"><i><label for="entry-showhide-methods" class="show-inline">/* 8 unexporteds ... */</label><label for="entry-showhide-methods" class="hide-inline">/* 8 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs">(*entry) <a href="../src/sync/map.go.html#line-300">delete</a>() (value <a href="builtin.html#name-any">any</a>, ok <a href="builtin.html#name-bool">bool</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*entry) <a href="../src/sync/map.go.html#line-145">load</a>() (value <a href="builtin.html#name-any">any</a>, ok <a href="builtin.html#name-bool">bool</a>)</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="entry-fold-method-swapLocked"><label for="entry-fold-method-swapLocked">(*entry) <a href="../src/sync/map.go.html#line-196">swapLocked</a>(i *<a href="builtin.html#name-any">any</a>) *<a href="builtin.html#name-any">any</a></label><span id='entry-fold-method-swapLocked-docs' class="fold-docs">
+<span class="md-text">				swapLocked unconditionally swaps a value into the entry.
 				
 				The entry must be known not to be expunged.</span>
 </span></i></span><span class="hidden"><i>
-			<span class="nodocs">(*entry) <a href="../src/sync/map.go.html#line-384">tryExpungeLocked</a>() (isExpunged <a href="builtin.html#name-bool">bool</a>)</span></i></span><span class="hidden"><i>
-			<input type='checkbox' class="fold" id="entry-fold-method-tryLoadOrStore"><label for="entry-fold-method-tryLoadOrStore">(*entry) <a href="../src/sync/map.go.html#line-247">tryLoadOrStore</a>(i <a href="builtin.html#name-any">any</a>) (actual <a href="builtin.html#name-any">any</a>, loaded, ok <a href="builtin.html#name-bool">bool</a>)</label><span id='entry-fold-method-tryLoadOrStore-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="entry-fold-method-tryCompareAndSwap"><label for="entry-fold-method-tryCompareAndSwap">(*entry) <a href="../src/sync/map.go.html#line-164">tryCompareAndSwap</a>(old, new <a href="builtin.html#name-any">any</a>) <a href="builtin.html#name-bool">bool</a></label><span id='entry-fold-method-tryCompareAndSwap-docs' class="fold-docs">
+<span class="md-text">				tryCompareAndSwap compare the entry with the given old value and swaps
+				it with a new value if the entry is equal to the old value, and the entry
+				has not been expunged.
+				
+				If the entry is expunged, tryCompareAndSwap returns false and leaves
+				the entry unchanged.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*entry) <a href="../src/sync/map.go.html#line-506">tryExpungeLocked</a>() (isExpunged <a href="builtin.html#name-bool">bool</a>)</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="entry-fold-method-tryLoadOrStore"><label for="entry-fold-method-tryLoadOrStore">(*entry) <a href="../src/sync/map.go.html#line-243">tryLoadOrStore</a>(i <a href="builtin.html#name-any">any</a>) (actual <a href="builtin.html#name-any">any</a>, loaded, ok <a href="builtin.html#name-bool">bool</a>)</label><span id='entry-fold-method-tryLoadOrStore-docs' class="fold-docs">
 <span class="md-text">				tryLoadOrStore atomically loads or stores a value if the entry is not
 				expunged.
 				
 				If the entry is expunged, tryLoadOrStore leaves the entry unchanged and
 				returns with ok==false.</span>
 </span></i></span><span class="hidden"><i>
-			<input type='checkbox' class="fold" id="entry-fold-method-tryStore"><label for="entry-fold-method-tryStore">(*entry) <a href="../src/sync/map.go.html#line-177">tryStore</a>(i *<a href="builtin.html#name-any">any</a>) <a href="builtin.html#name-bool">bool</a></label><span id='entry-fold-method-tryStore-docs' class="fold-docs">
-<span class="md-text">				tryStore stores a value if the entry has not been expunged.
+			<input type='checkbox' class="fold" id="entry-fold-method-trySwap"><label for="entry-fold-method-trySwap">(*entry) <a href="../src/sync/map.go.html#line-316">trySwap</a>(i *<a href="builtin.html#name-any">any</a>) (*<a href="builtin.html#name-any">any</a>, <a href="builtin.html#name-bool">bool</a>)</label><span id='entry-fold-method-trySwap-docs' class="fold-docs">
+<span class="md-text">				trySwap swaps a value if the entry has not been expunged.
 				
-				If the entry is expunged, tryStore returns false and leaves the entry
+				If the entry is expunged, trySwap returns false and leaves the entry
 				unchanged.</span>
 </span></i></span><span class="hidden"><i>
-			<input type='checkbox' class="fold" id="entry-fold-method-unexpungeLocked"><label for="entry-fold-method-unexpungeLocked">(*entry) <a href="../src/sync/map.go.html#line-193">unexpungeLocked</a>() (wasExpunged <a href="builtin.html#name-bool">bool</a>)</label><span id='entry-fold-method-unexpungeLocked-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="entry-fold-method-unexpungeLocked"><label for="entry-fold-method-unexpungeLocked">(*entry) <a href="../src/sync/map.go.html#line-189">unexpungeLocked</a>() (wasExpunged <a href="builtin.html#name-bool">bool</a>)</label><span id='entry-fold-method-unexpungeLocked-docs' class="fold-docs">
 <span class="md-text">				unexpungeLocked ensures that the entry is not marked as expunged.
 				
 				If the entry was previously expunged, it must be added to the dirty map
@@ -983,27 +1005,30 @@
 <span class="md-text">				// Local P can pushHead/popHead; any P can popTail.</span>
 </span></i></span></span>
 
-</span></div><div class="anchor type-res hidden" id="name-readOnly" data-popularity="0">	<input type='checkbox' class="fold" id="readOnly-fold-content"><label for="readOnly-fold-content"> type <a href="../src/sync/map.go.html#line-70">readOnly</a> <i>(struct)</i></label><span id='readOnly-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor type-res hidden" id="name-readOnly" data-popularity="75">	<input type='checkbox' class="fold" id="readOnly-fold-content"><label for="readOnly-fold-content"> type <a href="../src/sync/map.go.html#line-71">readOnly</a> <i>(struct)</i></label><span id='readOnly-fold-content-docs' class="fold-docs">
 <span class="md-text">		readOnly is an immutable struct stored atomically in the Map.read field.</span>
 
 		<input type='checkbox' class="fold" id="readOnly-fold-fields"><label for="readOnly-fold-fields">Fields (<i>total 2, neither is exported</i>)</label><span id='readOnly-fold-fields-items' class="fold-items">
 			<input type='checkbox' checked class="showhide" id="readOnly-showhide-fields"><i><label for="readOnly-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="readOnly-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
-			<input type='checkbox' class="fold" id="readOnly-fold-field-amended"><label for="readOnly-fold-field-amended"><a href="../src/sync/map.go.html#line-72">amended</a> <i><a href="builtin.html#name-bool">bool</a></i></label><span id='readOnly-fold-field-amended-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="readOnly-fold-field-amended"><label for="readOnly-fold-field-amended"><a href="../src/sync/map.go.html#line-73">amended</a> <i><a href="builtin.html#name-bool">bool</a></i></label><span id='readOnly-fold-field-amended-docs' class="fold-docs">
 <span class="md-text">				// true if the dirty map contains some key not in m.</span>
 </span></i></span><span class="hidden"><i>
-			<span class="nodocs"><a href="../src/sync/map.go.html#line-71">m</a> <i>map[<a href="builtin.html#name-any">any</a>]*<a href="#name-entry">entry</a></i></span></i></span></span>
+			<span class="nodocs"><a href="../src/sync/map.go.html#line-72">m</a> <i>map[<a href="builtin.html#name-any">any</a>]*<a href="#name-entry">entry</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="readOnly-fold-results"><label for="readOnly-fold-results">As Outputs Of (<i>at least one unexported</i>)</label><span id='readOnly-fold-results-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="readOnly-showhide-inputofs"><i><label for="readOnly-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="readOnly-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func (*<a href="#name-Map">Map</a>).<a href="../src/sync/map.go.html#line-110">loadReadOnly</a>() <b>readOnly</b></i></span></span>
 
-</span></div><div class="anchor type-res hidden" id="name-rlocker" data-popularity="150">	<input type='checkbox' class="fold" id="rlocker-fold-content"><label for="rlocker-fold-content"> type <a href="../src/sync/rwmutex.go.html#line-228">rlocker</a> <a href="#name-RWMutex">RWMutex</a> <i>(struct)</i></label><span id='rlocker-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor type-res hidden" id="name-rlocker" data-popularity="150">	<input type='checkbox' class="fold" id="rlocker-fold-content"><label for="rlocker-fold-content"> type <a href="../src/sync/rwmutex.go.html#line-241">rlocker</a> <a href="#name-RWMutex">RWMutex</a> <i>(struct)</i></label><span id='rlocker-fold-content-docs' class="fold-docs">
 
 		<input type='checkbox' class="fold" id="rlocker-fold-fields"><label for="rlocker-fold-fields">Fields (<i>total 5, none are exported</i>)</label><span id='rlocker-fold-fields-items' class="fold-items">
 			<input type='checkbox' checked class="showhide" id="rlocker-showhide-fields"><i><label for="rlocker-showhide-fields" class="show-inline">/* 5 unexporteds ... */</label><label for="rlocker-showhide-fields" class="hide-inline">/* 5 unexporteds: */</label></i><span class="hidden"><i>
-			<input type='checkbox' class="fold" id="rlocker-fold-field-readerCount"><label for="rlocker-fold-field-readerCount"><a href="../src/sync/rwmutex.go.html#line-40">readerCount</a> <i><a href="builtin.html#name-int32">int32</a></i></label><span id='rlocker-fold-field-readerCount-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="rlocker-fold-field-readerCount"><label for="rlocker-fold-field-readerCount"><a href="../src/sync/rwmutex.go.html#line-40">readerCount</a> <i><a href="sync/atomic.html">atomic</a>.<a href="sync/atomic.html#name-Int32">Int32</a></i></label><span id='rlocker-fold-field-readerCount-docs' class="fold-docs">
 <span class="md-text">				// number of pending readers</span>
 </span></i></span><span class="hidden"><i>
 			<input type='checkbox' class="fold" id="rlocker-fold-field-readerSem"><label for="rlocker-fold-field-readerSem"><a href="../src/sync/rwmutex.go.html#line-39">readerSem</a> <i><a href="builtin.html#name-uint32">uint32</a></i></label><span id='rlocker-fold-field-readerSem-docs' class="fold-docs">
 <span class="md-text">				// semaphore for readers to wait for completing writers</span>
 </span></i></span><span class="hidden"><i>
-			<input type='checkbox' class="fold" id="rlocker-fold-field-readerWait"><label for="rlocker-fold-field-readerWait"><a href="../src/sync/rwmutex.go.html#line-41">readerWait</a> <i><a href="builtin.html#name-int32">int32</a></i></label><span id='rlocker-fold-field-readerWait-docs' class="fold-docs">
+			<input type='checkbox' class="fold" id="rlocker-fold-field-readerWait"><label for="rlocker-fold-field-readerWait"><a href="../src/sync/rwmutex.go.html#line-41">readerWait</a> <i><a href="sync/atomic.html">atomic</a>.<a href="sync/atomic.html#name-Int32">Int32</a></i></label><span id='rlocker-fold-field-readerWait-docs' class="fold-docs">
 <span class="md-text">				// number of departing readers</span>
 </span></i></span><span class="hidden"><i>
 			<input type='checkbox' class="fold" id="rlocker-fold-field-w"><label for="rlocker-fold-field-w"><a href="../src/sync/rwmutex.go.html#line-37">w</a> <i><a href="#name-Mutex">Mutex</a></i></label><span id='rlocker-fold-field-w-docs' class="fold-docs">
@@ -1013,47 +1038,74 @@
 <span class="md-text">				// semaphore for writers to wait for completing readers</span>
 </span></i></span></span>
 		<input type='checkbox' class="fold" id="rlocker-fold-methods"><label for="rlocker-fold-methods">Methods (<i>total 2, both are exported</i>)</label><span id='rlocker-fold-methods-items' class="fold-items"><span>
-			<span class="nodocs">(*rlocker) <a href="../src/sync/rwmutex.go.html#line-230">Lock</a>()</span></span><span>
-			<span class="nodocs">(*rlocker) <a href="../src/sync/rwmutex.go.html#line-231">Unlock</a>()</span></span></span>
+			<span class="nodocs">(*rlocker) <a href="../src/sync/rwmutex.go.html#line-243">Lock</a>()</span></span><span>
+			<span class="nodocs">(*rlocker) <a href="../src/sync/rwmutex.go.html#line-244">Unlock</a>()</span></span></span>
 		<input type='checkbox' class="fold" id="rlocker-fold-impls"><label for="rlocker-fold-impls">Implements (<i>at least one exported</i>)</label><span id='rlocker-fold-impls-items' class="fold-items"><span>
 			*rlocker : <a href="#name-Locker">Locker</a></span></span>
 
 </span></div></div>
-<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 28, in which 1 is exported)</i></span></span>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 34, in which 4 are exported)</i></span></span>
 
 <div class="anchor value-res" id="name-NewCond">	<input type='checkbox' class="fold" id="NewCond-fold-content"><label for="NewCond-fold-content"> func <a href="../src/sync/cond.go.html#line-47">NewCond</a>(l <a href="#name-Locker">Locker</a>) *<a href="#name-Cond">Cond</a></label><span id='NewCond-fold-content-docs' class="fold-docs">
 <span class="md-text">		NewCond returns a new Cond with Locker l.</span>
 
-</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 27 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 27 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-fastrandn"><i>	<input type='checkbox' class="fold" id="fastrandn-fold-content"><label for="fastrandn-fold-content"> func <a href="../src/sync/pool.go.html#line-79">fastrandn</a>(n <a href="builtin.html#name-uint32">uint32</a>) <a href="builtin.html#name-uint32">uint32</a></label><span id='fastrandn-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor value-res" id="name-OnceFunc">	<input type='checkbox' class="fold" id="OnceFunc-fold-content"><label for="OnceFunc-fold-content"> func <a href="../src/sync/oncefunc.go.html#line-11">OnceFunc</a>(f func()) func()</label><span id='OnceFunc-fold-content-docs' class="fold-docs">
+<span class="md-text">		OnceFunc returns a function that invokes f only once. The returned function
+		may be called concurrently.
+		
+		If f panics, the returned function will panic with the same value on every call.</span>
+
+</span></div><div class="anchor value-res" id="name-OnceValue">	<input type='checkbox' class="fold" id="OnceValue-fold-content"><label for="OnceValue-fold-content"> func <a href="../src/sync/oncefunc.go.html#line-42">OnceValue</a>[T](f func() T) func() T</label><span id='OnceValue-fold-content-docs' class="fold-docs">
+
+		Type Parameters:
+			T: <a href="builtin.html#name-any">any</a>
+
+<span class="md-text">		OnceValue returns a function that invokes f only once and returns the value
+		returned by f. The returned function may be called concurrently.
+		
+		If f panics, the returned function will panic with the same value on every call.</span>
+
+</span></div><div class="anchor value-res" id="name-OnceValues">	<input type='checkbox' class="fold" id="OnceValues-fold-content"><label for="OnceValues-fold-content"> func <a href="../src/sync/oncefunc.go.html#line-72">OnceValues</a>[T1, T2](f func() (T1, T2)) func() (T1, T2)</label><span id='OnceValues-fold-content-docs' class="fold-docs">
+
+		Type Parameters:
+			T1: <a href="builtin.html#name-any">any</a>
+			T2: <a href="builtin.html#name-any">any</a>
+
+<span class="md-text">		OnceValues returns a function that invokes f only once and returns the values
+		returned by f. The returned function may be called concurrently.
+		
+		If f panics, the returned function will panic with the same value on every call.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 30 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 30 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-fastrandn"><i>	<input type='checkbox' class="fold" id="fastrandn-fold-content"><label for="fastrandn-fold-content"> func <a href="../src/sync/pool.go.html#line-79">fastrandn</a>(n <a href="builtin.html#name-uint32">uint32</a>) <a href="builtin.html#name-uint32">uint32</a></label><span id='fastrandn-fold-content-docs' class="fold-docs">
 <span class="md-text">		from runtime</span>
 
-</span></i></div><div class="anchor value-res hidden" id="name-fatal"><i>	<span class="nodocs"> func <a href="../src/sync/mutex.go.html#line-21">fatal</a>(<a href="builtin.html#name-string">string</a>)</span></i></div><div class="anchor value-res hidden" id="name-indexLocal"><i>	<span class="nodocs"> func <a href="../src/sync/pool.go.html#line-279">indexLocal</a>(l <a href="unsafe.html">unsafe</a>.<a href="unsafe.html#name-Pointer">Pointer</a>, i <a href="builtin.html#name-int">int</a>) *<a href="#name-poolLocal">poolLocal</a></span></i></div><div class="anchor value-res hidden" id="name-init"><i>	<span class="nodocs"> func <a href="../src/sync/pool.go.html#line-275">init</a>()</span></i></div><div class="anchor value-res hidden" id="name-init"><i>	<span class="nodocs"> func <a href="../src/sync/runtime.go.html#line-45">init</a>()</span></i></div><div class="anchor value-res hidden" id="name-loadPoolChainElt"><i>	<span class="nodocs"> func <a href="../src/sync/poolqueue.go.html#line-224">loadPoolChainElt</a>(pp **<a href="#name-poolChainElt">poolChainElt</a>) *<a href="#name-poolChainElt">poolChainElt</a></span></i></div><div class="anchor value-res hidden" id="name-newEntry"><i>	<span class="nodocs"> func <a href="../src/sync/map.go.html#line-103">newEntry</a>(i <a href="builtin.html#name-any">any</a>) *<a href="#name-entry">entry</a></span></i></div><div class="anchor value-res hidden" id="name-poolCleanup"><i>	<span class="nodocs"> func <a href="../src/sync/pool.go.html#line-236">poolCleanup</a>()</span></i></div><div class="anchor value-res hidden" id="name-poolRaceAddr"><i>	<input type='checkbox' class="fold" id="poolRaceAddr-fold-content"><label for="poolRaceAddr-fold-content"> func <a href="../src/sync/pool.go.html#line-88">poolRaceAddr</a>(x <a href="builtin.html#name-any">any</a>) <a href="unsafe.html">unsafe</a>.<a href="unsafe.html#name-Pointer">Pointer</a></label><span id='poolRaceAddr-fold-content-docs' class="fold-docs">
+</span></i></div><div class="anchor value-res hidden" id="name-fatal"><i>	<span class="nodocs"> func <a href="../src/sync/mutex.go.html#line-21">fatal</a>(<a href="builtin.html#name-string">string</a>)</span></i></div><div class="anchor value-res hidden" id="name-indexLocal"><i>	<span class="nodocs"> func <a href="../src/sync/pool.go.html#line-279">indexLocal</a>(l <a href="unsafe.html">unsafe</a>.<a href="unsafe.html#name-Pointer">Pointer</a>, i <a href="builtin.html#name-int">int</a>) *<a href="#name-poolLocal">poolLocal</a></span></i></div><div class="anchor value-res hidden" id="name-init"><i>	<span class="nodocs"> func <a href="../src/sync/runtime.go.html#line-51">init</a>()</span></i></div><div class="anchor value-res hidden" id="name-init"><i>	<span class="nodocs"> func <a href="../src/sync/pool.go.html#line-275">init</a>()</span></i></div><div class="anchor value-res hidden" id="name-loadPoolChainElt"><i>	<span class="nodocs"> func <a href="../src/sync/poolqueue.go.html#line-224">loadPoolChainElt</a>(pp **<a href="#name-poolChainElt">poolChainElt</a>) *<a href="#name-poolChainElt">poolChainElt</a></span></i></div><div class="anchor value-res hidden" id="name-newEntry"><i>	<span class="nodocs"> func <a href="../src/sync/map.go.html#line-104">newEntry</a>(i <a href="builtin.html#name-any">any</a>) *<a href="#name-entry">entry</a></span></i></div><div class="anchor value-res hidden" id="name-poolCleanup"><i>	<span class="nodocs"> func <a href="../src/sync/pool.go.html#line-236">poolCleanup</a>()</span></i></div><div class="anchor value-res hidden" id="name-poolRaceAddr"><i>	<input type='checkbox' class="fold" id="poolRaceAddr-fold-content"><label for="poolRaceAddr-fold-content"> func <a href="../src/sync/pool.go.html#line-88">poolRaceAddr</a>(x <a href="builtin.html#name-any">any</a>) <a href="unsafe.html">unsafe</a>.<a href="unsafe.html#name-Pointer">Pointer</a></label><span id='poolRaceAddr-fold-content-docs' class="fold-docs">
 <span class="md-text">		poolRaceAddr returns an address to use as the synchronization point
 		for race detector logic. We don't use the actual pointer stored in x
 		directly, for fear of conflicting with other synchronization on that address.
 		Instead, we hash the pointer to get an index into poolRaceHash.
 		See discussion on golang.org/cl/31589.</span>
 
-</span></i></div><div class="anchor value-res hidden" id="name-runtime_canSpin"><i>	<input type='checkbox' class="fold" id="runtime_canSpin-fold-content"><label for="runtime_canSpin-fold-content"> func <a href="../src/sync/runtime.go.html#line-52">runtime_canSpin</a>(i <a href="builtin.html#name-int">int</a>) <a href="builtin.html#name-bool">bool</a></label><span id='runtime_canSpin-fold-content-docs' class="fold-docs">
+</span></i></div><div class="anchor value-res hidden" id="name-runtime_canSpin"><i>	<input type='checkbox' class="fold" id="runtime_canSpin-fold-content"><label for="runtime_canSpin-fold-content"> func <a href="../src/sync/runtime.go.html#line-58">runtime_canSpin</a>(i <a href="builtin.html#name-int">int</a>) <a href="builtin.html#name-bool">bool</a></label><span id='runtime_canSpin-fold-content-docs' class="fold-docs">
 <span class="md-text">		Active spinning runtime support.
 		runtime_canSpin reports whether spinning makes sense at the moment.</span>
 
-</span></i></div><div class="anchor value-res hidden" id="name-runtime_doSpin"><i>	<input type='checkbox' class="fold" id="runtime_doSpin-fold-content"><label for="runtime_doSpin-fold-content"> func <a href="../src/sync/runtime.go.html#line-55">runtime_doSpin</a>()</label><span id='runtime_doSpin-fold-content-docs' class="fold-docs">
+</span></i></div><div class="anchor value-res hidden" id="name-runtime_doSpin"><i>	<input type='checkbox' class="fold" id="runtime_doSpin-fold-content"><label for="runtime_doSpin-fold-content"> func <a href="../src/sync/runtime.go.html#line-61">runtime_doSpin</a>()</label><span id='runtime_doSpin-fold-content-docs' class="fold-docs">
 <span class="md-text">		runtime_doSpin does active spinning.</span>
 
-</span></i></div><div class="anchor value-res hidden" id="name-runtime_LoadAcquintptr"><i>	<span class="nodocs"> func <a href="../src/sync/pool.go.html#line-294">runtime_LoadAcquintptr</a>(ptr *<a href="builtin.html#name-uintptr">uintptr</a>) <a href="builtin.html#name-uintptr">uintptr</a></span></i></div><div class="anchor value-res hidden" id="name-runtime_nanotime"><i>	<span class="nodocs"> func <a href="../src/sync/runtime.go.html#line-57">runtime_nanotime</a>() <a href="builtin.html#name-int64">int64</a></span></i></div><div class="anchor value-res hidden" id="name-runtime_notifyListAdd"><i>	<input type='checkbox' class="fold" id="runtime_notifyListAdd-fold-content"><label for="runtime_notifyListAdd-fold-content"> func <a href="../src/sync/runtime.go.html#line-32">runtime_notifyListAdd</a>(l *<a href="#name-notifyList">notifyList</a>) <a href="builtin.html#name-uint32">uint32</a></label><span id='runtime_notifyListAdd-fold-content-docs' class="fold-docs">
+</span></i></div><div class="anchor value-res hidden" id="name-runtime_LoadAcquintptr"><i>	<span class="nodocs"> func <a href="../src/sync/pool.go.html#line-294">runtime_LoadAcquintptr</a>(ptr *<a href="builtin.html#name-uintptr">uintptr</a>) <a href="builtin.html#name-uintptr">uintptr</a></span></i></div><div class="anchor value-res hidden" id="name-runtime_nanotime"><i>	<span class="nodocs"> func <a href="../src/sync/runtime.go.html#line-63">runtime_nanotime</a>() <a href="builtin.html#name-int64">int64</a></span></i></div><div class="anchor value-res hidden" id="name-runtime_notifyListAdd"><i>	<input type='checkbox' class="fold" id="runtime_notifyListAdd-fold-content"><label for="runtime_notifyListAdd-fold-content"> func <a href="../src/sync/runtime.go.html#line-38">runtime_notifyListAdd</a>(l *<a href="#name-notifyList">notifyList</a>) <a href="builtin.html#name-uint32">uint32</a></label><span id='runtime_notifyListAdd-fold-content-docs' class="fold-docs">
 <span class="md-text">		See runtime/sema.go for documentation.</span>
 
-</span></i></div><div class="anchor value-res hidden" id="name-runtime_notifyListCheck"><i>	<input type='checkbox' class="fold" id="runtime_notifyListCheck-fold-content"><label for="runtime_notifyListCheck-fold-content"> func <a href="../src/sync/runtime.go.html#line-44">runtime_notifyListCheck</a>(size <a href="builtin.html#name-uintptr">uintptr</a>)</label><span id='runtime_notifyListCheck-fold-content-docs' class="fold-docs">
+</span></i></div><div class="anchor value-res hidden" id="name-runtime_notifyListCheck"><i>	<input type='checkbox' class="fold" id="runtime_notifyListCheck-fold-content"><label for="runtime_notifyListCheck-fold-content"> func <a href="../src/sync/runtime.go.html#line-50">runtime_notifyListCheck</a>(size <a href="builtin.html#name-uintptr">uintptr</a>)</label><span id='runtime_notifyListCheck-fold-content-docs' class="fold-docs">
 <span class="md-text">		Ensure that sync and runtime agree on size of notifyList.</span>
 
-</span></i></div><div class="anchor value-res hidden" id="name-runtime_notifyListNotifyAll"><i>	<input type='checkbox' class="fold" id="runtime_notifyListNotifyAll-fold-content"><label for="runtime_notifyListNotifyAll-fold-content"> func <a href="../src/sync/runtime.go.html#line-38">runtime_notifyListNotifyAll</a>(l *<a href="#name-notifyList">notifyList</a>)</label><span id='runtime_notifyListNotifyAll-fold-content-docs' class="fold-docs">
+</span></i></div><div class="anchor value-res hidden" id="name-runtime_notifyListNotifyAll"><i>	<input type='checkbox' class="fold" id="runtime_notifyListNotifyAll-fold-content"><label for="runtime_notifyListNotifyAll-fold-content"> func <a href="../src/sync/runtime.go.html#line-44">runtime_notifyListNotifyAll</a>(l *<a href="#name-notifyList">notifyList</a>)</label><span id='runtime_notifyListNotifyAll-fold-content-docs' class="fold-docs">
 <span class="md-text">		See runtime/sema.go for documentation.</span>
 
-</span></i></div><div class="anchor value-res hidden" id="name-runtime_notifyListNotifyOne"><i>	<input type='checkbox' class="fold" id="runtime_notifyListNotifyOne-fold-content"><label for="runtime_notifyListNotifyOne-fold-content"> func <a href="../src/sync/runtime.go.html#line-41">runtime_notifyListNotifyOne</a>(l *<a href="#name-notifyList">notifyList</a>)</label><span id='runtime_notifyListNotifyOne-fold-content-docs' class="fold-docs">
+</span></i></div><div class="anchor value-res hidden" id="name-runtime_notifyListNotifyOne"><i>	<input type='checkbox' class="fold" id="runtime_notifyListNotifyOne-fold-content"><label for="runtime_notifyListNotifyOne-fold-content"> func <a href="../src/sync/runtime.go.html#line-47">runtime_notifyListNotifyOne</a>(l *<a href="#name-notifyList">notifyList</a>)</label><span id='runtime_notifyListNotifyOne-fold-content-docs' class="fold-docs">
 <span class="md-text">		See runtime/sema.go for documentation.</span>
 
-</span></i></div><div class="anchor value-res hidden" id="name-runtime_notifyListWait"><i>	<input type='checkbox' class="fold" id="runtime_notifyListWait-fold-content"><label for="runtime_notifyListWait-fold-content"> func <a href="../src/sync/runtime.go.html#line-35">runtime_notifyListWait</a>(l *<a href="#name-notifyList">notifyList</a>, t <a href="builtin.html#name-uint32">uint32</a>)</label><span id='runtime_notifyListWait-fold-content-docs' class="fold-docs">
+</span></i></div><div class="anchor value-res hidden" id="name-runtime_notifyListWait"><i>	<input type='checkbox' class="fold" id="runtime_notifyListWait-fold-content"><label for="runtime_notifyListWait-fold-content"> func <a href="../src/sync/runtime.go.html#line-41">runtime_notifyListWait</a>(l *<a href="#name-notifyList">notifyList</a>, t <a href="builtin.html#name-uint32">uint32</a>)</label><span id='runtime_notifyListWait-fold-content-docs' class="fold-docs">
 <span class="md-text">		See runtime/sema.go for documentation.</span>
 
 </span></i></div><div class="anchor value-res hidden" id="name-runtime_procPin"><i>	<span class="nodocs"> func <a href="../src/sync/pool.go.html#line-286">runtime_procPin</a>() <a href="builtin.html#name-int">int</a></span></i></div><div class="anchor value-res hidden" id="name-runtime_procUnpin"><i>	<span class="nodocs"> func <a href="../src/sync/pool.go.html#line-287">runtime_procUnpin</a>()</span></i></div><div class="anchor value-res hidden" id="name-runtime_registerPoolCleanup"><i>	<input type='checkbox' class="fold" id="runtime_registerPoolCleanup-fold-content"><label for="runtime_registerPoolCleanup-fold-content"> func <a href="../src/sync/pool.go.html#line-285">runtime_registerPoolCleanup</a>(cleanup func())</label><span id='runtime_registerPoolCleanup-fold-content-docs' class="fold-docs">
@@ -1064,13 +1116,17 @@
 		It is intended as a simple sleep primitive for use by the synchronization
 		library and should not be used directly.</span>
 
-</span></i></div><div class="anchor value-res hidden" id="name-runtime_SemacquireMutex"><i>	<input type='checkbox' class="fold" id="runtime_SemacquireMutex-fold-content"><label for="runtime_SemacquireMutex-fold-content"> func <a href="../src/sync/runtime.go.html#line-20">runtime_SemacquireMutex</a>(s *<a href="builtin.html#name-uint32">uint32</a>, lifo <a href="builtin.html#name-bool">bool</a>, skipframes <a href="builtin.html#name-int">int</a>)</label><span id='runtime_SemacquireMutex-fold-content-docs' class="fold-docs">
-<span class="md-text">		SemacquireMutex is like Semacquire, but for profiling contended Mutexes.
+</span></i></div><div class="anchor value-res hidden" id="name-runtime_SemacquireMutex"><i>	<input type='checkbox' class="fold" id="runtime_SemacquireMutex-fold-content"><label for="runtime_SemacquireMutex-fold-content"> func <a href="../src/sync/runtime.go.html#line-24">runtime_SemacquireMutex</a>(s *<a href="builtin.html#name-uint32">uint32</a>, lifo <a href="builtin.html#name-bool">bool</a>, skipframes <a href="builtin.html#name-int">int</a>)</label><span id='runtime_SemacquireMutex-fold-content-docs' class="fold-docs">
+<span class="md-text">		Semacquire(RW)Mutex(R) is like Semacquire, but for profiling contended
+		Mutexes and RWMutexes.
 		If lifo is true, queue waiter at the head of wait queue.
 		skipframes is the number of frames to omit during tracing, counting from
-		runtime_SemacquireMutex's caller.</span>
+		runtime_SemacquireMutex's caller.
+		The different forms of this function just tell the runtime how to present
+		the reason for waiting in a backtrace, and is used to compute some metrics.
+		Otherwise they're functionally identical.</span>
 
-</span></i></div><div class="anchor value-res hidden" id="name-runtime_Semrelease"><i>	<input type='checkbox' class="fold" id="runtime_Semrelease-fold-content"><label for="runtime_Semrelease-fold-content"> func <a href="../src/sync/runtime.go.html#line-29">runtime_Semrelease</a>(s *<a href="builtin.html#name-uint32">uint32</a>, handoff <a href="builtin.html#name-bool">bool</a>, skipframes <a href="builtin.html#name-int">int</a>)</label><span id='runtime_Semrelease-fold-content-docs' class="fold-docs">
+</span></i></div><div class="anchor value-res hidden" id="name-runtime_SemacquireRWMutex"><i>	<span class="nodocs"> func <a href="../src/sync/runtime.go.html#line-26">runtime_SemacquireRWMutex</a>(s *<a href="builtin.html#name-uint32">uint32</a>, lifo <a href="builtin.html#name-bool">bool</a>, skipframes <a href="builtin.html#name-int">int</a>)</span></i></div><div class="anchor value-res hidden" id="name-runtime_SemacquireRWMutexR"><i>	<span class="nodocs"> func <a href="../src/sync/runtime.go.html#line-25">runtime_SemacquireRWMutexR</a>(s *<a href="builtin.html#name-uint32">uint32</a>, lifo <a href="builtin.html#name-bool">bool</a>, skipframes <a href="builtin.html#name-int">int</a>)</span></i></div><div class="anchor value-res hidden" id="name-runtime_Semrelease"><i>	<input type='checkbox' class="fold" id="runtime_Semrelease-fold-content"><label for="runtime_Semrelease-fold-content"> func <a href="../src/sync/runtime.go.html#line-35">runtime_Semrelease</a>(s *<a href="builtin.html#name-uint32">uint32</a>, handoff <a href="builtin.html#name-bool">bool</a>, skipframes <a href="builtin.html#name-int">int</a>)</label><span id='runtime_Semrelease-fold-content-docs' class="fold-docs">
 <span class="md-text">		Semrelease atomically increments *s and notifies a waiting goroutine
 		if one is blocked in Semacquire.
 		It is intended as a simple wakeup primitive for use by the synchronization
@@ -1079,7 +1135,15 @@
 		skipframes is the number of frames to omit during tracing, counting from
 		runtime_Semrelease's caller.</span>
 
-</span></i></div><div class="anchor value-res hidden" id="name-runtime_StoreReluintptr"><i>	<span class="nodocs"> func <a href="../src/sync/pool.go.html#line-297">runtime_StoreReluintptr</a>(ptr *<a href="builtin.html#name-uintptr">uintptr</a>, val <a href="builtin.html#name-uintptr">uintptr</a>) <a href="builtin.html#name-uintptr">uintptr</a></span></i></div><div class="anchor value-res hidden" id="name-storePoolChainElt"><i>	<span class="nodocs"> func <a href="../src/sync/poolqueue.go.html#line-220">storePoolChainElt</a>(pp **<a href="#name-poolChainElt">poolChainElt</a>, v *<a href="#name-poolChainElt">poolChainElt</a>)</span></i></div><div class="anchor value-res hidden" id="name-throw"><i>	<input type='checkbox' class="fold" id="throw-fold-content"><label for="throw-fold-content"> func <a href="../src/sync/mutex.go.html#line-20">throw</a>(<a href="builtin.html#name-string">string</a>)</label><span id='throw-fold-content-docs' class="fold-docs">
+</span></i></div><div class="anchor value-res hidden" id="name-runtime_StoreReluintptr"><i>	<span class="nodocs"> func <a href="../src/sync/pool.go.html#line-297">runtime_StoreReluintptr</a>(ptr *<a href="builtin.html#name-uintptr">uintptr</a>, val <a href="builtin.html#name-uintptr">uintptr</a>) <a href="builtin.html#name-uintptr">uintptr</a></span></i></div><div class="anchor value-res hidden" id="name-storePoolChainElt"><i>	<span class="nodocs"> func <a href="../src/sync/poolqueue.go.html#line-220">storePoolChainElt</a>(pp **<a href="#name-poolChainElt">poolChainElt</a>, v *<a href="#name-poolChainElt">poolChainElt</a>)</span></i></div><div class="anchor value-res hidden" id="name-syscall_hasWaitingReaders"><i>	<input type='checkbox' class="fold" id="syscall_hasWaitingReaders-fold-content"><label for="syscall_hasWaitingReaders-fold-content"> func <a href="../src/sync/rwmutex.go.html#line-230">syscall_hasWaitingReaders</a>(rw *<a href="#name-RWMutex">RWMutex</a>) <a href="builtin.html#name-bool">bool</a></label><span id='syscall_hasWaitingReaders-fold-content-docs' class="fold-docs">
+<span class="md-text">		syscall_hasWaitingReaders reports whether any goroutine is waiting
+		to acquire a read lock on rw. This exists because syscall.ForkLock
+		is an RWMutex, and we can't change that without breaking compatibility.
+		We don't need or want RWMutex semantics for ForkLock, and we use
+		this private API to avoid having to change the type of ForkLock.
+		For more details see the syscall package.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-throw"><i>	<input type='checkbox' class="fold" id="throw-fold-content"><label for="throw-fold-content"> func <a href="../src/sync/mutex.go.html#line-20">throw</a>(<a href="builtin.html#name-string">string</a>)</label><span id='throw-fold-content-docs' class="fold-docs">
 <span class="md-text">		Provided by runtime via linkname.</span>
 
 </span></i></div></div>
@@ -1090,7 +1154,7 @@
 		caches. Protected by either 1) allPoolsMu and pinning or 2)
 		STW.</span>
 
-</span></i></div><div class="anchor value-res hidden" id="name-allPoolsMu"><i>	<span class="nodocs">  var <a href="../src/sync/pool.go.html#line-263">allPoolsMu</a> <a href="#name-Mutex">Mutex</a></span></i></div><div class="anchor value-res hidden" id="name-expunged"><i>	<input type='checkbox' class="fold" id="expunged-fold-content"><label for="expunged-fold-content">  var <a href="../src/sync/map.go.html#line-77">expunged</a> <a href="builtin.html#name-Pointer">Pointer</a></label><span id='expunged-fold-content-docs' class="fold-docs">
+</span></i></div><div class="anchor value-res hidden" id="name-allPoolsMu"><i>	<span class="nodocs">  var <a href="../src/sync/pool.go.html#line-263">allPoolsMu</a> <a href="#name-Mutex">Mutex</a></span></i></div><div class="anchor value-res hidden" id="name-expunged"><i>	<input type='checkbox' class="fold" id="expunged-fold-content"><label for="expunged-fold-content">  var <a href="../src/sync/map.go.html#line-78">expunged</a> *interface{}</label><span id='expunged-fold-content-docs' class="fold-docs">
 <span class="md-text">		expunged is an arbitrary pointer that marks entries which have been deleted
 		from the dirty map.</span>
 
@@ -1136,7 +1200,7 @@
 
 </span></i></div></div></code></pre><pre id="footer">
 <table><tr><td><img src="../png/go101-twitter.png"></td>
-<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.6.6</i>. (GOOS=darwin GOARCH=arm64)
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.6.7</i>. (GOOS=darwin GOARCH=arm64)
 <b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
 PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
 Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

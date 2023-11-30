@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Source: asm_arm64.s in package runtime</title>
-<link href="../../css/auto-v0.6.6.css" rel="stylesheet">
-<script src="../../jvs/golds-v0.6.6.js"></script>
+<link href="../../css/auto-v0.6.7.css" rel="stylesheet">
+<script src="../../jvs/golds-v0.6.7.js"></script>
 <body onload="onPageLoad()"><div>
 
 <pre id="header"><code><span class="title">Source File</span>
@@ -78,7 +78,7 @@
 <span class="codeline" id="line-59"><code>	BL	runtime·save_g(SB)</code></span>
 <span class="codeline" id="line-60"><code>	// update stackguard after _cgo_init</code></span>
 <span class="codeline" id="line-61"><code>	MOVD	(g_stack+stack_lo)(g), R0</code></span>
-<span class="codeline" id="line-62"><code>	ADD	$const__StackGuard, R0</code></span>
+<span class="codeline" id="line-62"><code>	ADD	$const_stackGuard, R0</code></span>
 <span class="codeline" id="line-63"><code>	MOVD	R0, g_stackguard0(g)</code></span>
 <span class="codeline" id="line-64"><code>	MOVD	R0, g_stackguard1(g)</code></span>
 <span class="codeline" id="line-65"><code></code></span>
@@ -630,921 +630,969 @@
 <span class="codeline" id="line-611"><code>	AESE	V0.B16, V2.B16</code></span>
 <span class="codeline" id="line-612"><code>	AESMC	V2.B16, V2.B16</code></span>
 <span class="codeline" id="line-613"><code>	AESE	V0.B16, V2.B16</code></span>
-<span class="codeline" id="line-614"><code></code></span>
-<span class="codeline" id="line-615"><code>	VMOV	V2.D[0], R0</code></span>
-<span class="codeline" id="line-616"><code>	RET</code></span>
-<span class="codeline" id="line-617"><code></code></span>
-<span class="codeline" id="line-618"><code>aes0:</code></span>
-<span class="codeline" id="line-619"><code>	VMOV	V0.D[0], R0</code></span>
-<span class="codeline" id="line-620"><code>	RET</code></span>
-<span class="codeline" id="line-621"><code></code></span>
-<span class="codeline" id="line-622"><code>aes16:</code></span>
-<span class="codeline" id="line-623"><code>	VLD1	(R0), [V2.B16]</code></span>
-<span class="codeline" id="line-624"><code>	B	done</code></span>
-<span class="codeline" id="line-625"><code></code></span>
-<span class="codeline" id="line-626"><code>aes17to32:</code></span>
-<span class="codeline" id="line-627"><code>	// make second seed</code></span>
-<span class="codeline" id="line-628"><code>	VLD1	(R4), [V1.B16]</code></span>
-<span class="codeline" id="line-629"><code>	AESE	V30.B16, V1.B16</code></span>
-<span class="codeline" id="line-630"><code>	AESMC	V1.B16, V1.B16</code></span>
-<span class="codeline" id="line-631"><code>	SUB	$16, R2, R10</code></span>
-<span class="codeline" id="line-632"><code>	VLD1.P	(R0)(R10), [V2.B16]</code></span>
-<span class="codeline" id="line-633"><code>	VLD1	(R0), [V3.B16]</code></span>
-<span class="codeline" id="line-634"><code></code></span>
-<span class="codeline" id="line-635"><code>	AESE	V0.B16, V2.B16</code></span>
-<span class="codeline" id="line-636"><code>	AESMC	V2.B16, V2.B16</code></span>
-<span class="codeline" id="line-637"><code>	AESE	V1.B16, V3.B16</code></span>
-<span class="codeline" id="line-638"><code>	AESMC	V3.B16, V3.B16</code></span>
-<span class="codeline" id="line-639"><code></code></span>
-<span class="codeline" id="line-640"><code>	AESE	V0.B16, V2.B16</code></span>
-<span class="codeline" id="line-641"><code>	AESMC	V2.B16, V2.B16</code></span>
-<span class="codeline" id="line-642"><code>	AESE	V1.B16, V3.B16</code></span>
-<span class="codeline" id="line-643"><code>	AESMC	V3.B16, V3.B16</code></span>
-<span class="codeline" id="line-644"><code></code></span>
-<span class="codeline" id="line-645"><code>	AESE	V0.B16, V2.B16</code></span>
-<span class="codeline" id="line-646"><code>	AESE	V1.B16, V3.B16</code></span>
-<span class="codeline" id="line-647"><code></code></span>
-<span class="codeline" id="line-648"><code>	VEOR	V3.B16, V2.B16, V2.B16</code></span>
-<span class="codeline" id="line-649"><code></code></span>
-<span class="codeline" id="line-650"><code>	VMOV	V2.D[0], R0</code></span>
-<span class="codeline" id="line-651"><code>	RET</code></span>
-<span class="codeline" id="line-652"><code></code></span>
-<span class="codeline" id="line-653"><code>aes33to64:</code></span>
-<span class="codeline" id="line-654"><code>	VLD1	(R4), [V1.B16, V2.B16, V3.B16]</code></span>
-<span class="codeline" id="line-655"><code>	AESE	V30.B16, V1.B16</code></span>
-<span class="codeline" id="line-656"><code>	AESMC	V1.B16, V1.B16</code></span>
-<span class="codeline" id="line-657"><code>	AESE	V30.B16, V2.B16</code></span>
-<span class="codeline" id="line-658"><code>	AESMC	V2.B16, V2.B16</code></span>
-<span class="codeline" id="line-659"><code>	AESE	V30.B16, V3.B16</code></span>
-<span class="codeline" id="line-660"><code>	AESMC	V3.B16, V3.B16</code></span>
-<span class="codeline" id="line-661"><code>	SUB	$32, R2, R10</code></span>
-<span class="codeline" id="line-662"><code></code></span>
-<span class="codeline" id="line-663"><code>	VLD1.P	(R0)(R10), [V4.B16, V5.B16]</code></span>
-<span class="codeline" id="line-664"><code>	VLD1	(R0), [V6.B16, V7.B16]</code></span>
-<span class="codeline" id="line-665"><code></code></span>
-<span class="codeline" id="line-666"><code>	AESE	V0.B16, V4.B16</code></span>
-<span class="codeline" id="line-667"><code>	AESMC	V4.B16, V4.B16</code></span>
-<span class="codeline" id="line-668"><code>	AESE	V1.B16, V5.B16</code></span>
-<span class="codeline" id="line-669"><code>	AESMC	V5.B16, V5.B16</code></span>
-<span class="codeline" id="line-670"><code>	AESE	V2.B16, V6.B16</code></span>
-<span class="codeline" id="line-671"><code>	AESMC	V6.B16, V6.B16</code></span>
-<span class="codeline" id="line-672"><code>	AESE	V3.B16, V7.B16</code></span>
-<span class="codeline" id="line-673"><code>	AESMC	V7.B16, V7.B16</code></span>
-<span class="codeline" id="line-674"><code></code></span>
-<span class="codeline" id="line-675"><code>	AESE	V0.B16, V4.B16</code></span>
-<span class="codeline" id="line-676"><code>	AESMC	V4.B16, V4.B16</code></span>
-<span class="codeline" id="line-677"><code>	AESE	V1.B16, V5.B16</code></span>
-<span class="codeline" id="line-678"><code>	AESMC	V5.B16, V5.B16</code></span>
-<span class="codeline" id="line-679"><code>	AESE	V2.B16, V6.B16</code></span>
-<span class="codeline" id="line-680"><code>	AESMC	V6.B16, V6.B16</code></span>
-<span class="codeline" id="line-681"><code>	AESE	V3.B16, V7.B16</code></span>
-<span class="codeline" id="line-682"><code>	AESMC	V7.B16, V7.B16</code></span>
-<span class="codeline" id="line-683"><code></code></span>
-<span class="codeline" id="line-684"><code>	AESE	V0.B16, V4.B16</code></span>
-<span class="codeline" id="line-685"><code>	AESE	V1.B16, V5.B16</code></span>
-<span class="codeline" id="line-686"><code>	AESE	V2.B16, V6.B16</code></span>
-<span class="codeline" id="line-687"><code>	AESE	V3.B16, V7.B16</code></span>
-<span class="codeline" id="line-688"><code></code></span>
-<span class="codeline" id="line-689"><code>	VEOR	V6.B16, V4.B16, V4.B16</code></span>
-<span class="codeline" id="line-690"><code>	VEOR	V7.B16, V5.B16, V5.B16</code></span>
-<span class="codeline" id="line-691"><code>	VEOR	V5.B16, V4.B16, V4.B16</code></span>
-<span class="codeline" id="line-692"><code></code></span>
-<span class="codeline" id="line-693"><code>	VMOV	V4.D[0], R0</code></span>
-<span class="codeline" id="line-694"><code>	RET</code></span>
-<span class="codeline" id="line-695"><code></code></span>
-<span class="codeline" id="line-696"><code>aes65to128:</code></span>
-<span class="codeline" id="line-697"><code>	VLD1.P	64(R4), [V1.B16, V2.B16, V3.B16, V4.B16]</code></span>
-<span class="codeline" id="line-698"><code>	VLD1	(R4), [V5.B16, V6.B16, V7.B16]</code></span>
-<span class="codeline" id="line-699"><code>	AESE	V30.B16, V1.B16</code></span>
-<span class="codeline" id="line-700"><code>	AESMC	V1.B16, V1.B16</code></span>
-<span class="codeline" id="line-701"><code>	AESE	V30.B16, V2.B16</code></span>
-<span class="codeline" id="line-702"><code>	AESMC	V2.B16, V2.B16</code></span>
-<span class="codeline" id="line-703"><code>	AESE	V30.B16, V3.B16</code></span>
-<span class="codeline" id="line-704"><code>	AESMC	V3.B16, V3.B16</code></span>
-<span class="codeline" id="line-705"><code>	AESE	V30.B16, V4.B16</code></span>
-<span class="codeline" id="line-706"><code>	AESMC	V4.B16, V4.B16</code></span>
-<span class="codeline" id="line-707"><code>	AESE	V30.B16, V5.B16</code></span>
-<span class="codeline" id="line-708"><code>	AESMC	V5.B16, V5.B16</code></span>
-<span class="codeline" id="line-709"><code>	AESE	V30.B16, V6.B16</code></span>
-<span class="codeline" id="line-710"><code>	AESMC	V6.B16, V6.B16</code></span>
-<span class="codeline" id="line-711"><code>	AESE	V30.B16, V7.B16</code></span>
-<span class="codeline" id="line-712"><code>	AESMC	V7.B16, V7.B16</code></span>
-<span class="codeline" id="line-713"><code></code></span>
-<span class="codeline" id="line-714"><code>	SUB	$64, R2, R10</code></span>
-<span class="codeline" id="line-715"><code>	VLD1.P	(R0)(R10), [V8.B16, V9.B16, V10.B16, V11.B16]</code></span>
-<span class="codeline" id="line-716"><code>	VLD1	(R0), [V12.B16, V13.B16, V14.B16, V15.B16]</code></span>
-<span class="codeline" id="line-717"><code>	AESE	V0.B16,	 V8.B16</code></span>
-<span class="codeline" id="line-718"><code>	AESMC	V8.B16,  V8.B16</code></span>
-<span class="codeline" id="line-719"><code>	AESE	V1.B16,	 V9.B16</code></span>
-<span class="codeline" id="line-720"><code>	AESMC	V9.B16,  V9.B16</code></span>
-<span class="codeline" id="line-721"><code>	AESE	V2.B16, V10.B16</code></span>
-<span class="codeline" id="line-722"><code>	AESMC	V10.B16,  V10.B16</code></span>
-<span class="codeline" id="line-723"><code>	AESE	V3.B16, V11.B16</code></span>
-<span class="codeline" id="line-724"><code>	AESMC	V11.B16,  V11.B16</code></span>
-<span class="codeline" id="line-725"><code>	AESE	V4.B16, V12.B16</code></span>
-<span class="codeline" id="line-726"><code>	AESMC	V12.B16,  V12.B16</code></span>
-<span class="codeline" id="line-727"><code>	AESE	V5.B16, V13.B16</code></span>
-<span class="codeline" id="line-728"><code>	AESMC	V13.B16,  V13.B16</code></span>
-<span class="codeline" id="line-729"><code>	AESE	V6.B16, V14.B16</code></span>
-<span class="codeline" id="line-730"><code>	AESMC	V14.B16,  V14.B16</code></span>
-<span class="codeline" id="line-731"><code>	AESE	V7.B16, V15.B16</code></span>
-<span class="codeline" id="line-732"><code>	AESMC	V15.B16,  V15.B16</code></span>
-<span class="codeline" id="line-733"><code></code></span>
-<span class="codeline" id="line-734"><code>	AESE	V0.B16,	 V8.B16</code></span>
-<span class="codeline" id="line-735"><code>	AESMC	V8.B16,  V8.B16</code></span>
-<span class="codeline" id="line-736"><code>	AESE	V1.B16,	 V9.B16</code></span>
-<span class="codeline" id="line-737"><code>	AESMC	V9.B16,  V9.B16</code></span>
-<span class="codeline" id="line-738"><code>	AESE	V2.B16, V10.B16</code></span>
-<span class="codeline" id="line-739"><code>	AESMC	V10.B16,  V10.B16</code></span>
-<span class="codeline" id="line-740"><code>	AESE	V3.B16, V11.B16</code></span>
-<span class="codeline" id="line-741"><code>	AESMC	V11.B16,  V11.B16</code></span>
-<span class="codeline" id="line-742"><code>	AESE	V4.B16, V12.B16</code></span>
-<span class="codeline" id="line-743"><code>	AESMC	V12.B16,  V12.B16</code></span>
-<span class="codeline" id="line-744"><code>	AESE	V5.B16, V13.B16</code></span>
-<span class="codeline" id="line-745"><code>	AESMC	V13.B16,  V13.B16</code></span>
-<span class="codeline" id="line-746"><code>	AESE	V6.B16, V14.B16</code></span>
-<span class="codeline" id="line-747"><code>	AESMC	V14.B16,  V14.B16</code></span>
-<span class="codeline" id="line-748"><code>	AESE	V7.B16, V15.B16</code></span>
-<span class="codeline" id="line-749"><code>	AESMC	V15.B16,  V15.B16</code></span>
-<span class="codeline" id="line-750"><code></code></span>
-<span class="codeline" id="line-751"><code>	AESE	V0.B16,	 V8.B16</code></span>
-<span class="codeline" id="line-752"><code>	AESE	V1.B16,	 V9.B16</code></span>
-<span class="codeline" id="line-753"><code>	AESE	V2.B16, V10.B16</code></span>
-<span class="codeline" id="line-754"><code>	AESE	V3.B16, V11.B16</code></span>
-<span class="codeline" id="line-755"><code>	AESE	V4.B16, V12.B16</code></span>
-<span class="codeline" id="line-756"><code>	AESE	V5.B16, V13.B16</code></span>
-<span class="codeline" id="line-757"><code>	AESE	V6.B16, V14.B16</code></span>
-<span class="codeline" id="line-758"><code>	AESE	V7.B16, V15.B16</code></span>
-<span class="codeline" id="line-759"><code></code></span>
-<span class="codeline" id="line-760"><code>	VEOR	V12.B16, V8.B16, V8.B16</code></span>
-<span class="codeline" id="line-761"><code>	VEOR	V13.B16, V9.B16, V9.B16</code></span>
-<span class="codeline" id="line-762"><code>	VEOR	V14.B16, V10.B16, V10.B16</code></span>
-<span class="codeline" id="line-763"><code>	VEOR	V15.B16, V11.B16, V11.B16</code></span>
-<span class="codeline" id="line-764"><code>	VEOR	V10.B16, V8.B16, V8.B16</code></span>
-<span class="codeline" id="line-765"><code>	VEOR	V11.B16, V9.B16, V9.B16</code></span>
-<span class="codeline" id="line-766"><code>	VEOR	V9.B16, V8.B16, V8.B16</code></span>
-<span class="codeline" id="line-767"><code></code></span>
-<span class="codeline" id="line-768"><code>	VMOV	V8.D[0], R0</code></span>
-<span class="codeline" id="line-769"><code>	RET</code></span>
-<span class="codeline" id="line-770"><code></code></span>
-<span class="codeline" id="line-771"><code>aes129plus:</code></span>
-<span class="codeline" id="line-772"><code>	PRFM (R0), PLDL1KEEP</code></span>
-<span class="codeline" id="line-773"><code>	VLD1.P	64(R4), [V1.B16, V2.B16, V3.B16, V4.B16]</code></span>
-<span class="codeline" id="line-774"><code>	VLD1	(R4), [V5.B16, V6.B16, V7.B16]</code></span>
-<span class="codeline" id="line-775"><code>	AESE	V30.B16, V1.B16</code></span>
-<span class="codeline" id="line-776"><code>	AESMC	V1.B16, V1.B16</code></span>
-<span class="codeline" id="line-777"><code>	AESE	V30.B16, V2.B16</code></span>
-<span class="codeline" id="line-778"><code>	AESMC	V2.B16, V2.B16</code></span>
-<span class="codeline" id="line-779"><code>	AESE	V30.B16, V3.B16</code></span>
-<span class="codeline" id="line-780"><code>	AESMC	V3.B16, V3.B16</code></span>
-<span class="codeline" id="line-781"><code>	AESE	V30.B16, V4.B16</code></span>
-<span class="codeline" id="line-782"><code>	AESMC	V4.B16, V4.B16</code></span>
-<span class="codeline" id="line-783"><code>	AESE	V30.B16, V5.B16</code></span>
-<span class="codeline" id="line-784"><code>	AESMC	V5.B16, V5.B16</code></span>
-<span class="codeline" id="line-785"><code>	AESE	V30.B16, V6.B16</code></span>
-<span class="codeline" id="line-786"><code>	AESMC	V6.B16, V6.B16</code></span>
-<span class="codeline" id="line-787"><code>	AESE	V30.B16, V7.B16</code></span>
-<span class="codeline" id="line-788"><code>	AESMC	V7.B16, V7.B16</code></span>
-<span class="codeline" id="line-789"><code>	ADD	R0, R2, R10</code></span>
-<span class="codeline" id="line-790"><code>	SUB	$128, R10, R10</code></span>
-<span class="codeline" id="line-791"><code>	VLD1.P	64(R10), [V8.B16, V9.B16, V10.B16, V11.B16]</code></span>
-<span class="codeline" id="line-792"><code>	VLD1	(R10), [V12.B16, V13.B16, V14.B16, V15.B16]</code></span>
-<span class="codeline" id="line-793"><code>	SUB	$1, R2, R2</code></span>
-<span class="codeline" id="line-794"><code>	LSR	$7, R2, R2</code></span>
-<span class="codeline" id="line-795"><code></code></span>
-<span class="codeline" id="line-796"><code>aesloop:</code></span>
-<span class="codeline" id="line-797"><code>	AESE	V8.B16,	 V0.B16</code></span>
-<span class="codeline" id="line-798"><code>	AESMC	V0.B16,  V0.B16</code></span>
-<span class="codeline" id="line-799"><code>	AESE	V9.B16,	 V1.B16</code></span>
-<span class="codeline" id="line-800"><code>	AESMC	V1.B16,  V1.B16</code></span>
-<span class="codeline" id="line-801"><code>	AESE	V10.B16, V2.B16</code></span>
-<span class="codeline" id="line-802"><code>	AESMC	V2.B16,  V2.B16</code></span>
-<span class="codeline" id="line-803"><code>	AESE	V11.B16, V3.B16</code></span>
-<span class="codeline" id="line-804"><code>	AESMC	V3.B16,  V3.B16</code></span>
-<span class="codeline" id="line-805"><code>	AESE	V12.B16, V4.B16</code></span>
-<span class="codeline" id="line-806"><code>	AESMC	V4.B16,  V4.B16</code></span>
-<span class="codeline" id="line-807"><code>	AESE	V13.B16, V5.B16</code></span>
-<span class="codeline" id="line-808"><code>	AESMC	V5.B16,  V5.B16</code></span>
-<span class="codeline" id="line-809"><code>	AESE	V14.B16, V6.B16</code></span>
-<span class="codeline" id="line-810"><code>	AESMC	V6.B16,  V6.B16</code></span>
-<span class="codeline" id="line-811"><code>	AESE	V15.B16, V7.B16</code></span>
-<span class="codeline" id="line-812"><code>	AESMC	V7.B16,  V7.B16</code></span>
-<span class="codeline" id="line-813"><code></code></span>
-<span class="codeline" id="line-814"><code>	VLD1.P	64(R0), [V8.B16, V9.B16, V10.B16, V11.B16]</code></span>
-<span class="codeline" id="line-815"><code>	AESE	V8.B16,	 V0.B16</code></span>
-<span class="codeline" id="line-816"><code>	AESMC	V0.B16,  V0.B16</code></span>
-<span class="codeline" id="line-817"><code>	AESE	V9.B16,	 V1.B16</code></span>
-<span class="codeline" id="line-818"><code>	AESMC	V1.B16,  V1.B16</code></span>
-<span class="codeline" id="line-819"><code>	AESE	V10.B16, V2.B16</code></span>
-<span class="codeline" id="line-820"><code>	AESMC	V2.B16,  V2.B16</code></span>
-<span class="codeline" id="line-821"><code>	AESE	V11.B16, V3.B16</code></span>
-<span class="codeline" id="line-822"><code>	AESMC	V3.B16,  V3.B16</code></span>
-<span class="codeline" id="line-823"><code></code></span>
-<span class="codeline" id="line-824"><code>	VLD1.P	64(R0), [V12.B16, V13.B16, V14.B16, V15.B16]</code></span>
-<span class="codeline" id="line-825"><code>	AESE	V12.B16, V4.B16</code></span>
-<span class="codeline" id="line-826"><code>	AESMC	V4.B16,  V4.B16</code></span>
-<span class="codeline" id="line-827"><code>	AESE	V13.B16, V5.B16</code></span>
-<span class="codeline" id="line-828"><code>	AESMC	V5.B16,  V5.B16</code></span>
-<span class="codeline" id="line-829"><code>	AESE	V14.B16, V6.B16</code></span>
-<span class="codeline" id="line-830"><code>	AESMC	V6.B16,  V6.B16</code></span>
-<span class="codeline" id="line-831"><code>	AESE	V15.B16, V7.B16</code></span>
-<span class="codeline" id="line-832"><code>	AESMC	V7.B16,  V7.B16</code></span>
-<span class="codeline" id="line-833"><code>	SUB	$1, R2, R2</code></span>
-<span class="codeline" id="line-834"><code>	CBNZ	R2, aesloop</code></span>
-<span class="codeline" id="line-835"><code></code></span>
-<span class="codeline" id="line-836"><code>	AESE	V8.B16,	 V0.B16</code></span>
-<span class="codeline" id="line-837"><code>	AESMC	V0.B16,  V0.B16</code></span>
-<span class="codeline" id="line-838"><code>	AESE	V9.B16,	 V1.B16</code></span>
-<span class="codeline" id="line-839"><code>	AESMC	V1.B16,  V1.B16</code></span>
-<span class="codeline" id="line-840"><code>	AESE	V10.B16, V2.B16</code></span>
-<span class="codeline" id="line-841"><code>	AESMC	V2.B16,  V2.B16</code></span>
-<span class="codeline" id="line-842"><code>	AESE	V11.B16, V3.B16</code></span>
-<span class="codeline" id="line-843"><code>	AESMC	V3.B16,  V3.B16</code></span>
-<span class="codeline" id="line-844"><code>	AESE	V12.B16, V4.B16</code></span>
-<span class="codeline" id="line-845"><code>	AESMC	V4.B16,  V4.B16</code></span>
-<span class="codeline" id="line-846"><code>	AESE	V13.B16, V5.B16</code></span>
-<span class="codeline" id="line-847"><code>	AESMC	V5.B16,  V5.B16</code></span>
-<span class="codeline" id="line-848"><code>	AESE	V14.B16, V6.B16</code></span>
-<span class="codeline" id="line-849"><code>	AESMC	V6.B16,  V6.B16</code></span>
-<span class="codeline" id="line-850"><code>	AESE	V15.B16, V7.B16</code></span>
-<span class="codeline" id="line-851"><code>	AESMC	V7.B16,  V7.B16</code></span>
-<span class="codeline" id="line-852"><code></code></span>
-<span class="codeline" id="line-853"><code>	AESE	V8.B16,	 V0.B16</code></span>
-<span class="codeline" id="line-854"><code>	AESMC	V0.B16,  V0.B16</code></span>
-<span class="codeline" id="line-855"><code>	AESE	V9.B16,	 V1.B16</code></span>
-<span class="codeline" id="line-856"><code>	AESMC	V1.B16,  V1.B16</code></span>
-<span class="codeline" id="line-857"><code>	AESE	V10.B16, V2.B16</code></span>
-<span class="codeline" id="line-858"><code>	AESMC	V2.B16,  V2.B16</code></span>
-<span class="codeline" id="line-859"><code>	AESE	V11.B16, V3.B16</code></span>
-<span class="codeline" id="line-860"><code>	AESMC	V3.B16,  V3.B16</code></span>
-<span class="codeline" id="line-861"><code>	AESE	V12.B16, V4.B16</code></span>
-<span class="codeline" id="line-862"><code>	AESMC	V4.B16,  V4.B16</code></span>
-<span class="codeline" id="line-863"><code>	AESE	V13.B16, V5.B16</code></span>
-<span class="codeline" id="line-864"><code>	AESMC	V5.B16,  V5.B16</code></span>
-<span class="codeline" id="line-865"><code>	AESE	V14.B16, V6.B16</code></span>
-<span class="codeline" id="line-866"><code>	AESMC	V6.B16,  V6.B16</code></span>
-<span class="codeline" id="line-867"><code>	AESE	V15.B16, V7.B16</code></span>
-<span class="codeline" id="line-868"><code>	AESMC	V7.B16,  V7.B16</code></span>
-<span class="codeline" id="line-869"><code></code></span>
-<span class="codeline" id="line-870"><code>	AESE	V8.B16,	 V0.B16</code></span>
-<span class="codeline" id="line-871"><code>	AESE	V9.B16,	 V1.B16</code></span>
-<span class="codeline" id="line-872"><code>	AESE	V10.B16, V2.B16</code></span>
-<span class="codeline" id="line-873"><code>	AESE	V11.B16, V3.B16</code></span>
-<span class="codeline" id="line-874"><code>	AESE	V12.B16, V4.B16</code></span>
-<span class="codeline" id="line-875"><code>	AESE	V13.B16, V5.B16</code></span>
-<span class="codeline" id="line-876"><code>	AESE	V14.B16, V6.B16</code></span>
-<span class="codeline" id="line-877"><code>	AESE	V15.B16, V7.B16</code></span>
-<span class="codeline" id="line-878"><code></code></span>
-<span class="codeline" id="line-879"><code>	VEOR	V0.B16, V1.B16, V0.B16</code></span>
-<span class="codeline" id="line-880"><code>	VEOR	V2.B16, V3.B16, V2.B16</code></span>
-<span class="codeline" id="line-881"><code>	VEOR	V4.B16, V5.B16, V4.B16</code></span>
-<span class="codeline" id="line-882"><code>	VEOR	V6.B16, V7.B16, V6.B16</code></span>
-<span class="codeline" id="line-883"><code>	VEOR	V0.B16, V2.B16, V0.B16</code></span>
-<span class="codeline" id="line-884"><code>	VEOR	V4.B16, V6.B16, V4.B16</code></span>
-<span class="codeline" id="line-885"><code>	VEOR	V4.B16, V0.B16, V0.B16</code></span>
-<span class="codeline" id="line-886"><code></code></span>
-<span class="codeline" id="line-887"><code>	VMOV	V0.D[0], R0</code></span>
-<span class="codeline" id="line-888"><code>	RET</code></span>
-<span class="codeline" id="line-889"><code></code></span>
-<span class="codeline" id="line-890"><code>TEXT runtime·procyield(SB),NOSPLIT,$0-0</code></span>
-<span class="codeline" id="line-891"><code>	MOVWU	cycles+0(FP), R0</code></span>
-<span class="codeline" id="line-892"><code>again:</code></span>
-<span class="codeline" id="line-893"><code>	YIELD</code></span>
-<span class="codeline" id="line-894"><code>	SUBW	$1, R0</code></span>
-<span class="codeline" id="line-895"><code>	CBNZ	R0, again</code></span>
-<span class="codeline" id="line-896"><code>	RET</code></span>
-<span class="codeline" id="line-897"><code></code></span>
-<span class="codeline" id="line-898"><code>// Save state of caller into g-&gt;sched,</code></span>
-<span class="codeline" id="line-899"><code>// but using fake PC from systemstack_switch.</code></span>
-<span class="codeline" id="line-900"><code>// Must only be called from functions with no locals ($0)</code></span>
-<span class="codeline" id="line-901"><code>// or else unwinding from systemstack_switch is incorrect.</code></span>
-<span class="codeline" id="line-902"><code>// Smashes R0.</code></span>
-<span class="codeline" id="line-903"><code>TEXT gosave_systemstack_switch&lt;&gt;(SB),NOSPLIT|NOFRAME,$0</code></span>
-<span class="codeline" id="line-904"><code>	MOVD	$runtime·systemstack_switch(SB), R0</code></span>
-<span class="codeline" id="line-905"><code>	ADD	$8, R0	// get past prologue</code></span>
-<span class="codeline" id="line-906"><code>	MOVD	R0, (g_sched+gobuf_pc)(g)</code></span>
-<span class="codeline" id="line-907"><code>	MOVD	RSP, R0</code></span>
-<span class="codeline" id="line-908"><code>	MOVD	R0, (g_sched+gobuf_sp)(g)</code></span>
-<span class="codeline" id="line-909"><code>	MOVD	R29, (g_sched+gobuf_bp)(g)</code></span>
-<span class="codeline" id="line-910"><code>	MOVD	$0, (g_sched+gobuf_lr)(g)</code></span>
-<span class="codeline" id="line-911"><code>	MOVD	$0, (g_sched+gobuf_ret)(g)</code></span>
-<span class="codeline" id="line-912"><code>	// Assert ctxt is zero. See func save.</code></span>
-<span class="codeline" id="line-913"><code>	MOVD	(g_sched+gobuf_ctxt)(g), R0</code></span>
-<span class="codeline" id="line-914"><code>	CBZ	R0, 2(PC)</code></span>
-<span class="codeline" id="line-915"><code>	CALL	runtime·abort(SB)</code></span>
-<span class="codeline" id="line-916"><code>	RET</code></span>
-<span class="codeline" id="line-917"><code></code></span>
-<span class="codeline" id="line-918"><code>// func asmcgocall_no_g(fn, arg unsafe.Pointer)</code></span>
-<span class="codeline" id="line-919"><code>// Call fn(arg) aligned appropriately for the gcc ABI.</code></span>
-<span class="codeline" id="line-920"><code>// Called on a system stack, and there may be no g yet (during needm).</code></span>
-<span class="codeline" id="line-921"><code>TEXT ·asmcgocall_no_g(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-922"><code>	MOVD	fn+0(FP), R1</code></span>
-<span class="codeline" id="line-923"><code>	MOVD	arg+8(FP), R0</code></span>
-<span class="codeline" id="line-924"><code>	SUB	$16, RSP	// skip over saved frame pointer below RSP</code></span>
-<span class="codeline" id="line-925"><code>	BL	(R1)</code></span>
-<span class="codeline" id="line-926"><code>	ADD	$16, RSP	// skip over saved frame pointer below RSP</code></span>
-<span class="codeline" id="line-927"><code>	RET</code></span>
-<span class="codeline" id="line-928"><code></code></span>
-<span class="codeline" id="line-929"><code>// func asmcgocall(fn, arg unsafe.Pointer) int32</code></span>
-<span class="codeline" id="line-930"><code>// Call fn(arg) on the scheduler stack,</code></span>
-<span class="codeline" id="line-931"><code>// aligned appropriately for the gcc ABI.</code></span>
-<span class="codeline" id="line-932"><code>// See cgocall.go for more details.</code></span>
-<span class="codeline" id="line-933"><code>TEXT ·asmcgocall(SB),NOSPLIT,$0-20</code></span>
-<span class="codeline" id="line-934"><code>	MOVD	fn+0(FP), R1</code></span>
-<span class="codeline" id="line-935"><code>	MOVD	arg+8(FP), R0</code></span>
-<span class="codeline" id="line-936"><code></code></span>
-<span class="codeline" id="line-937"><code>	MOVD	RSP, R2		// save original stack pointer</code></span>
-<span class="codeline" id="line-938"><code>	CBZ	g, nosave</code></span>
-<span class="codeline" id="line-939"><code>	MOVD	g, R4</code></span>
-<span class="codeline" id="line-940"><code></code></span>
-<span class="codeline" id="line-941"><code>	// Figure out if we need to switch to m-&gt;g0 stack.</code></span>
-<span class="codeline" id="line-942"><code>	// We get called to create new OS threads too, and those</code></span>
-<span class="codeline" id="line-943"><code>	// come in on the m-&gt;g0 stack already. Or we might already</code></span>
-<span class="codeline" id="line-944"><code>	// be on the m-&gt;gsignal stack.</code></span>
-<span class="codeline" id="line-945"><code>	MOVD	g_m(g), R8</code></span>
-<span class="codeline" id="line-946"><code>	MOVD	m_gsignal(R8), R3</code></span>
-<span class="codeline" id="line-947"><code>	CMP	R3, g</code></span>
-<span class="codeline" id="line-948"><code>	BEQ	nosave</code></span>
-<span class="codeline" id="line-949"><code>	MOVD	m_g0(R8), R3</code></span>
-<span class="codeline" id="line-950"><code>	CMP	R3, g</code></span>
-<span class="codeline" id="line-951"><code>	BEQ	nosave</code></span>
-<span class="codeline" id="line-952"><code></code></span>
-<span class="codeline" id="line-953"><code>	// Switch to system stack.</code></span>
-<span class="codeline" id="line-954"><code>	MOVD	R0, R9	// gosave_systemstack_switch&lt;&gt; and save_g might clobber R0</code></span>
-<span class="codeline" id="line-955"><code>	BL	gosave_systemstack_switch&lt;&gt;(SB)</code></span>
-<span class="codeline" id="line-956"><code>	MOVD	R3, g</code></span>
-<span class="codeline" id="line-957"><code>	BL	runtime·save_g(SB)</code></span>
-<span class="codeline" id="line-958"><code>	MOVD	(g_sched+gobuf_sp)(g), R0</code></span>
-<span class="codeline" id="line-959"><code>	MOVD	R0, RSP</code></span>
-<span class="codeline" id="line-960"><code>	MOVD	(g_sched+gobuf_bp)(g), R29</code></span>
-<span class="codeline" id="line-961"><code>	MOVD	R9, R0</code></span>
-<span class="codeline" id="line-962"><code></code></span>
-<span class="codeline" id="line-963"><code>	// Now on a scheduling stack (a pthread-created stack).</code></span>
-<span class="codeline" id="line-964"><code>	// Save room for two of our pointers /*, plus 32 bytes of callee</code></span>
-<span class="codeline" id="line-965"><code>	// save area that lives on the caller stack. */</code></span>
-<span class="codeline" id="line-966"><code>	MOVD	RSP, R13</code></span>
-<span class="codeline" id="line-967"><code>	SUB	$16, R13</code></span>
-<span class="codeline" id="line-968"><code>	MOVD	R13, RSP</code></span>
-<span class="codeline" id="line-969"><code>	MOVD	R4, 0(RSP)	// save old g on stack</code></span>
-<span class="codeline" id="line-970"><code>	MOVD	(g_stack+stack_hi)(R4), R4</code></span>
-<span class="codeline" id="line-971"><code>	SUB	R2, R4</code></span>
-<span class="codeline" id="line-972"><code>	MOVD	R4, 8(RSP)	// save depth in old g stack (can't just save SP, as stack might be copied during a callback)</code></span>
-<span class="codeline" id="line-973"><code>	BL	(R1)</code></span>
-<span class="codeline" id="line-974"><code>	MOVD	R0, R9</code></span>
-<span class="codeline" id="line-975"><code></code></span>
-<span class="codeline" id="line-976"><code>	// Restore g, stack pointer. R0 is errno, so don't touch it</code></span>
-<span class="codeline" id="line-977"><code>	MOVD	0(RSP), g</code></span>
-<span class="codeline" id="line-978"><code>	BL	runtime·save_g(SB)</code></span>
-<span class="codeline" id="line-979"><code>	MOVD	(g_stack+stack_hi)(g), R5</code></span>
-<span class="codeline" id="line-980"><code>	MOVD	8(RSP), R6</code></span>
-<span class="codeline" id="line-981"><code>	SUB	R6, R5</code></span>
-<span class="codeline" id="line-982"><code>	MOVD	R9, R0</code></span>
-<span class="codeline" id="line-983"><code>	MOVD	R5, RSP</code></span>
-<span class="codeline" id="line-984"><code></code></span>
-<span class="codeline" id="line-985"><code>	MOVW	R0, ret+16(FP)</code></span>
-<span class="codeline" id="line-986"><code>	RET</code></span>
-<span class="codeline" id="line-987"><code></code></span>
-<span class="codeline" id="line-988"><code>nosave:</code></span>
-<span class="codeline" id="line-989"><code>	// Running on a system stack, perhaps even without a g.</code></span>
-<span class="codeline" id="line-990"><code>	// Having no g can happen during thread creation or thread teardown</code></span>
-<span class="codeline" id="line-991"><code>	// (see needm/dropm on Solaris, for example).</code></span>
-<span class="codeline" id="line-992"><code>	// This code is like the above sequence but without saving/restoring g</code></span>
-<span class="codeline" id="line-993"><code>	// and without worrying about the stack moving out from under us</code></span>
-<span class="codeline" id="line-994"><code>	// (because we're on a system stack, not a goroutine stack).</code></span>
-<span class="codeline" id="line-995"><code>	// The above code could be used directly if already on a system stack,</code></span>
-<span class="codeline" id="line-996"><code>	// but then the only path through this code would be a rare case on Solaris.</code></span>
-<span class="codeline" id="line-997"><code>	// Using this code for all "already on system stack" calls exercises it more,</code></span>
-<span class="codeline" id="line-998"><code>	// which should help keep it correct.</code></span>
-<span class="codeline" id="line-999"><code>	MOVD	RSP, R13</code></span>
-<span class="codeline" id="line-1000"><code>	SUB	$16, R13</code></span>
-<span class="codeline" id="line-1001"><code>	MOVD	R13, RSP</code></span>
-<span class="codeline" id="line-1002"><code>	MOVD	$0, R4</code></span>
-<span class="codeline" id="line-1003"><code>	MOVD	R4, 0(RSP)	// Where above code stores g, in case someone looks during debugging.</code></span>
-<span class="codeline" id="line-1004"><code>	MOVD	R2, 8(RSP)	// Save original stack pointer.</code></span>
-<span class="codeline" id="line-1005"><code>	BL	(R1)</code></span>
-<span class="codeline" id="line-1006"><code>	// Restore stack pointer.</code></span>
-<span class="codeline" id="line-1007"><code>	MOVD	8(RSP), R2</code></span>
-<span class="codeline" id="line-1008"><code>	MOVD	R2, RSP</code></span>
-<span class="codeline" id="line-1009"><code>	MOVD	R0, ret+16(FP)</code></span>
-<span class="codeline" id="line-1010"><code>	RET</code></span>
-<span class="codeline" id="line-1011"><code></code></span>
-<span class="codeline" id="line-1012"><code>// cgocallback(fn, frame unsafe.Pointer, ctxt uintptr)</code></span>
-<span class="codeline" id="line-1013"><code>// See cgocall.go for more details.</code></span>
-<span class="codeline" id="line-1014"><code>TEXT ·cgocallback(SB),NOSPLIT,$24-24</code></span>
-<span class="codeline" id="line-1015"><code>	NO_LOCAL_POINTERS</code></span>
-<span class="codeline" id="line-1016"><code></code></span>
-<span class="codeline" id="line-1017"><code>	// Load g from thread-local storage.</code></span>
-<span class="codeline" id="line-1018"><code>	BL	runtime·load_g(SB)</code></span>
-<span class="codeline" id="line-1019"><code></code></span>
-<span class="codeline" id="line-1020"><code>	// If g is nil, Go did not create the current thread.</code></span>
-<span class="codeline" id="line-1021"><code>	// Call needm to obtain one for temporary use.</code></span>
-<span class="codeline" id="line-1022"><code>	// In this case, we're running on the thread stack, so there's</code></span>
-<span class="codeline" id="line-1023"><code>	// lots of space, but the linker doesn't know. Hide the call from</code></span>
-<span class="codeline" id="line-1024"><code>	// the linker analysis by using an indirect call.</code></span>
-<span class="codeline" id="line-1025"><code>	CBZ	g, needm</code></span>
-<span class="codeline" id="line-1026"><code></code></span>
-<span class="codeline" id="line-1027"><code>	MOVD	g_m(g), R8</code></span>
-<span class="codeline" id="line-1028"><code>	MOVD	R8, savedm-8(SP)</code></span>
-<span class="codeline" id="line-1029"><code>	B	havem</code></span>
-<span class="codeline" id="line-1030"><code></code></span>
-<span class="codeline" id="line-1031"><code>needm:</code></span>
-<span class="codeline" id="line-1032"><code>	MOVD	g, savedm-8(SP) // g is zero, so is m.</code></span>
-<span class="codeline" id="line-1033"><code>	MOVD	$runtime·needm(SB), R0</code></span>
-<span class="codeline" id="line-1034"><code>	BL	(R0)</code></span>
-<span class="codeline" id="line-1035"><code></code></span>
-<span class="codeline" id="line-1036"><code>	// Set m-&gt;g0-&gt;sched.sp = SP, so that if a panic happens</code></span>
-<span class="codeline" id="line-1037"><code>	// during the function we are about to execute, it will</code></span>
-<span class="codeline" id="line-1038"><code>	// have a valid SP to run on the g0 stack.</code></span>
-<span class="codeline" id="line-1039"><code>	// The next few lines (after the havem label)</code></span>
-<span class="codeline" id="line-1040"><code>	// will save this SP onto the stack and then write</code></span>
-<span class="codeline" id="line-1041"><code>	// the same SP back to m-&gt;sched.sp. That seems redundant,</code></span>
-<span class="codeline" id="line-1042"><code>	// but if an unrecovered panic happens, unwindm will</code></span>
-<span class="codeline" id="line-1043"><code>	// restore the g-&gt;sched.sp from the stack location</code></span>
-<span class="codeline" id="line-1044"><code>	// and then systemstack will try to use it. If we don't set it here,</code></span>
-<span class="codeline" id="line-1045"><code>	// that restored SP will be uninitialized (typically 0) and</code></span>
-<span class="codeline" id="line-1046"><code>	// will not be usable.</code></span>
-<span class="codeline" id="line-1047"><code>	MOVD	g_m(g), R8</code></span>
-<span class="codeline" id="line-1048"><code>	MOVD	m_g0(R8), R3</code></span>
-<span class="codeline" id="line-1049"><code>	MOVD	RSP, R0</code></span>
-<span class="codeline" id="line-1050"><code>	MOVD	R0, (g_sched+gobuf_sp)(R3)</code></span>
-<span class="codeline" id="line-1051"><code>	MOVD	R29, (g_sched+gobuf_bp)(R3)</code></span>
-<span class="codeline" id="line-1052"><code></code></span>
-<span class="codeline" id="line-1053"><code>havem:</code></span>
-<span class="codeline" id="line-1054"><code>	// Now there's a valid m, and we're running on its m-&gt;g0.</code></span>
-<span class="codeline" id="line-1055"><code>	// Save current m-&gt;g0-&gt;sched.sp on stack and then set it to SP.</code></span>
-<span class="codeline" id="line-1056"><code>	// Save current sp in m-&gt;g0-&gt;sched.sp in preparation for</code></span>
-<span class="codeline" id="line-1057"><code>	// switch back to m-&gt;curg stack.</code></span>
-<span class="codeline" id="line-1058"><code>	// NOTE: unwindm knows that the saved g-&gt;sched.sp is at 16(RSP) aka savedsp-16(SP).</code></span>
-<span class="codeline" id="line-1059"><code>	// Beware that the frame size is actually 32+16.</code></span>
-<span class="codeline" id="line-1060"><code>	MOVD	m_g0(R8), R3</code></span>
-<span class="codeline" id="line-1061"><code>	MOVD	(g_sched+gobuf_sp)(R3), R4</code></span>
-<span class="codeline" id="line-1062"><code>	MOVD	R4, savedsp-16(SP)</code></span>
-<span class="codeline" id="line-1063"><code>	MOVD	RSP, R0</code></span>
-<span class="codeline" id="line-1064"><code>	MOVD	R0, (g_sched+gobuf_sp)(R3)</code></span>
-<span class="codeline" id="line-1065"><code></code></span>
-<span class="codeline" id="line-1066"><code>	// Switch to m-&gt;curg stack and call runtime.cgocallbackg.</code></span>
-<span class="codeline" id="line-1067"><code>	// Because we are taking over the execution of m-&gt;curg</code></span>
-<span class="codeline" id="line-1068"><code>	// but *not* resuming what had been running, we need to</code></span>
-<span class="codeline" id="line-1069"><code>	// save that information (m-&gt;curg-&gt;sched) so we can restore it.</code></span>
-<span class="codeline" id="line-1070"><code>	// We can restore m-&gt;curg-&gt;sched.sp easily, because calling</code></span>
-<span class="codeline" id="line-1071"><code>	// runtime.cgocallbackg leaves SP unchanged upon return.</code></span>
-<span class="codeline" id="line-1072"><code>	// To save m-&gt;curg-&gt;sched.pc, we push it onto the curg stack and</code></span>
-<span class="codeline" id="line-1073"><code>	// open a frame the same size as cgocallback's g0 frame.</code></span>
-<span class="codeline" id="line-1074"><code>	// Once we switch to the curg stack, the pushed PC will appear</code></span>
-<span class="codeline" id="line-1075"><code>	// to be the return PC of cgocallback, so that the traceback</code></span>
-<span class="codeline" id="line-1076"><code>	// will seamlessly trace back into the earlier calls.</code></span>
-<span class="codeline" id="line-1077"><code>	MOVD	m_curg(R8), g</code></span>
-<span class="codeline" id="line-1078"><code>	BL	runtime·save_g(SB)</code></span>
-<span class="codeline" id="line-1079"><code>	MOVD	(g_sched+gobuf_sp)(g), R4 // prepare stack as R4</code></span>
-<span class="codeline" id="line-1080"><code>	MOVD	(g_sched+gobuf_pc)(g), R5</code></span>
-<span class="codeline" id="line-1081"><code>	MOVD	R5, -48(R4)</code></span>
-<span class="codeline" id="line-1082"><code>	MOVD	(g_sched+gobuf_bp)(g), R5</code></span>
-<span class="codeline" id="line-1083"><code>	MOVD	R5, -56(R4)</code></span>
-<span class="codeline" id="line-1084"><code>	// Gather our arguments into registers.</code></span>
-<span class="codeline" id="line-1085"><code>	MOVD	fn+0(FP), R1</code></span>
-<span class="codeline" id="line-1086"><code>	MOVD	frame+8(FP), R2</code></span>
-<span class="codeline" id="line-1087"><code>	MOVD	ctxt+16(FP), R3</code></span>
-<span class="codeline" id="line-1088"><code>	MOVD	$-48(R4), R0 // maintain 16-byte SP alignment</code></span>
-<span class="codeline" id="line-1089"><code>	MOVD	R0, RSP	// switch stack</code></span>
-<span class="codeline" id="line-1090"><code>	MOVD	R1, 8(RSP)</code></span>
-<span class="codeline" id="line-1091"><code>	MOVD	R2, 16(RSP)</code></span>
-<span class="codeline" id="line-1092"><code>	MOVD	R3, 24(RSP)</code></span>
-<span class="codeline" id="line-1093"><code>	MOVD	$runtime·cgocallbackg(SB), R0</code></span>
-<span class="codeline" id="line-1094"><code>	CALL	(R0) // indirect call to bypass nosplit check. We're on a different stack now.</code></span>
-<span class="codeline" id="line-1095"><code></code></span>
-<span class="codeline" id="line-1096"><code>	// Restore g-&gt;sched (== m-&gt;curg-&gt;sched) from saved values.</code></span>
-<span class="codeline" id="line-1097"><code>	MOVD	0(RSP), R5</code></span>
-<span class="codeline" id="line-1098"><code>	MOVD	R5, (g_sched+gobuf_pc)(g)</code></span>
-<span class="codeline" id="line-1099"><code>	MOVD	RSP, R4</code></span>
-<span class="codeline" id="line-1100"><code>	ADD	$48, R4, R4</code></span>
-<span class="codeline" id="line-1101"><code>	MOVD	R4, (g_sched+gobuf_sp)(g)</code></span>
-<span class="codeline" id="line-1102"><code></code></span>
-<span class="codeline" id="line-1103"><code>	// Switch back to m-&gt;g0's stack and restore m-&gt;g0-&gt;sched.sp.</code></span>
-<span class="codeline" id="line-1104"><code>	// (Unlike m-&gt;curg, the g0 goroutine never uses sched.pc,</code></span>
-<span class="codeline" id="line-1105"><code>	// so we do not have to restore it.)</code></span>
-<span class="codeline" id="line-1106"><code>	MOVD	g_m(g), R8</code></span>
-<span class="codeline" id="line-1107"><code>	MOVD	m_g0(R8), g</code></span>
-<span class="codeline" id="line-1108"><code>	BL	runtime·save_g(SB)</code></span>
-<span class="codeline" id="line-1109"><code>	MOVD	(g_sched+gobuf_sp)(g), R0</code></span>
-<span class="codeline" id="line-1110"><code>	MOVD	R0, RSP</code></span>
-<span class="codeline" id="line-1111"><code>	MOVD	savedsp-16(SP), R4</code></span>
+<span class="codeline" id="line-614"><code>	AESMC	V2.B16, V2.B16</code></span>
+<span class="codeline" id="line-615"><code></code></span>
+<span class="codeline" id="line-616"><code>	VMOV	V2.D[0], R0</code></span>
+<span class="codeline" id="line-617"><code>	RET</code></span>
+<span class="codeline" id="line-618"><code></code></span>
+<span class="codeline" id="line-619"><code>aes0:</code></span>
+<span class="codeline" id="line-620"><code>	VMOV	V0.D[0], R0</code></span>
+<span class="codeline" id="line-621"><code>	RET</code></span>
+<span class="codeline" id="line-622"><code></code></span>
+<span class="codeline" id="line-623"><code>aes16:</code></span>
+<span class="codeline" id="line-624"><code>	VLD1	(R0), [V2.B16]</code></span>
+<span class="codeline" id="line-625"><code>	B	done</code></span>
+<span class="codeline" id="line-626"><code></code></span>
+<span class="codeline" id="line-627"><code>aes17to32:</code></span>
+<span class="codeline" id="line-628"><code>	// make second seed</code></span>
+<span class="codeline" id="line-629"><code>	VLD1	(R4), [V1.B16]</code></span>
+<span class="codeline" id="line-630"><code>	AESE	V30.B16, V1.B16</code></span>
+<span class="codeline" id="line-631"><code>	AESMC	V1.B16, V1.B16</code></span>
+<span class="codeline" id="line-632"><code>	SUB	$16, R2, R10</code></span>
+<span class="codeline" id="line-633"><code>	VLD1.P	(R0)(R10), [V2.B16]</code></span>
+<span class="codeline" id="line-634"><code>	VLD1	(R0), [V3.B16]</code></span>
+<span class="codeline" id="line-635"><code></code></span>
+<span class="codeline" id="line-636"><code>	AESE	V0.B16, V2.B16</code></span>
+<span class="codeline" id="line-637"><code>	AESMC	V2.B16, V2.B16</code></span>
+<span class="codeline" id="line-638"><code>	AESE	V1.B16, V3.B16</code></span>
+<span class="codeline" id="line-639"><code>	AESMC	V3.B16, V3.B16</code></span>
+<span class="codeline" id="line-640"><code></code></span>
+<span class="codeline" id="line-641"><code>	AESE	V0.B16, V2.B16</code></span>
+<span class="codeline" id="line-642"><code>	AESMC	V2.B16, V2.B16</code></span>
+<span class="codeline" id="line-643"><code>	AESE	V1.B16, V3.B16</code></span>
+<span class="codeline" id="line-644"><code>	AESMC	V3.B16, V3.B16</code></span>
+<span class="codeline" id="line-645"><code></code></span>
+<span class="codeline" id="line-646"><code>	AESE	V0.B16, V2.B16</code></span>
+<span class="codeline" id="line-647"><code>	AESE	V1.B16, V3.B16</code></span>
+<span class="codeline" id="line-648"><code></code></span>
+<span class="codeline" id="line-649"><code>	VEOR	V3.B16, V2.B16, V2.B16</code></span>
+<span class="codeline" id="line-650"><code></code></span>
+<span class="codeline" id="line-651"><code>	VMOV	V2.D[0], R0</code></span>
+<span class="codeline" id="line-652"><code>	RET</code></span>
+<span class="codeline" id="line-653"><code></code></span>
+<span class="codeline" id="line-654"><code>aes33to64:</code></span>
+<span class="codeline" id="line-655"><code>	VLD1	(R4), [V1.B16, V2.B16, V3.B16]</code></span>
+<span class="codeline" id="line-656"><code>	AESE	V30.B16, V1.B16</code></span>
+<span class="codeline" id="line-657"><code>	AESMC	V1.B16, V1.B16</code></span>
+<span class="codeline" id="line-658"><code>	AESE	V30.B16, V2.B16</code></span>
+<span class="codeline" id="line-659"><code>	AESMC	V2.B16, V2.B16</code></span>
+<span class="codeline" id="line-660"><code>	AESE	V30.B16, V3.B16</code></span>
+<span class="codeline" id="line-661"><code>	AESMC	V3.B16, V3.B16</code></span>
+<span class="codeline" id="line-662"><code>	SUB	$32, R2, R10</code></span>
+<span class="codeline" id="line-663"><code></code></span>
+<span class="codeline" id="line-664"><code>	VLD1.P	(R0)(R10), [V4.B16, V5.B16]</code></span>
+<span class="codeline" id="line-665"><code>	VLD1	(R0), [V6.B16, V7.B16]</code></span>
+<span class="codeline" id="line-666"><code></code></span>
+<span class="codeline" id="line-667"><code>	AESE	V0.B16, V4.B16</code></span>
+<span class="codeline" id="line-668"><code>	AESMC	V4.B16, V4.B16</code></span>
+<span class="codeline" id="line-669"><code>	AESE	V1.B16, V5.B16</code></span>
+<span class="codeline" id="line-670"><code>	AESMC	V5.B16, V5.B16</code></span>
+<span class="codeline" id="line-671"><code>	AESE	V2.B16, V6.B16</code></span>
+<span class="codeline" id="line-672"><code>	AESMC	V6.B16, V6.B16</code></span>
+<span class="codeline" id="line-673"><code>	AESE	V3.B16, V7.B16</code></span>
+<span class="codeline" id="line-674"><code>	AESMC	V7.B16, V7.B16</code></span>
+<span class="codeline" id="line-675"><code></code></span>
+<span class="codeline" id="line-676"><code>	AESE	V0.B16, V4.B16</code></span>
+<span class="codeline" id="line-677"><code>	AESMC	V4.B16, V4.B16</code></span>
+<span class="codeline" id="line-678"><code>	AESE	V1.B16, V5.B16</code></span>
+<span class="codeline" id="line-679"><code>	AESMC	V5.B16, V5.B16</code></span>
+<span class="codeline" id="line-680"><code>	AESE	V2.B16, V6.B16</code></span>
+<span class="codeline" id="line-681"><code>	AESMC	V6.B16, V6.B16</code></span>
+<span class="codeline" id="line-682"><code>	AESE	V3.B16, V7.B16</code></span>
+<span class="codeline" id="line-683"><code>	AESMC	V7.B16, V7.B16</code></span>
+<span class="codeline" id="line-684"><code></code></span>
+<span class="codeline" id="line-685"><code>	AESE	V0.B16, V4.B16</code></span>
+<span class="codeline" id="line-686"><code>	AESE	V1.B16, V5.B16</code></span>
+<span class="codeline" id="line-687"><code>	AESE	V2.B16, V6.B16</code></span>
+<span class="codeline" id="line-688"><code>	AESE	V3.B16, V7.B16</code></span>
+<span class="codeline" id="line-689"><code></code></span>
+<span class="codeline" id="line-690"><code>	VEOR	V6.B16, V4.B16, V4.B16</code></span>
+<span class="codeline" id="line-691"><code>	VEOR	V7.B16, V5.B16, V5.B16</code></span>
+<span class="codeline" id="line-692"><code>	VEOR	V5.B16, V4.B16, V4.B16</code></span>
+<span class="codeline" id="line-693"><code></code></span>
+<span class="codeline" id="line-694"><code>	VMOV	V4.D[0], R0</code></span>
+<span class="codeline" id="line-695"><code>	RET</code></span>
+<span class="codeline" id="line-696"><code></code></span>
+<span class="codeline" id="line-697"><code>aes65to128:</code></span>
+<span class="codeline" id="line-698"><code>	VLD1.P	64(R4), [V1.B16, V2.B16, V3.B16, V4.B16]</code></span>
+<span class="codeline" id="line-699"><code>	VLD1	(R4), [V5.B16, V6.B16, V7.B16]</code></span>
+<span class="codeline" id="line-700"><code>	AESE	V30.B16, V1.B16</code></span>
+<span class="codeline" id="line-701"><code>	AESMC	V1.B16, V1.B16</code></span>
+<span class="codeline" id="line-702"><code>	AESE	V30.B16, V2.B16</code></span>
+<span class="codeline" id="line-703"><code>	AESMC	V2.B16, V2.B16</code></span>
+<span class="codeline" id="line-704"><code>	AESE	V30.B16, V3.B16</code></span>
+<span class="codeline" id="line-705"><code>	AESMC	V3.B16, V3.B16</code></span>
+<span class="codeline" id="line-706"><code>	AESE	V30.B16, V4.B16</code></span>
+<span class="codeline" id="line-707"><code>	AESMC	V4.B16, V4.B16</code></span>
+<span class="codeline" id="line-708"><code>	AESE	V30.B16, V5.B16</code></span>
+<span class="codeline" id="line-709"><code>	AESMC	V5.B16, V5.B16</code></span>
+<span class="codeline" id="line-710"><code>	AESE	V30.B16, V6.B16</code></span>
+<span class="codeline" id="line-711"><code>	AESMC	V6.B16, V6.B16</code></span>
+<span class="codeline" id="line-712"><code>	AESE	V30.B16, V7.B16</code></span>
+<span class="codeline" id="line-713"><code>	AESMC	V7.B16, V7.B16</code></span>
+<span class="codeline" id="line-714"><code></code></span>
+<span class="codeline" id="line-715"><code>	SUB	$64, R2, R10</code></span>
+<span class="codeline" id="line-716"><code>	VLD1.P	(R0)(R10), [V8.B16, V9.B16, V10.B16, V11.B16]</code></span>
+<span class="codeline" id="line-717"><code>	VLD1	(R0), [V12.B16, V13.B16, V14.B16, V15.B16]</code></span>
+<span class="codeline" id="line-718"><code>	AESE	V0.B16,	 V8.B16</code></span>
+<span class="codeline" id="line-719"><code>	AESMC	V8.B16,  V8.B16</code></span>
+<span class="codeline" id="line-720"><code>	AESE	V1.B16,	 V9.B16</code></span>
+<span class="codeline" id="line-721"><code>	AESMC	V9.B16,  V9.B16</code></span>
+<span class="codeline" id="line-722"><code>	AESE	V2.B16, V10.B16</code></span>
+<span class="codeline" id="line-723"><code>	AESMC	V10.B16,  V10.B16</code></span>
+<span class="codeline" id="line-724"><code>	AESE	V3.B16, V11.B16</code></span>
+<span class="codeline" id="line-725"><code>	AESMC	V11.B16,  V11.B16</code></span>
+<span class="codeline" id="line-726"><code>	AESE	V4.B16, V12.B16</code></span>
+<span class="codeline" id="line-727"><code>	AESMC	V12.B16,  V12.B16</code></span>
+<span class="codeline" id="line-728"><code>	AESE	V5.B16, V13.B16</code></span>
+<span class="codeline" id="line-729"><code>	AESMC	V13.B16,  V13.B16</code></span>
+<span class="codeline" id="line-730"><code>	AESE	V6.B16, V14.B16</code></span>
+<span class="codeline" id="line-731"><code>	AESMC	V14.B16,  V14.B16</code></span>
+<span class="codeline" id="line-732"><code>	AESE	V7.B16, V15.B16</code></span>
+<span class="codeline" id="line-733"><code>	AESMC	V15.B16,  V15.B16</code></span>
+<span class="codeline" id="line-734"><code></code></span>
+<span class="codeline" id="line-735"><code>	AESE	V0.B16,	 V8.B16</code></span>
+<span class="codeline" id="line-736"><code>	AESMC	V8.B16,  V8.B16</code></span>
+<span class="codeline" id="line-737"><code>	AESE	V1.B16,	 V9.B16</code></span>
+<span class="codeline" id="line-738"><code>	AESMC	V9.B16,  V9.B16</code></span>
+<span class="codeline" id="line-739"><code>	AESE	V2.B16, V10.B16</code></span>
+<span class="codeline" id="line-740"><code>	AESMC	V10.B16,  V10.B16</code></span>
+<span class="codeline" id="line-741"><code>	AESE	V3.B16, V11.B16</code></span>
+<span class="codeline" id="line-742"><code>	AESMC	V11.B16,  V11.B16</code></span>
+<span class="codeline" id="line-743"><code>	AESE	V4.B16, V12.B16</code></span>
+<span class="codeline" id="line-744"><code>	AESMC	V12.B16,  V12.B16</code></span>
+<span class="codeline" id="line-745"><code>	AESE	V5.B16, V13.B16</code></span>
+<span class="codeline" id="line-746"><code>	AESMC	V13.B16,  V13.B16</code></span>
+<span class="codeline" id="line-747"><code>	AESE	V6.B16, V14.B16</code></span>
+<span class="codeline" id="line-748"><code>	AESMC	V14.B16,  V14.B16</code></span>
+<span class="codeline" id="line-749"><code>	AESE	V7.B16, V15.B16</code></span>
+<span class="codeline" id="line-750"><code>	AESMC	V15.B16,  V15.B16</code></span>
+<span class="codeline" id="line-751"><code></code></span>
+<span class="codeline" id="line-752"><code>	AESE	V0.B16,	 V8.B16</code></span>
+<span class="codeline" id="line-753"><code>	AESE	V1.B16,	 V9.B16</code></span>
+<span class="codeline" id="line-754"><code>	AESE	V2.B16, V10.B16</code></span>
+<span class="codeline" id="line-755"><code>	AESE	V3.B16, V11.B16</code></span>
+<span class="codeline" id="line-756"><code>	AESE	V4.B16, V12.B16</code></span>
+<span class="codeline" id="line-757"><code>	AESE	V5.B16, V13.B16</code></span>
+<span class="codeline" id="line-758"><code>	AESE	V6.B16, V14.B16</code></span>
+<span class="codeline" id="line-759"><code>	AESE	V7.B16, V15.B16</code></span>
+<span class="codeline" id="line-760"><code></code></span>
+<span class="codeline" id="line-761"><code>	VEOR	V12.B16, V8.B16, V8.B16</code></span>
+<span class="codeline" id="line-762"><code>	VEOR	V13.B16, V9.B16, V9.B16</code></span>
+<span class="codeline" id="line-763"><code>	VEOR	V14.B16, V10.B16, V10.B16</code></span>
+<span class="codeline" id="line-764"><code>	VEOR	V15.B16, V11.B16, V11.B16</code></span>
+<span class="codeline" id="line-765"><code>	VEOR	V10.B16, V8.B16, V8.B16</code></span>
+<span class="codeline" id="line-766"><code>	VEOR	V11.B16, V9.B16, V9.B16</code></span>
+<span class="codeline" id="line-767"><code>	VEOR	V9.B16, V8.B16, V8.B16</code></span>
+<span class="codeline" id="line-768"><code></code></span>
+<span class="codeline" id="line-769"><code>	VMOV	V8.D[0], R0</code></span>
+<span class="codeline" id="line-770"><code>	RET</code></span>
+<span class="codeline" id="line-771"><code></code></span>
+<span class="codeline" id="line-772"><code>aes129plus:</code></span>
+<span class="codeline" id="line-773"><code>	PRFM (R0), PLDL1KEEP</code></span>
+<span class="codeline" id="line-774"><code>	VLD1.P	64(R4), [V1.B16, V2.B16, V3.B16, V4.B16]</code></span>
+<span class="codeline" id="line-775"><code>	VLD1	(R4), [V5.B16, V6.B16, V7.B16]</code></span>
+<span class="codeline" id="line-776"><code>	AESE	V30.B16, V1.B16</code></span>
+<span class="codeline" id="line-777"><code>	AESMC	V1.B16, V1.B16</code></span>
+<span class="codeline" id="line-778"><code>	AESE	V30.B16, V2.B16</code></span>
+<span class="codeline" id="line-779"><code>	AESMC	V2.B16, V2.B16</code></span>
+<span class="codeline" id="line-780"><code>	AESE	V30.B16, V3.B16</code></span>
+<span class="codeline" id="line-781"><code>	AESMC	V3.B16, V3.B16</code></span>
+<span class="codeline" id="line-782"><code>	AESE	V30.B16, V4.B16</code></span>
+<span class="codeline" id="line-783"><code>	AESMC	V4.B16, V4.B16</code></span>
+<span class="codeline" id="line-784"><code>	AESE	V30.B16, V5.B16</code></span>
+<span class="codeline" id="line-785"><code>	AESMC	V5.B16, V5.B16</code></span>
+<span class="codeline" id="line-786"><code>	AESE	V30.B16, V6.B16</code></span>
+<span class="codeline" id="line-787"><code>	AESMC	V6.B16, V6.B16</code></span>
+<span class="codeline" id="line-788"><code>	AESE	V30.B16, V7.B16</code></span>
+<span class="codeline" id="line-789"><code>	AESMC	V7.B16, V7.B16</code></span>
+<span class="codeline" id="line-790"><code>	ADD	R0, R2, R10</code></span>
+<span class="codeline" id="line-791"><code>	SUB	$128, R10, R10</code></span>
+<span class="codeline" id="line-792"><code>	VLD1.P	64(R10), [V8.B16, V9.B16, V10.B16, V11.B16]</code></span>
+<span class="codeline" id="line-793"><code>	VLD1	(R10), [V12.B16, V13.B16, V14.B16, V15.B16]</code></span>
+<span class="codeline" id="line-794"><code>	SUB	$1, R2, R2</code></span>
+<span class="codeline" id="line-795"><code>	LSR	$7, R2, R2</code></span>
+<span class="codeline" id="line-796"><code></code></span>
+<span class="codeline" id="line-797"><code>aesloop:</code></span>
+<span class="codeline" id="line-798"><code>	AESE	V8.B16,	 V0.B16</code></span>
+<span class="codeline" id="line-799"><code>	AESMC	V0.B16,  V0.B16</code></span>
+<span class="codeline" id="line-800"><code>	AESE	V9.B16,	 V1.B16</code></span>
+<span class="codeline" id="line-801"><code>	AESMC	V1.B16,  V1.B16</code></span>
+<span class="codeline" id="line-802"><code>	AESE	V10.B16, V2.B16</code></span>
+<span class="codeline" id="line-803"><code>	AESMC	V2.B16,  V2.B16</code></span>
+<span class="codeline" id="line-804"><code>	AESE	V11.B16, V3.B16</code></span>
+<span class="codeline" id="line-805"><code>	AESMC	V3.B16,  V3.B16</code></span>
+<span class="codeline" id="line-806"><code>	AESE	V12.B16, V4.B16</code></span>
+<span class="codeline" id="line-807"><code>	AESMC	V4.B16,  V4.B16</code></span>
+<span class="codeline" id="line-808"><code>	AESE	V13.B16, V5.B16</code></span>
+<span class="codeline" id="line-809"><code>	AESMC	V5.B16,  V5.B16</code></span>
+<span class="codeline" id="line-810"><code>	AESE	V14.B16, V6.B16</code></span>
+<span class="codeline" id="line-811"><code>	AESMC	V6.B16,  V6.B16</code></span>
+<span class="codeline" id="line-812"><code>	AESE	V15.B16, V7.B16</code></span>
+<span class="codeline" id="line-813"><code>	AESMC	V7.B16,  V7.B16</code></span>
+<span class="codeline" id="line-814"><code></code></span>
+<span class="codeline" id="line-815"><code>	VLD1.P	64(R0), [V8.B16, V9.B16, V10.B16, V11.B16]</code></span>
+<span class="codeline" id="line-816"><code>	AESE	V8.B16,	 V0.B16</code></span>
+<span class="codeline" id="line-817"><code>	AESMC	V0.B16,  V0.B16</code></span>
+<span class="codeline" id="line-818"><code>	AESE	V9.B16,	 V1.B16</code></span>
+<span class="codeline" id="line-819"><code>	AESMC	V1.B16,  V1.B16</code></span>
+<span class="codeline" id="line-820"><code>	AESE	V10.B16, V2.B16</code></span>
+<span class="codeline" id="line-821"><code>	AESMC	V2.B16,  V2.B16</code></span>
+<span class="codeline" id="line-822"><code>	AESE	V11.B16, V3.B16</code></span>
+<span class="codeline" id="line-823"><code>	AESMC	V3.B16,  V3.B16</code></span>
+<span class="codeline" id="line-824"><code></code></span>
+<span class="codeline" id="line-825"><code>	VLD1.P	64(R0), [V12.B16, V13.B16, V14.B16, V15.B16]</code></span>
+<span class="codeline" id="line-826"><code>	AESE	V12.B16, V4.B16</code></span>
+<span class="codeline" id="line-827"><code>	AESMC	V4.B16,  V4.B16</code></span>
+<span class="codeline" id="line-828"><code>	AESE	V13.B16, V5.B16</code></span>
+<span class="codeline" id="line-829"><code>	AESMC	V5.B16,  V5.B16</code></span>
+<span class="codeline" id="line-830"><code>	AESE	V14.B16, V6.B16</code></span>
+<span class="codeline" id="line-831"><code>	AESMC	V6.B16,  V6.B16</code></span>
+<span class="codeline" id="line-832"><code>	AESE	V15.B16, V7.B16</code></span>
+<span class="codeline" id="line-833"><code>	AESMC	V7.B16,  V7.B16</code></span>
+<span class="codeline" id="line-834"><code>	SUB	$1, R2, R2</code></span>
+<span class="codeline" id="line-835"><code>	CBNZ	R2, aesloop</code></span>
+<span class="codeline" id="line-836"><code></code></span>
+<span class="codeline" id="line-837"><code>	AESE	V8.B16,	 V0.B16</code></span>
+<span class="codeline" id="line-838"><code>	AESMC	V0.B16,  V0.B16</code></span>
+<span class="codeline" id="line-839"><code>	AESE	V9.B16,	 V1.B16</code></span>
+<span class="codeline" id="line-840"><code>	AESMC	V1.B16,  V1.B16</code></span>
+<span class="codeline" id="line-841"><code>	AESE	V10.B16, V2.B16</code></span>
+<span class="codeline" id="line-842"><code>	AESMC	V2.B16,  V2.B16</code></span>
+<span class="codeline" id="line-843"><code>	AESE	V11.B16, V3.B16</code></span>
+<span class="codeline" id="line-844"><code>	AESMC	V3.B16,  V3.B16</code></span>
+<span class="codeline" id="line-845"><code>	AESE	V12.B16, V4.B16</code></span>
+<span class="codeline" id="line-846"><code>	AESMC	V4.B16,  V4.B16</code></span>
+<span class="codeline" id="line-847"><code>	AESE	V13.B16, V5.B16</code></span>
+<span class="codeline" id="line-848"><code>	AESMC	V5.B16,  V5.B16</code></span>
+<span class="codeline" id="line-849"><code>	AESE	V14.B16, V6.B16</code></span>
+<span class="codeline" id="line-850"><code>	AESMC	V6.B16,  V6.B16</code></span>
+<span class="codeline" id="line-851"><code>	AESE	V15.B16, V7.B16</code></span>
+<span class="codeline" id="line-852"><code>	AESMC	V7.B16,  V7.B16</code></span>
+<span class="codeline" id="line-853"><code></code></span>
+<span class="codeline" id="line-854"><code>	AESE	V8.B16,	 V0.B16</code></span>
+<span class="codeline" id="line-855"><code>	AESMC	V0.B16,  V0.B16</code></span>
+<span class="codeline" id="line-856"><code>	AESE	V9.B16,	 V1.B16</code></span>
+<span class="codeline" id="line-857"><code>	AESMC	V1.B16,  V1.B16</code></span>
+<span class="codeline" id="line-858"><code>	AESE	V10.B16, V2.B16</code></span>
+<span class="codeline" id="line-859"><code>	AESMC	V2.B16,  V2.B16</code></span>
+<span class="codeline" id="line-860"><code>	AESE	V11.B16, V3.B16</code></span>
+<span class="codeline" id="line-861"><code>	AESMC	V3.B16,  V3.B16</code></span>
+<span class="codeline" id="line-862"><code>	AESE	V12.B16, V4.B16</code></span>
+<span class="codeline" id="line-863"><code>	AESMC	V4.B16,  V4.B16</code></span>
+<span class="codeline" id="line-864"><code>	AESE	V13.B16, V5.B16</code></span>
+<span class="codeline" id="line-865"><code>	AESMC	V5.B16,  V5.B16</code></span>
+<span class="codeline" id="line-866"><code>	AESE	V14.B16, V6.B16</code></span>
+<span class="codeline" id="line-867"><code>	AESMC	V6.B16,  V6.B16</code></span>
+<span class="codeline" id="line-868"><code>	AESE	V15.B16, V7.B16</code></span>
+<span class="codeline" id="line-869"><code>	AESMC	V7.B16,  V7.B16</code></span>
+<span class="codeline" id="line-870"><code></code></span>
+<span class="codeline" id="line-871"><code>	AESE	V8.B16,	 V0.B16</code></span>
+<span class="codeline" id="line-872"><code>	AESE	V9.B16,	 V1.B16</code></span>
+<span class="codeline" id="line-873"><code>	AESE	V10.B16, V2.B16</code></span>
+<span class="codeline" id="line-874"><code>	AESE	V11.B16, V3.B16</code></span>
+<span class="codeline" id="line-875"><code>	AESE	V12.B16, V4.B16</code></span>
+<span class="codeline" id="line-876"><code>	AESE	V13.B16, V5.B16</code></span>
+<span class="codeline" id="line-877"><code>	AESE	V14.B16, V6.B16</code></span>
+<span class="codeline" id="line-878"><code>	AESE	V15.B16, V7.B16</code></span>
+<span class="codeline" id="line-879"><code></code></span>
+<span class="codeline" id="line-880"><code>	VEOR	V0.B16, V1.B16, V0.B16</code></span>
+<span class="codeline" id="line-881"><code>	VEOR	V2.B16, V3.B16, V2.B16</code></span>
+<span class="codeline" id="line-882"><code>	VEOR	V4.B16, V5.B16, V4.B16</code></span>
+<span class="codeline" id="line-883"><code>	VEOR	V6.B16, V7.B16, V6.B16</code></span>
+<span class="codeline" id="line-884"><code>	VEOR	V0.B16, V2.B16, V0.B16</code></span>
+<span class="codeline" id="line-885"><code>	VEOR	V4.B16, V6.B16, V4.B16</code></span>
+<span class="codeline" id="line-886"><code>	VEOR	V4.B16, V0.B16, V0.B16</code></span>
+<span class="codeline" id="line-887"><code></code></span>
+<span class="codeline" id="line-888"><code>	VMOV	V0.D[0], R0</code></span>
+<span class="codeline" id="line-889"><code>	RET</code></span>
+<span class="codeline" id="line-890"><code></code></span>
+<span class="codeline" id="line-891"><code>TEXT runtime·procyield(SB),NOSPLIT,$0-0</code></span>
+<span class="codeline" id="line-892"><code>	MOVWU	cycles+0(FP), R0</code></span>
+<span class="codeline" id="line-893"><code>again:</code></span>
+<span class="codeline" id="line-894"><code>	YIELD</code></span>
+<span class="codeline" id="line-895"><code>	SUBW	$1, R0</code></span>
+<span class="codeline" id="line-896"><code>	CBNZ	R0, again</code></span>
+<span class="codeline" id="line-897"><code>	RET</code></span>
+<span class="codeline" id="line-898"><code></code></span>
+<span class="codeline" id="line-899"><code>// Save state of caller into g-&gt;sched,</code></span>
+<span class="codeline" id="line-900"><code>// but using fake PC from systemstack_switch.</code></span>
+<span class="codeline" id="line-901"><code>// Must only be called from functions with no locals ($0)</code></span>
+<span class="codeline" id="line-902"><code>// or else unwinding from systemstack_switch is incorrect.</code></span>
+<span class="codeline" id="line-903"><code>// Smashes R0.</code></span>
+<span class="codeline" id="line-904"><code>TEXT gosave_systemstack_switch&lt;&gt;(SB),NOSPLIT|NOFRAME,$0</code></span>
+<span class="codeline" id="line-905"><code>	MOVD	$runtime·systemstack_switch(SB), R0</code></span>
+<span class="codeline" id="line-906"><code>	ADD	$8, R0	// get past prologue</code></span>
+<span class="codeline" id="line-907"><code>	MOVD	R0, (g_sched+gobuf_pc)(g)</code></span>
+<span class="codeline" id="line-908"><code>	MOVD	RSP, R0</code></span>
+<span class="codeline" id="line-909"><code>	MOVD	R0, (g_sched+gobuf_sp)(g)</code></span>
+<span class="codeline" id="line-910"><code>	MOVD	R29, (g_sched+gobuf_bp)(g)</code></span>
+<span class="codeline" id="line-911"><code>	MOVD	$0, (g_sched+gobuf_lr)(g)</code></span>
+<span class="codeline" id="line-912"><code>	MOVD	$0, (g_sched+gobuf_ret)(g)</code></span>
+<span class="codeline" id="line-913"><code>	// Assert ctxt is zero. See func save.</code></span>
+<span class="codeline" id="line-914"><code>	MOVD	(g_sched+gobuf_ctxt)(g), R0</code></span>
+<span class="codeline" id="line-915"><code>	CBZ	R0, 2(PC)</code></span>
+<span class="codeline" id="line-916"><code>	CALL	runtime·abort(SB)</code></span>
+<span class="codeline" id="line-917"><code>	RET</code></span>
+<span class="codeline" id="line-918"><code></code></span>
+<span class="codeline" id="line-919"><code>// func asmcgocall_no_g(fn, arg unsafe.Pointer)</code></span>
+<span class="codeline" id="line-920"><code>// Call fn(arg) aligned appropriately for the gcc ABI.</code></span>
+<span class="codeline" id="line-921"><code>// Called on a system stack, and there may be no g yet (during needm).</code></span>
+<span class="codeline" id="line-922"><code>TEXT ·asmcgocall_no_g(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-923"><code>	MOVD	fn+0(FP), R1</code></span>
+<span class="codeline" id="line-924"><code>	MOVD	arg+8(FP), R0</code></span>
+<span class="codeline" id="line-925"><code>	SUB	$16, RSP	// skip over saved frame pointer below RSP</code></span>
+<span class="codeline" id="line-926"><code>	BL	(R1)</code></span>
+<span class="codeline" id="line-927"><code>	ADD	$16, RSP	// skip over saved frame pointer below RSP</code></span>
+<span class="codeline" id="line-928"><code>	RET</code></span>
+<span class="codeline" id="line-929"><code></code></span>
+<span class="codeline" id="line-930"><code>// func asmcgocall(fn, arg unsafe.Pointer) int32</code></span>
+<span class="codeline" id="line-931"><code>// Call fn(arg) on the scheduler stack,</code></span>
+<span class="codeline" id="line-932"><code>// aligned appropriately for the gcc ABI.</code></span>
+<span class="codeline" id="line-933"><code>// See cgocall.go for more details.</code></span>
+<span class="codeline" id="line-934"><code>TEXT ·asmcgocall(SB),NOSPLIT,$0-20</code></span>
+<span class="codeline" id="line-935"><code>	MOVD	fn+0(FP), R1</code></span>
+<span class="codeline" id="line-936"><code>	MOVD	arg+8(FP), R0</code></span>
+<span class="codeline" id="line-937"><code></code></span>
+<span class="codeline" id="line-938"><code>	MOVD	RSP, R2		// save original stack pointer</code></span>
+<span class="codeline" id="line-939"><code>	CBZ	g, nosave</code></span>
+<span class="codeline" id="line-940"><code>	MOVD	g, R4</code></span>
+<span class="codeline" id="line-941"><code></code></span>
+<span class="codeline" id="line-942"><code>	// Figure out if we need to switch to m-&gt;g0 stack.</code></span>
+<span class="codeline" id="line-943"><code>	// We get called to create new OS threads too, and those</code></span>
+<span class="codeline" id="line-944"><code>	// come in on the m-&gt;g0 stack already. Or we might already</code></span>
+<span class="codeline" id="line-945"><code>	// be on the m-&gt;gsignal stack.</code></span>
+<span class="codeline" id="line-946"><code>	MOVD	g_m(g), R8</code></span>
+<span class="codeline" id="line-947"><code>	MOVD	m_gsignal(R8), R3</code></span>
+<span class="codeline" id="line-948"><code>	CMP	R3, g</code></span>
+<span class="codeline" id="line-949"><code>	BEQ	nosave</code></span>
+<span class="codeline" id="line-950"><code>	MOVD	m_g0(R8), R3</code></span>
+<span class="codeline" id="line-951"><code>	CMP	R3, g</code></span>
+<span class="codeline" id="line-952"><code>	BEQ	nosave</code></span>
+<span class="codeline" id="line-953"><code></code></span>
+<span class="codeline" id="line-954"><code>	// Switch to system stack.</code></span>
+<span class="codeline" id="line-955"><code>	MOVD	R0, R9	// gosave_systemstack_switch&lt;&gt; and save_g might clobber R0</code></span>
+<span class="codeline" id="line-956"><code>	BL	gosave_systemstack_switch&lt;&gt;(SB)</code></span>
+<span class="codeline" id="line-957"><code>	MOVD	R3, g</code></span>
+<span class="codeline" id="line-958"><code>	BL	runtime·save_g(SB)</code></span>
+<span class="codeline" id="line-959"><code>	MOVD	(g_sched+gobuf_sp)(g), R0</code></span>
+<span class="codeline" id="line-960"><code>	MOVD	R0, RSP</code></span>
+<span class="codeline" id="line-961"><code>	MOVD	(g_sched+gobuf_bp)(g), R29</code></span>
+<span class="codeline" id="line-962"><code>	MOVD	R9, R0</code></span>
+<span class="codeline" id="line-963"><code></code></span>
+<span class="codeline" id="line-964"><code>	// Now on a scheduling stack (a pthread-created stack).</code></span>
+<span class="codeline" id="line-965"><code>	// Save room for two of our pointers /*, plus 32 bytes of callee</code></span>
+<span class="codeline" id="line-966"><code>	// save area that lives on the caller stack. */</code></span>
+<span class="codeline" id="line-967"><code>	MOVD	RSP, R13</code></span>
+<span class="codeline" id="line-968"><code>	SUB	$16, R13</code></span>
+<span class="codeline" id="line-969"><code>	MOVD	R13, RSP</code></span>
+<span class="codeline" id="line-970"><code>	MOVD	R4, 0(RSP)	// save old g on stack</code></span>
+<span class="codeline" id="line-971"><code>	MOVD	(g_stack+stack_hi)(R4), R4</code></span>
+<span class="codeline" id="line-972"><code>	SUB	R2, R4</code></span>
+<span class="codeline" id="line-973"><code>	MOVD	R4, 8(RSP)	// save depth in old g stack (can't just save SP, as stack might be copied during a callback)</code></span>
+<span class="codeline" id="line-974"><code>	BL	(R1)</code></span>
+<span class="codeline" id="line-975"><code>	MOVD	R0, R9</code></span>
+<span class="codeline" id="line-976"><code></code></span>
+<span class="codeline" id="line-977"><code>	// Restore g, stack pointer. R0 is errno, so don't touch it</code></span>
+<span class="codeline" id="line-978"><code>	MOVD	0(RSP), g</code></span>
+<span class="codeline" id="line-979"><code>	BL	runtime·save_g(SB)</code></span>
+<span class="codeline" id="line-980"><code>	MOVD	(g_stack+stack_hi)(g), R5</code></span>
+<span class="codeline" id="line-981"><code>	MOVD	8(RSP), R6</code></span>
+<span class="codeline" id="line-982"><code>	SUB	R6, R5</code></span>
+<span class="codeline" id="line-983"><code>	MOVD	R9, R0</code></span>
+<span class="codeline" id="line-984"><code>	MOVD	R5, RSP</code></span>
+<span class="codeline" id="line-985"><code></code></span>
+<span class="codeline" id="line-986"><code>	MOVW	R0, ret+16(FP)</code></span>
+<span class="codeline" id="line-987"><code>	RET</code></span>
+<span class="codeline" id="line-988"><code></code></span>
+<span class="codeline" id="line-989"><code>nosave:</code></span>
+<span class="codeline" id="line-990"><code>	// Running on a system stack, perhaps even without a g.</code></span>
+<span class="codeline" id="line-991"><code>	// Having no g can happen during thread creation or thread teardown</code></span>
+<span class="codeline" id="line-992"><code>	// (see needm/dropm on Solaris, for example).</code></span>
+<span class="codeline" id="line-993"><code>	// This code is like the above sequence but without saving/restoring g</code></span>
+<span class="codeline" id="line-994"><code>	// and without worrying about the stack moving out from under us</code></span>
+<span class="codeline" id="line-995"><code>	// (because we're on a system stack, not a goroutine stack).</code></span>
+<span class="codeline" id="line-996"><code>	// The above code could be used directly if already on a system stack,</code></span>
+<span class="codeline" id="line-997"><code>	// but then the only path through this code would be a rare case on Solaris.</code></span>
+<span class="codeline" id="line-998"><code>	// Using this code for all "already on system stack" calls exercises it more,</code></span>
+<span class="codeline" id="line-999"><code>	// which should help keep it correct.</code></span>
+<span class="codeline" id="line-1000"><code>	MOVD	RSP, R13</code></span>
+<span class="codeline" id="line-1001"><code>	SUB	$16, R13</code></span>
+<span class="codeline" id="line-1002"><code>	MOVD	R13, RSP</code></span>
+<span class="codeline" id="line-1003"><code>	MOVD	$0, R4</code></span>
+<span class="codeline" id="line-1004"><code>	MOVD	R4, 0(RSP)	// Where above code stores g, in case someone looks during debugging.</code></span>
+<span class="codeline" id="line-1005"><code>	MOVD	R2, 8(RSP)	// Save original stack pointer.</code></span>
+<span class="codeline" id="line-1006"><code>	BL	(R1)</code></span>
+<span class="codeline" id="line-1007"><code>	// Restore stack pointer.</code></span>
+<span class="codeline" id="line-1008"><code>	MOVD	8(RSP), R2</code></span>
+<span class="codeline" id="line-1009"><code>	MOVD	R2, RSP</code></span>
+<span class="codeline" id="line-1010"><code>	MOVD	R0, ret+16(FP)</code></span>
+<span class="codeline" id="line-1011"><code>	RET</code></span>
+<span class="codeline" id="line-1012"><code></code></span>
+<span class="codeline" id="line-1013"><code>// cgocallback(fn, frame unsafe.Pointer, ctxt uintptr)</code></span>
+<span class="codeline" id="line-1014"><code>// See cgocall.go for more details.</code></span>
+<span class="codeline" id="line-1015"><code>TEXT ·cgocallback(SB),NOSPLIT,$24-24</code></span>
+<span class="codeline" id="line-1016"><code>	NO_LOCAL_POINTERS</code></span>
+<span class="codeline" id="line-1017"><code></code></span>
+<span class="codeline" id="line-1018"><code>	// Skip cgocallbackg, just dropm when fn is nil, and frame is the saved g.</code></span>
+<span class="codeline" id="line-1019"><code>	// It is used to dropm while thread is exiting.</code></span>
+<span class="codeline" id="line-1020"><code>	MOVD	fn+0(FP), R1</code></span>
+<span class="codeline" id="line-1021"><code>	CBNZ	R1, loadg</code></span>
+<span class="codeline" id="line-1022"><code>	// Restore the g from frame.</code></span>
+<span class="codeline" id="line-1023"><code>	MOVD	frame+8(FP), g</code></span>
+<span class="codeline" id="line-1024"><code>	B	dropm</code></span>
+<span class="codeline" id="line-1025"><code></code></span>
+<span class="codeline" id="line-1026"><code>loadg:</code></span>
+<span class="codeline" id="line-1027"><code>	// Load g from thread-local storage.</code></span>
+<span class="codeline" id="line-1028"><code>	BL	runtime·load_g(SB)</code></span>
+<span class="codeline" id="line-1029"><code></code></span>
+<span class="codeline" id="line-1030"><code>	// If g is nil, Go did not create the current thread,</code></span>
+<span class="codeline" id="line-1031"><code>	// or if this thread never called into Go on pthread platforms.</code></span>
+<span class="codeline" id="line-1032"><code>	// Call needm to obtain one for temporary use.</code></span>
+<span class="codeline" id="line-1033"><code>	// In this case, we're running on the thread stack, so there's</code></span>
+<span class="codeline" id="line-1034"><code>	// lots of space, but the linker doesn't know. Hide the call from</code></span>
+<span class="codeline" id="line-1035"><code>	// the linker analysis by using an indirect call.</code></span>
+<span class="codeline" id="line-1036"><code>	CBZ	g, needm</code></span>
+<span class="codeline" id="line-1037"><code></code></span>
+<span class="codeline" id="line-1038"><code>	MOVD	g_m(g), R8</code></span>
+<span class="codeline" id="line-1039"><code>	MOVD	R8, savedm-8(SP)</code></span>
+<span class="codeline" id="line-1040"><code>	B	havem</code></span>
+<span class="codeline" id="line-1041"><code></code></span>
+<span class="codeline" id="line-1042"><code>needm:</code></span>
+<span class="codeline" id="line-1043"><code>	MOVD	g, savedm-8(SP) // g is zero, so is m.</code></span>
+<span class="codeline" id="line-1044"><code>	MOVD	$runtime·needAndBindM(SB), R0</code></span>
+<span class="codeline" id="line-1045"><code>	BL	(R0)</code></span>
+<span class="codeline" id="line-1046"><code></code></span>
+<span class="codeline" id="line-1047"><code>	// Set m-&gt;g0-&gt;sched.sp = SP, so that if a panic happens</code></span>
+<span class="codeline" id="line-1048"><code>	// during the function we are about to execute, it will</code></span>
+<span class="codeline" id="line-1049"><code>	// have a valid SP to run on the g0 stack.</code></span>
+<span class="codeline" id="line-1050"><code>	// The next few lines (after the havem label)</code></span>
+<span class="codeline" id="line-1051"><code>	// will save this SP onto the stack and then write</code></span>
+<span class="codeline" id="line-1052"><code>	// the same SP back to m-&gt;sched.sp. That seems redundant,</code></span>
+<span class="codeline" id="line-1053"><code>	// but if an unrecovered panic happens, unwindm will</code></span>
+<span class="codeline" id="line-1054"><code>	// restore the g-&gt;sched.sp from the stack location</code></span>
+<span class="codeline" id="line-1055"><code>	// and then systemstack will try to use it. If we don't set it here,</code></span>
+<span class="codeline" id="line-1056"><code>	// that restored SP will be uninitialized (typically 0) and</code></span>
+<span class="codeline" id="line-1057"><code>	// will not be usable.</code></span>
+<span class="codeline" id="line-1058"><code>	MOVD	g_m(g), R8</code></span>
+<span class="codeline" id="line-1059"><code>	MOVD	m_g0(R8), R3</code></span>
+<span class="codeline" id="line-1060"><code>	MOVD	RSP, R0</code></span>
+<span class="codeline" id="line-1061"><code>	MOVD	R0, (g_sched+gobuf_sp)(R3)</code></span>
+<span class="codeline" id="line-1062"><code>	MOVD	R29, (g_sched+gobuf_bp)(R3)</code></span>
+<span class="codeline" id="line-1063"><code></code></span>
+<span class="codeline" id="line-1064"><code>havem:</code></span>
+<span class="codeline" id="line-1065"><code>	// Now there's a valid m, and we're running on its m-&gt;g0.</code></span>
+<span class="codeline" id="line-1066"><code>	// Save current m-&gt;g0-&gt;sched.sp on stack and then set it to SP.</code></span>
+<span class="codeline" id="line-1067"><code>	// Save current sp in m-&gt;g0-&gt;sched.sp in preparation for</code></span>
+<span class="codeline" id="line-1068"><code>	// switch back to m-&gt;curg stack.</code></span>
+<span class="codeline" id="line-1069"><code>	// NOTE: unwindm knows that the saved g-&gt;sched.sp is at 16(RSP) aka savedsp-16(SP).</code></span>
+<span class="codeline" id="line-1070"><code>	// Beware that the frame size is actually 32+16.</code></span>
+<span class="codeline" id="line-1071"><code>	MOVD	m_g0(R8), R3</code></span>
+<span class="codeline" id="line-1072"><code>	MOVD	(g_sched+gobuf_sp)(R3), R4</code></span>
+<span class="codeline" id="line-1073"><code>	MOVD	R4, savedsp-16(SP)</code></span>
+<span class="codeline" id="line-1074"><code>	MOVD	RSP, R0</code></span>
+<span class="codeline" id="line-1075"><code>	MOVD	R0, (g_sched+gobuf_sp)(R3)</code></span>
+<span class="codeline" id="line-1076"><code></code></span>
+<span class="codeline" id="line-1077"><code>	// Switch to m-&gt;curg stack and call runtime.cgocallbackg.</code></span>
+<span class="codeline" id="line-1078"><code>	// Because we are taking over the execution of m-&gt;curg</code></span>
+<span class="codeline" id="line-1079"><code>	// but *not* resuming what had been running, we need to</code></span>
+<span class="codeline" id="line-1080"><code>	// save that information (m-&gt;curg-&gt;sched) so we can restore it.</code></span>
+<span class="codeline" id="line-1081"><code>	// We can restore m-&gt;curg-&gt;sched.sp easily, because calling</code></span>
+<span class="codeline" id="line-1082"><code>	// runtime.cgocallbackg leaves SP unchanged upon return.</code></span>
+<span class="codeline" id="line-1083"><code>	// To save m-&gt;curg-&gt;sched.pc, we push it onto the curg stack and</code></span>
+<span class="codeline" id="line-1084"><code>	// open a frame the same size as cgocallback's g0 frame.</code></span>
+<span class="codeline" id="line-1085"><code>	// Once we switch to the curg stack, the pushed PC will appear</code></span>
+<span class="codeline" id="line-1086"><code>	// to be the return PC of cgocallback, so that the traceback</code></span>
+<span class="codeline" id="line-1087"><code>	// will seamlessly trace back into the earlier calls.</code></span>
+<span class="codeline" id="line-1088"><code>	MOVD	m_curg(R8), g</code></span>
+<span class="codeline" id="line-1089"><code>	BL	runtime·save_g(SB)</code></span>
+<span class="codeline" id="line-1090"><code>	MOVD	(g_sched+gobuf_sp)(g), R4 // prepare stack as R4</code></span>
+<span class="codeline" id="line-1091"><code>	MOVD	(g_sched+gobuf_pc)(g), R5</code></span>
+<span class="codeline" id="line-1092"><code>	MOVD	R5, -48(R4)</code></span>
+<span class="codeline" id="line-1093"><code>	MOVD	(g_sched+gobuf_bp)(g), R5</code></span>
+<span class="codeline" id="line-1094"><code>	MOVD	R5, -56(R4)</code></span>
+<span class="codeline" id="line-1095"><code>	// Gather our arguments into registers.</code></span>
+<span class="codeline" id="line-1096"><code>	MOVD	fn+0(FP), R1</code></span>
+<span class="codeline" id="line-1097"><code>	MOVD	frame+8(FP), R2</code></span>
+<span class="codeline" id="line-1098"><code>	MOVD	ctxt+16(FP), R3</code></span>
+<span class="codeline" id="line-1099"><code>	MOVD	$-48(R4), R0 // maintain 16-byte SP alignment</code></span>
+<span class="codeline" id="line-1100"><code>	MOVD	R0, RSP	// switch stack</code></span>
+<span class="codeline" id="line-1101"><code>	MOVD	R1, 8(RSP)</code></span>
+<span class="codeline" id="line-1102"><code>	MOVD	R2, 16(RSP)</code></span>
+<span class="codeline" id="line-1103"><code>	MOVD	R3, 24(RSP)</code></span>
+<span class="codeline" id="line-1104"><code>	MOVD	$runtime·cgocallbackg(SB), R0</code></span>
+<span class="codeline" id="line-1105"><code>	CALL	(R0) // indirect call to bypass nosplit check. We're on a different stack now.</code></span>
+<span class="codeline" id="line-1106"><code></code></span>
+<span class="codeline" id="line-1107"><code>	// Restore g-&gt;sched (== m-&gt;curg-&gt;sched) from saved values.</code></span>
+<span class="codeline" id="line-1108"><code>	MOVD	0(RSP), R5</code></span>
+<span class="codeline" id="line-1109"><code>	MOVD	R5, (g_sched+gobuf_pc)(g)</code></span>
+<span class="codeline" id="line-1110"><code>	MOVD	RSP, R4</code></span>
+<span class="codeline" id="line-1111"><code>	ADD	$48, R4, R4</code></span>
 <span class="codeline" id="line-1112"><code>	MOVD	R4, (g_sched+gobuf_sp)(g)</code></span>
 <span class="codeline" id="line-1113"><code></code></span>
-<span class="codeline" id="line-1114"><code>	// If the m on entry was nil, we called needm above to borrow an m</code></span>
-<span class="codeline" id="line-1115"><code>	// for the duration of the call. Since the call is over, return it with dropm.</code></span>
-<span class="codeline" id="line-1116"><code>	MOVD	savedm-8(SP), R6</code></span>
-<span class="codeline" id="line-1117"><code>	CBNZ	R6, droppedm</code></span>
-<span class="codeline" id="line-1118"><code>	MOVD	$runtime·dropm(SB), R0</code></span>
-<span class="codeline" id="line-1119"><code>	BL	(R0)</code></span>
-<span class="codeline" id="line-1120"><code>droppedm:</code></span>
-<span class="codeline" id="line-1121"><code></code></span>
-<span class="codeline" id="line-1122"><code>	// Done!</code></span>
-<span class="codeline" id="line-1123"><code>	RET</code></span>
+<span class="codeline" id="line-1114"><code>	// Switch back to m-&gt;g0's stack and restore m-&gt;g0-&gt;sched.sp.</code></span>
+<span class="codeline" id="line-1115"><code>	// (Unlike m-&gt;curg, the g0 goroutine never uses sched.pc,</code></span>
+<span class="codeline" id="line-1116"><code>	// so we do not have to restore it.)</code></span>
+<span class="codeline" id="line-1117"><code>	MOVD	g_m(g), R8</code></span>
+<span class="codeline" id="line-1118"><code>	MOVD	m_g0(R8), g</code></span>
+<span class="codeline" id="line-1119"><code>	BL	runtime·save_g(SB)</code></span>
+<span class="codeline" id="line-1120"><code>	MOVD	(g_sched+gobuf_sp)(g), R0</code></span>
+<span class="codeline" id="line-1121"><code>	MOVD	R0, RSP</code></span>
+<span class="codeline" id="line-1122"><code>	MOVD	savedsp-16(SP), R4</code></span>
+<span class="codeline" id="line-1123"><code>	MOVD	R4, (g_sched+gobuf_sp)(g)</code></span>
 <span class="codeline" id="line-1124"><code></code></span>
-<span class="codeline" id="line-1125"><code>// Called from cgo wrappers, this function returns g-&gt;m-&gt;curg.stack.hi.</code></span>
-<span class="codeline" id="line-1126"><code>// Must obey the gcc calling convention.</code></span>
-<span class="codeline" id="line-1127"><code>TEXT _cgo_topofstack(SB),NOSPLIT,$24</code></span>
-<span class="codeline" id="line-1128"><code>	// g (R28) and REGTMP (R27)  might be clobbered by load_g. They</code></span>
-<span class="codeline" id="line-1129"><code>	// are callee-save in the gcc calling convention, so save them.</code></span>
-<span class="codeline" id="line-1130"><code>	MOVD	R27, savedR27-8(SP)</code></span>
-<span class="codeline" id="line-1131"><code>	MOVD	g, saveG-16(SP)</code></span>
-<span class="codeline" id="line-1132"><code></code></span>
-<span class="codeline" id="line-1133"><code>	BL	runtime·load_g(SB)</code></span>
-<span class="codeline" id="line-1134"><code>	MOVD	g_m(g), R0</code></span>
-<span class="codeline" id="line-1135"><code>	MOVD	m_curg(R0), R0</code></span>
-<span class="codeline" id="line-1136"><code>	MOVD	(g_stack+stack_hi)(R0), R0</code></span>
-<span class="codeline" id="line-1137"><code></code></span>
-<span class="codeline" id="line-1138"><code>	MOVD	saveG-16(SP), g</code></span>
-<span class="codeline" id="line-1139"><code>	MOVD	savedR28-8(SP), R27</code></span>
-<span class="codeline" id="line-1140"><code>	RET</code></span>
+<span class="codeline" id="line-1125"><code>	// If the m on entry was nil, we called needm above to borrow an m,</code></span>
+<span class="codeline" id="line-1126"><code>	// 1. for the duration of the call on non-pthread platforms,</code></span>
+<span class="codeline" id="line-1127"><code>	// 2. or the duration of the C thread alive on pthread platforms.</code></span>
+<span class="codeline" id="line-1128"><code>	// If the m on entry wasn't nil,</code></span>
+<span class="codeline" id="line-1129"><code>	// 1. the thread might be a Go thread,</code></span>
+<span class="codeline" id="line-1130"><code>	// 2. or it wasn't the first call from a C thread on pthread platforms,</code></span>
+<span class="codeline" id="line-1131"><code>	//    since then we skip dropm to reuse the m in the first call.</code></span>
+<span class="codeline" id="line-1132"><code>	MOVD	savedm-8(SP), R6</code></span>
+<span class="codeline" id="line-1133"><code>	CBNZ	R6, droppedm</code></span>
+<span class="codeline" id="line-1134"><code></code></span>
+<span class="codeline" id="line-1135"><code>	// Skip dropm to reuse it in the next call, when a pthread key has been created.</code></span>
+<span class="codeline" id="line-1136"><code>	MOVD	_cgo_pthread_key_created(SB), R6</code></span>
+<span class="codeline" id="line-1137"><code>	// It means cgo is disabled when _cgo_pthread_key_created is a nil pointer, need dropm.</code></span>
+<span class="codeline" id="line-1138"><code>	CBZ	R6, dropm</code></span>
+<span class="codeline" id="line-1139"><code>	MOVD	(R6), R6</code></span>
+<span class="codeline" id="line-1140"><code>	CBNZ	R6, droppedm</code></span>
 <span class="codeline" id="line-1141"><code></code></span>
-<span class="codeline" id="line-1142"><code>// void setg(G*); set g. for use by needm.</code></span>
-<span class="codeline" id="line-1143"><code>TEXT runtime·setg(SB), NOSPLIT, $0-8</code></span>
-<span class="codeline" id="line-1144"><code>	MOVD	gg+0(FP), g</code></span>
-<span class="codeline" id="line-1145"><code>	// This only happens if iscgo, so jump straight to save_g</code></span>
-<span class="codeline" id="line-1146"><code>	BL	runtime·save_g(SB)</code></span>
-<span class="codeline" id="line-1147"><code>	RET</code></span>
-<span class="codeline" id="line-1148"><code></code></span>
-<span class="codeline" id="line-1149"><code>// void setg_gcc(G*); set g called from gcc</code></span>
-<span class="codeline" id="line-1150"><code>TEXT setg_gcc&lt;&gt;(SB),NOSPLIT,$8</code></span>
-<span class="codeline" id="line-1151"><code>	MOVD	R0, g</code></span>
-<span class="codeline" id="line-1152"><code>	MOVD	R27, savedR27-8(SP)</code></span>
-<span class="codeline" id="line-1153"><code>	BL	runtime·save_g(SB)</code></span>
-<span class="codeline" id="line-1154"><code>	MOVD	savedR27-8(SP), R27</code></span>
-<span class="codeline" id="line-1155"><code>	RET</code></span>
-<span class="codeline" id="line-1156"><code></code></span>
-<span class="codeline" id="line-1157"><code>TEXT runtime·emptyfunc(SB),0,$0-0</code></span>
-<span class="codeline" id="line-1158"><code>	RET</code></span>
-<span class="codeline" id="line-1159"><code></code></span>
-<span class="codeline" id="line-1160"><code>TEXT runtime·abort(SB),NOSPLIT|NOFRAME,$0-0</code></span>
-<span class="codeline" id="line-1161"><code>	MOVD	ZR, R0</code></span>
-<span class="codeline" id="line-1162"><code>	MOVD	(R0), R0</code></span>
-<span class="codeline" id="line-1163"><code>	UNDEF</code></span>
-<span class="codeline" id="line-1164"><code></code></span>
-<span class="codeline" id="line-1165"><code>TEXT runtime·return0(SB), NOSPLIT, $0</code></span>
-<span class="codeline" id="line-1166"><code>	MOVW	$0, R0</code></span>
-<span class="codeline" id="line-1167"><code>	RET</code></span>
-<span class="codeline" id="line-1168"><code></code></span>
-<span class="codeline" id="line-1169"><code>// The top-most function running on a goroutine</code></span>
-<span class="codeline" id="line-1170"><code>// returns to goexit+PCQuantum.</code></span>
-<span class="codeline" id="line-1171"><code>TEXT runtime·goexit(SB),NOSPLIT|NOFRAME|TOPFRAME,$0-0</code></span>
-<span class="codeline" id="line-1172"><code>	MOVD	R0, R0	// NOP</code></span>
-<span class="codeline" id="line-1173"><code>	BL	runtime·goexit1(SB)	// does not return</code></span>
-<span class="codeline" id="line-1174"><code></code></span>
-<span class="codeline" id="line-1175"><code>// This is called from .init_array and follows the platform, not Go, ABI.</code></span>
-<span class="codeline" id="line-1176"><code>TEXT runtime·addmoduledata(SB),NOSPLIT,$0-0</code></span>
-<span class="codeline" id="line-1177"><code>	SUB	$0x10, RSP</code></span>
-<span class="codeline" id="line-1178"><code>	MOVD	R27, 8(RSP) // The access to global variables below implicitly uses R27, which is callee-save</code></span>
-<span class="codeline" id="line-1179"><code>	MOVD	runtime·lastmoduledatap(SB), R1</code></span>
-<span class="codeline" id="line-1180"><code>	MOVD	R0, moduledata_next(R1)</code></span>
-<span class="codeline" id="line-1181"><code>	MOVD	R0, runtime·lastmoduledatap(SB)</code></span>
-<span class="codeline" id="line-1182"><code>	MOVD	8(RSP), R27</code></span>
-<span class="codeline" id="line-1183"><code>	ADD	$0x10, RSP</code></span>
-<span class="codeline" id="line-1184"><code>	RET</code></span>
-<span class="codeline" id="line-1185"><code></code></span>
-<span class="codeline" id="line-1186"><code>TEXT ·checkASM(SB),NOSPLIT,$0-1</code></span>
-<span class="codeline" id="line-1187"><code>	MOVW	$1, R3</code></span>
-<span class="codeline" id="line-1188"><code>	MOVB	R3, ret+0(FP)</code></span>
-<span class="codeline" id="line-1189"><code>	RET</code></span>
-<span class="codeline" id="line-1190"><code></code></span>
-<span class="codeline" id="line-1191"><code>// gcWriteBarrier performs a heap pointer write and informs the GC.</code></span>
-<span class="codeline" id="line-1192"><code>//</code></span>
-<span class="codeline" id="line-1193"><code>// gcWriteBarrier does NOT follow the Go ABI. It takes two arguments:</code></span>
-<span class="codeline" id="line-1194"><code>// - R2 is the destination of the write</code></span>
-<span class="codeline" id="line-1195"><code>// - R3 is the value being written at R2</code></span>
-<span class="codeline" id="line-1196"><code>// It clobbers condition codes.</code></span>
-<span class="codeline" id="line-1197"><code>// It does not clobber any general-purpose registers,</code></span>
-<span class="codeline" id="line-1198"><code>// but may clobber others (e.g., floating point registers)</code></span>
-<span class="codeline" id="line-1199"><code>// The act of CALLing gcWriteBarrier will clobber R30 (LR).</code></span>
-<span class="codeline" id="line-1200"><code>//</code></span>
-<span class="codeline" id="line-1201"><code>// Defined as ABIInternal since the compiler generates ABIInternal</code></span>
-<span class="codeline" id="line-1202"><code>// calls to it directly and it does not use the stack-based Go ABI.</code></span>
-<span class="codeline" id="line-1203"><code>TEXT runtime·gcWriteBarrier&lt;ABIInternal&gt;(SB),NOSPLIT,$200</code></span>
-<span class="codeline" id="line-1204"><code>	// Save the registers clobbered by the fast path.</code></span>
-<span class="codeline" id="line-1205"><code>	STP	(R0, R1), 184(RSP)</code></span>
-<span class="codeline" id="line-1206"><code>	MOVD	g_m(g), R0</code></span>
-<span class="codeline" id="line-1207"><code>	MOVD	m_p(R0), R0</code></span>
-<span class="codeline" id="line-1208"><code>	MOVD	(p_wbBuf+wbBuf_next)(R0), R1</code></span>
-<span class="codeline" id="line-1209"><code>	// Increment wbBuf.next position.</code></span>
-<span class="codeline" id="line-1210"><code>	ADD	$16, R1</code></span>
-<span class="codeline" id="line-1211"><code>	MOVD	R1, (p_wbBuf+wbBuf_next)(R0)</code></span>
-<span class="codeline" id="line-1212"><code>	MOVD	(p_wbBuf+wbBuf_end)(R0), R0</code></span>
-<span class="codeline" id="line-1213"><code>	CMP	R1, R0</code></span>
-<span class="codeline" id="line-1214"><code>	// Record the write.</code></span>
-<span class="codeline" id="line-1215"><code>	MOVD	R3, -16(R1)	// Record value</code></span>
-<span class="codeline" id="line-1216"><code>	MOVD	(R2), R0	// TODO: This turns bad writes into bad reads.</code></span>
-<span class="codeline" id="line-1217"><code>	MOVD	R0, -8(R1)	// Record *slot</code></span>
-<span class="codeline" id="line-1218"><code>	// Is the buffer full? (flags set in CMP above)</code></span>
-<span class="codeline" id="line-1219"><code>	BEQ	flush</code></span>
-<span class="codeline" id="line-1220"><code>ret:</code></span>
-<span class="codeline" id="line-1221"><code>	LDP	184(RSP), (R0, R1)</code></span>
-<span class="codeline" id="line-1222"><code>	// Do the write.</code></span>
-<span class="codeline" id="line-1223"><code>	MOVD	R3, (R2)</code></span>
-<span class="codeline" id="line-1224"><code>	RET</code></span>
-<span class="codeline" id="line-1225"><code></code></span>
-<span class="codeline" id="line-1226"><code>flush:</code></span>
-<span class="codeline" id="line-1227"><code>	// Save all general purpose registers since these could be</code></span>
-<span class="codeline" id="line-1228"><code>	// clobbered by wbBufFlush and were not saved by the caller.</code></span>
-<span class="codeline" id="line-1229"><code>	// R0 and R1 already saved</code></span>
-<span class="codeline" id="line-1230"><code>	STP	(R2, R3), 1*8(RSP)	// Also first and second arguments to wbBufFlush</code></span>
-<span class="codeline" id="line-1231"><code>	STP	(R4, R5), 3*8(RSP)</code></span>
-<span class="codeline" id="line-1232"><code>	STP	(R6, R7), 5*8(RSP)</code></span>
-<span class="codeline" id="line-1233"><code>	STP	(R8, R9), 7*8(RSP)</code></span>
-<span class="codeline" id="line-1234"><code>	STP	(R10, R11), 9*8(RSP)</code></span>
-<span class="codeline" id="line-1235"><code>	STP	(R12, R13), 11*8(RSP)</code></span>
-<span class="codeline" id="line-1236"><code>	STP	(R14, R15), 13*8(RSP)</code></span>
-<span class="codeline" id="line-1237"><code>	// R16, R17 may be clobbered by linker trampoline</code></span>
-<span class="codeline" id="line-1238"><code>	// R18 is unused.</code></span>
-<span class="codeline" id="line-1239"><code>	STP	(R19, R20), 15*8(RSP)</code></span>
-<span class="codeline" id="line-1240"><code>	STP	(R21, R22), 17*8(RSP)</code></span>
-<span class="codeline" id="line-1241"><code>	STP	(R23, R24), 19*8(RSP)</code></span>
-<span class="codeline" id="line-1242"><code>	STP	(R25, R26), 21*8(RSP)</code></span>
-<span class="codeline" id="line-1243"><code>	// R27 is temp register.</code></span>
-<span class="codeline" id="line-1244"><code>	// R28 is g.</code></span>
-<span class="codeline" id="line-1245"><code>	// R29 is frame pointer (unused).</code></span>
-<span class="codeline" id="line-1246"><code>	// R30 is LR, which was saved by the prologue.</code></span>
-<span class="codeline" id="line-1247"><code>	// R31 is SP.</code></span>
-<span class="codeline" id="line-1248"><code></code></span>
-<span class="codeline" id="line-1249"><code>	// This takes arguments R2 and R3.</code></span>
-<span class="codeline" id="line-1250"><code>	CALL	runtime·wbBufFlush(SB)</code></span>
-<span class="codeline" id="line-1251"><code>	LDP	1*8(RSP), (R2, R3)</code></span>
-<span class="codeline" id="line-1252"><code>	LDP	3*8(RSP), (R4, R5)</code></span>
-<span class="codeline" id="line-1253"><code>	LDP	5*8(RSP), (R6, R7)</code></span>
-<span class="codeline" id="line-1254"><code>	LDP	7*8(RSP), (R8, R9)</code></span>
-<span class="codeline" id="line-1255"><code>	LDP	9*8(RSP), (R10, R11)</code></span>
-<span class="codeline" id="line-1256"><code>	LDP	11*8(RSP), (R12, R13)</code></span>
-<span class="codeline" id="line-1257"><code>	LDP	13*8(RSP), (R14, R15)</code></span>
-<span class="codeline" id="line-1258"><code>	LDP	15*8(RSP), (R19, R20)</code></span>
-<span class="codeline" id="line-1259"><code>	LDP	17*8(RSP), (R21, R22)</code></span>
-<span class="codeline" id="line-1260"><code>	LDP	19*8(RSP), (R23, R24)</code></span>
-<span class="codeline" id="line-1261"><code>	LDP	21*8(RSP), (R25, R26)</code></span>
-<span class="codeline" id="line-1262"><code>	JMP	ret</code></span>
-<span class="codeline" id="line-1263"><code></code></span>
-<span class="codeline" id="line-1264"><code>DATA	debugCallFrameTooLarge&lt;&gt;+0x00(SB)/20, $"call frame too large"</code></span>
-<span class="codeline" id="line-1265"><code>GLOBL	debugCallFrameTooLarge&lt;&gt;(SB), RODATA, $20	// Size duplicated below</code></span>
-<span class="codeline" id="line-1266"><code></code></span>
-<span class="codeline" id="line-1267"><code>// debugCallV2 is the entry point for debugger-injected function</code></span>
-<span class="codeline" id="line-1268"><code>// calls on running goroutines. It informs the runtime that a</code></span>
-<span class="codeline" id="line-1269"><code>// debug call has been injected and creates a call frame for the</code></span>
-<span class="codeline" id="line-1270"><code>// debugger to fill in.</code></span>
-<span class="codeline" id="line-1271"><code>//</code></span>
-<span class="codeline" id="line-1272"><code>// To inject a function call, a debugger should:</code></span>
-<span class="codeline" id="line-1273"><code>// 1. Check that the goroutine is in state _Grunning and that</code></span>
-<span class="codeline" id="line-1274"><code>//    there are at least 288 bytes free on the stack.</code></span>
-<span class="codeline" id="line-1275"><code>// 2. Set SP as SP-16.</code></span>
-<span class="codeline" id="line-1276"><code>// 3. Store the current LR in (SP) (using the SP after step 2).</code></span>
-<span class="codeline" id="line-1277"><code>// 4. Store the current PC in the LR register.</code></span>
-<span class="codeline" id="line-1278"><code>// 5. Write the desired argument frame size at SP-16</code></span>
-<span class="codeline" id="line-1279"><code>// 6. Save all machine registers (including flags and fpsimd registers)</code></span>
-<span class="codeline" id="line-1280"><code>//    so they can be restored later by the debugger.</code></span>
-<span class="codeline" id="line-1281"><code>// 7. Set the PC to debugCallV2 and resume execution.</code></span>
-<span class="codeline" id="line-1282"><code>//</code></span>
-<span class="codeline" id="line-1283"><code>// If the goroutine is in state _Grunnable, then it's not generally</code></span>
-<span class="codeline" id="line-1284"><code>// safe to inject a call because it may return out via other runtime</code></span>
-<span class="codeline" id="line-1285"><code>// operations. Instead, the debugger should unwind the stack to find</code></span>
-<span class="codeline" id="line-1286"><code>// the return to non-runtime code, add a temporary breakpoint there,</code></span>
-<span class="codeline" id="line-1287"><code>// and inject the call once that breakpoint is hit.</code></span>
-<span class="codeline" id="line-1288"><code>//</code></span>
-<span class="codeline" id="line-1289"><code>// If the goroutine is in any other state, it's not safe to inject a call.</code></span>
-<span class="codeline" id="line-1290"><code>//</code></span>
-<span class="codeline" id="line-1291"><code>// This function communicates back to the debugger by setting R20 and</code></span>
-<span class="codeline" id="line-1292"><code>// invoking BRK to raise a breakpoint signal. Note that the signal PC of</code></span>
-<span class="codeline" id="line-1293"><code>// the signal triggered by the BRK instruction is the PC where the signal</code></span>
-<span class="codeline" id="line-1294"><code>// is trapped, not the next PC, so to resume execution, the debugger needs</code></span>
-<span class="codeline" id="line-1295"><code>// to set the signal PC to PC+4. See the comments in the implementation for</code></span>
-<span class="codeline" id="line-1296"><code>// the protocol the debugger is expected to follow. InjectDebugCall in the</code></span>
-<span class="codeline" id="line-1297"><code>// runtime tests demonstrates this protocol.</code></span>
-<span class="codeline" id="line-1298"><code>//</code></span>
-<span class="codeline" id="line-1299"><code>// The debugger must ensure that any pointers passed to the function</code></span>
-<span class="codeline" id="line-1300"><code>// obey escape analysis requirements. Specifically, it must not pass</code></span>
-<span class="codeline" id="line-1301"><code>// a stack pointer to an escaping argument. debugCallV2 cannot check</code></span>
-<span class="codeline" id="line-1302"><code>// this invariant.</code></span>
-<span class="codeline" id="line-1303"><code>//</code></span>
-<span class="codeline" id="line-1304"><code>// This is ABIInternal because Go code injects its PC directly into new</code></span>
-<span class="codeline" id="line-1305"><code>// goroutine stacks.</code></span>
-<span class="codeline" id="line-1306"><code>TEXT runtime·debugCallV2&lt;ABIInternal&gt;(SB),NOSPLIT|NOFRAME,$0-0</code></span>
-<span class="codeline" id="line-1307"><code>	STP	(R29, R30), -280(RSP)</code></span>
-<span class="codeline" id="line-1308"><code>	SUB	$272, RSP, RSP</code></span>
-<span class="codeline" id="line-1309"><code>	SUB	$8, RSP, R29</code></span>
-<span class="codeline" id="line-1310"><code>	// Save all registers that may contain pointers so they can be</code></span>
-<span class="codeline" id="line-1311"><code>	// conservatively scanned.</code></span>
-<span class="codeline" id="line-1312"><code>	//</code></span>
-<span class="codeline" id="line-1313"><code>	// We can't do anything that might clobber any of these</code></span>
-<span class="codeline" id="line-1314"><code>	// registers before this.</code></span>
-<span class="codeline" id="line-1315"><code>	STP	(R27, g), (30*8)(RSP)</code></span>
-<span class="codeline" id="line-1316"><code>	STP	(R25, R26), (28*8)(RSP)</code></span>
-<span class="codeline" id="line-1317"><code>	STP	(R23, R24), (26*8)(RSP)</code></span>
-<span class="codeline" id="line-1318"><code>	STP	(R21, R22), (24*8)(RSP)</code></span>
-<span class="codeline" id="line-1319"><code>	STP	(R19, R20), (22*8)(RSP)</code></span>
-<span class="codeline" id="line-1320"><code>	STP	(R16, R17), (20*8)(RSP)</code></span>
-<span class="codeline" id="line-1321"><code>	STP	(R14, R15), (18*8)(RSP)</code></span>
-<span class="codeline" id="line-1322"><code>	STP	(R12, R13), (16*8)(RSP)</code></span>
-<span class="codeline" id="line-1323"><code>	STP	(R10, R11), (14*8)(RSP)</code></span>
-<span class="codeline" id="line-1324"><code>	STP	(R8, R9), (12*8)(RSP)</code></span>
-<span class="codeline" id="line-1325"><code>	STP	(R6, R7), (10*8)(RSP)</code></span>
-<span class="codeline" id="line-1326"><code>	STP	(R4, R5), (8*8)(RSP)</code></span>
-<span class="codeline" id="line-1327"><code>	STP	(R2, R3), (6*8)(RSP)</code></span>
-<span class="codeline" id="line-1328"><code>	STP	(R0, R1), (4*8)(RSP)</code></span>
-<span class="codeline" id="line-1329"><code></code></span>
-<span class="codeline" id="line-1330"><code>	// Perform a safe-point check.</code></span>
-<span class="codeline" id="line-1331"><code>	MOVD	R30, 8(RSP) // Caller's PC</code></span>
-<span class="codeline" id="line-1332"><code>	CALL	runtime·debugCallCheck(SB)</code></span>
-<span class="codeline" id="line-1333"><code>	MOVD	16(RSP), R0</code></span>
-<span class="codeline" id="line-1334"><code>	CBZ	R0, good</code></span>
-<span class="codeline" id="line-1335"><code></code></span>
-<span class="codeline" id="line-1336"><code>	// The safety check failed. Put the reason string at the top</code></span>
-<span class="codeline" id="line-1337"><code>	// of the stack.</code></span>
-<span class="codeline" id="line-1338"><code>	MOVD	R0, 8(RSP)</code></span>
-<span class="codeline" id="line-1339"><code>	MOVD	24(RSP), R0</code></span>
-<span class="codeline" id="line-1340"><code>	MOVD	R0, 16(RSP)</code></span>
-<span class="codeline" id="line-1341"><code></code></span>
-<span class="codeline" id="line-1342"><code>	// Set R20 to 8 and invoke BRK. The debugger should get the</code></span>
-<span class="codeline" id="line-1343"><code>	// reason a call can't be injected from SP+8 and resume execution.</code></span>
-<span class="codeline" id="line-1344"><code>	MOVD	$8, R20</code></span>
-<span class="codeline" id="line-1345"><code>	BREAK</code></span>
-<span class="codeline" id="line-1346"><code>	JMP	restore</code></span>
-<span class="codeline" id="line-1347"><code></code></span>
-<span class="codeline" id="line-1348"><code>good:</code></span>
-<span class="codeline" id="line-1349"><code>	// Registers are saved and it's safe to make a call.</code></span>
-<span class="codeline" id="line-1350"><code>	// Open up a call frame, moving the stack if necessary.</code></span>
-<span class="codeline" id="line-1351"><code>	//</code></span>
-<span class="codeline" id="line-1352"><code>	// Once the frame is allocated, this will set R20 to 0 and</code></span>
-<span class="codeline" id="line-1353"><code>	// invoke BRK. The debugger should write the argument</code></span>
-<span class="codeline" id="line-1354"><code>	// frame for the call at SP+8, set up argument registers,</code></span>
-<span class="codeline" id="line-1355"><code>	// set the LR as the signal PC + 4, set the PC to the function</code></span>
-<span class="codeline" id="line-1356"><code>	// to call, set R26 to point to the closure (if a closure call),</code></span>
-<span class="codeline" id="line-1357"><code>	// and resume execution.</code></span>
-<span class="codeline" id="line-1358"><code>	//</code></span>
-<span class="codeline" id="line-1359"><code>	// If the function returns, this will set R20 to 1 and invoke</code></span>
-<span class="codeline" id="line-1360"><code>	// BRK. The debugger can then inspect any return value saved</code></span>
-<span class="codeline" id="line-1361"><code>	// on the stack at SP+8 and in registers. To resume execution,</code></span>
-<span class="codeline" id="line-1362"><code>	// the debugger should restore the LR from (SP).</code></span>
-<span class="codeline" id="line-1363"><code>	//</code></span>
-<span class="codeline" id="line-1364"><code>	// If the function panics, this will set R20 to 2 and invoke BRK.</code></span>
-<span class="codeline" id="line-1365"><code>	// The interface{} value of the panic will be at SP+8. The debugger</code></span>
-<span class="codeline" id="line-1366"><code>	// can inspect the panic value and resume execution again.</code></span>
-<span class="codeline" id="line-1367"><code>#define DEBUG_CALL_DISPATCH(NAME,MAXSIZE)	\</code></span>
-<span class="codeline" id="line-1368"><code>	CMP	$MAXSIZE, R0;			\</code></span>
-<span class="codeline" id="line-1369"><code>	BGT	5(PC);				\</code></span>
-<span class="codeline" id="line-1370"><code>	MOVD	$NAME(SB), R0;			\</code></span>
-<span class="codeline" id="line-1371"><code>	MOVD	R0, 8(RSP);			\</code></span>
-<span class="codeline" id="line-1372"><code>	CALL	runtime·debugCallWrap(SB);	\</code></span>
-<span class="codeline" id="line-1373"><code>	JMP	restore</code></span>
-<span class="codeline" id="line-1374"><code></code></span>
-<span class="codeline" id="line-1375"><code>	MOVD	256(RSP), R0 // the argument frame size</code></span>
-<span class="codeline" id="line-1376"><code>	DEBUG_CALL_DISPATCH(debugCall32&lt;&gt;, 32)</code></span>
-<span class="codeline" id="line-1377"><code>	DEBUG_CALL_DISPATCH(debugCall64&lt;&gt;, 64)</code></span>
-<span class="codeline" id="line-1378"><code>	DEBUG_CALL_DISPATCH(debugCall128&lt;&gt;, 128)</code></span>
-<span class="codeline" id="line-1379"><code>	DEBUG_CALL_DISPATCH(debugCall256&lt;&gt;, 256)</code></span>
-<span class="codeline" id="line-1380"><code>	DEBUG_CALL_DISPATCH(debugCall512&lt;&gt;, 512)</code></span>
-<span class="codeline" id="line-1381"><code>	DEBUG_CALL_DISPATCH(debugCall1024&lt;&gt;, 1024)</code></span>
-<span class="codeline" id="line-1382"><code>	DEBUG_CALL_DISPATCH(debugCall2048&lt;&gt;, 2048)</code></span>
-<span class="codeline" id="line-1383"><code>	DEBUG_CALL_DISPATCH(debugCall4096&lt;&gt;, 4096)</code></span>
-<span class="codeline" id="line-1384"><code>	DEBUG_CALL_DISPATCH(debugCall8192&lt;&gt;, 8192)</code></span>
-<span class="codeline" id="line-1385"><code>	DEBUG_CALL_DISPATCH(debugCall16384&lt;&gt;, 16384)</code></span>
-<span class="codeline" id="line-1386"><code>	DEBUG_CALL_DISPATCH(debugCall32768&lt;&gt;, 32768)</code></span>
-<span class="codeline" id="line-1387"><code>	DEBUG_CALL_DISPATCH(debugCall65536&lt;&gt;, 65536)</code></span>
-<span class="codeline" id="line-1388"><code>	// The frame size is too large. Report the error.</code></span>
-<span class="codeline" id="line-1389"><code>	MOVD	$debugCallFrameTooLarge&lt;&gt;(SB), R0</code></span>
-<span class="codeline" id="line-1390"><code>	MOVD	R0, 8(RSP)</code></span>
-<span class="codeline" id="line-1391"><code>	MOVD	$20, R0</code></span>
-<span class="codeline" id="line-1392"><code>	MOVD	R0, 16(RSP) // length of debugCallFrameTooLarge string</code></span>
-<span class="codeline" id="line-1393"><code>	MOVD	$8, R20</code></span>
-<span class="codeline" id="line-1394"><code>	BREAK</code></span>
-<span class="codeline" id="line-1395"><code>	JMP	restore</code></span>
-<span class="codeline" id="line-1396"><code></code></span>
-<span class="codeline" id="line-1397"><code>restore:</code></span>
-<span class="codeline" id="line-1398"><code>	// Calls and failures resume here.</code></span>
-<span class="codeline" id="line-1399"><code>	//</code></span>
-<span class="codeline" id="line-1400"><code>	// Set R20 to 16 and invoke BRK. The debugger should restore</code></span>
-<span class="codeline" id="line-1401"><code>	// all registers except for PC and RSP and resume execution.</code></span>
-<span class="codeline" id="line-1402"><code>	MOVD	$16, R20</code></span>
-<span class="codeline" id="line-1403"><code>	BREAK</code></span>
-<span class="codeline" id="line-1404"><code>	// We must not modify flags after this point.</code></span>
-<span class="codeline" id="line-1405"><code></code></span>
-<span class="codeline" id="line-1406"><code>	// Restore pointer-containing registers, which may have been</code></span>
-<span class="codeline" id="line-1407"><code>	// modified from the debugger's copy by stack copying.</code></span>
-<span class="codeline" id="line-1408"><code>	LDP	(30*8)(RSP), (R27, g)</code></span>
-<span class="codeline" id="line-1409"><code>	LDP	(28*8)(RSP), (R25, R26)</code></span>
-<span class="codeline" id="line-1410"><code>	LDP	(26*8)(RSP), (R23, R24)</code></span>
-<span class="codeline" id="line-1411"><code>	LDP	(24*8)(RSP), (R21, R22)</code></span>
-<span class="codeline" id="line-1412"><code>	LDP	(22*8)(RSP), (R19, R20)</code></span>
-<span class="codeline" id="line-1413"><code>	LDP	(20*8)(RSP), (R16, R17)</code></span>
-<span class="codeline" id="line-1414"><code>	LDP	(18*8)(RSP), (R14, R15)</code></span>
-<span class="codeline" id="line-1415"><code>	LDP	(16*8)(RSP), (R12, R13)</code></span>
-<span class="codeline" id="line-1416"><code>	LDP	(14*8)(RSP), (R10, R11)</code></span>
-<span class="codeline" id="line-1417"><code>	LDP	(12*8)(RSP), (R8, R9)</code></span>
-<span class="codeline" id="line-1418"><code>	LDP	(10*8)(RSP), (R6, R7)</code></span>
-<span class="codeline" id="line-1419"><code>	LDP	(8*8)(RSP), (R4, R5)</code></span>
-<span class="codeline" id="line-1420"><code>	LDP	(6*8)(RSP), (R2, R3)</code></span>
-<span class="codeline" id="line-1421"><code>	LDP	(4*8)(RSP), (R0, R1)</code></span>
-<span class="codeline" id="line-1422"><code></code></span>
-<span class="codeline" id="line-1423"><code>	LDP	-8(RSP), (R29, R27)</code></span>
-<span class="codeline" id="line-1424"><code>	ADD	$288, RSP, RSP // Add 16 more bytes, see saveSigContext</code></span>
-<span class="codeline" id="line-1425"><code>	MOVD	-16(RSP), R30 // restore old lr</code></span>
-<span class="codeline" id="line-1426"><code>	JMP	(R27)</code></span>
-<span class="codeline" id="line-1427"><code></code></span>
-<span class="codeline" id="line-1428"><code>// runtime.debugCallCheck assumes that functions defined with the</code></span>
-<span class="codeline" id="line-1429"><code>// DEBUG_CALL_FN macro are safe points to inject calls.</code></span>
-<span class="codeline" id="line-1430"><code>#define DEBUG_CALL_FN(NAME,MAXSIZE)		\</code></span>
-<span class="codeline" id="line-1431"><code>TEXT NAME(SB),WRAPPER,$MAXSIZE-0;		\</code></span>
-<span class="codeline" id="line-1432"><code>	NO_LOCAL_POINTERS;		\</code></span>
-<span class="codeline" id="line-1433"><code>	MOVD	$0, R20;		\</code></span>
-<span class="codeline" id="line-1434"><code>	BREAK;		\</code></span>
-<span class="codeline" id="line-1435"><code>	MOVD	$1, R20;		\</code></span>
-<span class="codeline" id="line-1436"><code>	BREAK;		\</code></span>
-<span class="codeline" id="line-1437"><code>	RET</code></span>
-<span class="codeline" id="line-1438"><code>DEBUG_CALL_FN(debugCall32&lt;&gt;, 32)</code></span>
-<span class="codeline" id="line-1439"><code>DEBUG_CALL_FN(debugCall64&lt;&gt;, 64)</code></span>
-<span class="codeline" id="line-1440"><code>DEBUG_CALL_FN(debugCall128&lt;&gt;, 128)</code></span>
-<span class="codeline" id="line-1441"><code>DEBUG_CALL_FN(debugCall256&lt;&gt;, 256)</code></span>
-<span class="codeline" id="line-1442"><code>DEBUG_CALL_FN(debugCall512&lt;&gt;, 512)</code></span>
-<span class="codeline" id="line-1443"><code>DEBUG_CALL_FN(debugCall1024&lt;&gt;, 1024)</code></span>
-<span class="codeline" id="line-1444"><code>DEBUG_CALL_FN(debugCall2048&lt;&gt;, 2048)</code></span>
-<span class="codeline" id="line-1445"><code>DEBUG_CALL_FN(debugCall4096&lt;&gt;, 4096)</code></span>
-<span class="codeline" id="line-1446"><code>DEBUG_CALL_FN(debugCall8192&lt;&gt;, 8192)</code></span>
-<span class="codeline" id="line-1447"><code>DEBUG_CALL_FN(debugCall16384&lt;&gt;, 16384)</code></span>
-<span class="codeline" id="line-1448"><code>DEBUG_CALL_FN(debugCall32768&lt;&gt;, 32768)</code></span>
-<span class="codeline" id="line-1449"><code>DEBUG_CALL_FN(debugCall65536&lt;&gt;, 65536)</code></span>
-<span class="codeline" id="line-1450"><code></code></span>
-<span class="codeline" id="line-1451"><code>// func debugCallPanicked(val interface{})</code></span>
-<span class="codeline" id="line-1452"><code>TEXT runtime·debugCallPanicked(SB),NOSPLIT,$16-16</code></span>
-<span class="codeline" id="line-1453"><code>	// Copy the panic value to the top of stack at SP+8.</code></span>
-<span class="codeline" id="line-1454"><code>	MOVD	val_type+0(FP), R0</code></span>
-<span class="codeline" id="line-1455"><code>	MOVD	R0, 8(RSP)</code></span>
-<span class="codeline" id="line-1456"><code>	MOVD	val_data+8(FP), R0</code></span>
-<span class="codeline" id="line-1457"><code>	MOVD	R0, 16(RSP)</code></span>
-<span class="codeline" id="line-1458"><code>	MOVD	$2, R20</code></span>
-<span class="codeline" id="line-1459"><code>	BREAK</code></span>
-<span class="codeline" id="line-1460"><code>	RET</code></span>
-<span class="codeline" id="line-1461"><code></code></span>
-<span class="codeline" id="line-1462"><code>// Note: these functions use a special calling convention to save generated code space.</code></span>
-<span class="codeline" id="line-1463"><code>// Arguments are passed in registers, but the space for those arguments are allocated</code></span>
-<span class="codeline" id="line-1464"><code>// in the caller's stack frame. These stubs write the args into that stack space and</code></span>
-<span class="codeline" id="line-1465"><code>// then tail call to the corresponding runtime handler.</code></span>
-<span class="codeline" id="line-1466"><code>// The tail call makes these stubs disappear in backtraces.</code></span>
-<span class="codeline" id="line-1467"><code>//</code></span>
-<span class="codeline" id="line-1468"><code>// Defined as ABIInternal since the compiler generates ABIInternal</code></span>
-<span class="codeline" id="line-1469"><code>// calls to it directly and it does not use the stack-based Go ABI.</code></span>
-<span class="codeline" id="line-1470"><code>TEXT runtime·panicIndex&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1471"><code>	JMP	runtime·goPanicIndex&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1472"><code>TEXT runtime·panicIndexU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1473"><code>	JMP	runtime·goPanicIndexU&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1474"><code>TEXT runtime·panicSliceAlen&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1475"><code>	MOVD	R1, R0</code></span>
-<span class="codeline" id="line-1476"><code>	MOVD	R2, R1</code></span>
-<span class="codeline" id="line-1477"><code>	JMP	runtime·goPanicSliceAlen&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1478"><code>TEXT runtime·panicSliceAlenU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1479"><code>	MOVD	R1, R0</code></span>
-<span class="codeline" id="line-1480"><code>	MOVD	R2, R1</code></span>
-<span class="codeline" id="line-1481"><code>	JMP	runtime·goPanicSliceAlenU&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1482"><code>TEXT runtime·panicSliceAcap&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1483"><code>	MOVD	R1, R0</code></span>
-<span class="codeline" id="line-1484"><code>	MOVD	R2, R1</code></span>
-<span class="codeline" id="line-1485"><code>	JMP	runtime·goPanicSliceAcap&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1486"><code>TEXT runtime·panicSliceAcapU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1487"><code>	MOVD	R1, R0</code></span>
-<span class="codeline" id="line-1488"><code>	MOVD	R2, R1</code></span>
-<span class="codeline" id="line-1489"><code>	JMP	runtime·goPanicSliceAcapU&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1490"><code>TEXT runtime·panicSliceB&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1491"><code>	JMP	runtime·goPanicSliceB&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1492"><code>TEXT runtime·panicSliceBU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1493"><code>	JMP	runtime·goPanicSliceBU&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1494"><code>TEXT runtime·panicSlice3Alen&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1495"><code>	MOVD	R2, R0</code></span>
-<span class="codeline" id="line-1496"><code>	MOVD	R3, R1</code></span>
-<span class="codeline" id="line-1497"><code>	JMP	runtime·goPanicSlice3Alen&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1498"><code>TEXT runtime·panicSlice3AlenU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1499"><code>	MOVD	R2, R0</code></span>
-<span class="codeline" id="line-1500"><code>	MOVD	R3, R1</code></span>
-<span class="codeline" id="line-1501"><code>	JMP	runtime·goPanicSlice3AlenU&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1502"><code>TEXT runtime·panicSlice3Acap&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1503"><code>	MOVD	R2, R0</code></span>
-<span class="codeline" id="line-1504"><code>	MOVD	R3, R1</code></span>
-<span class="codeline" id="line-1505"><code>	JMP	runtime·goPanicSlice3Acap&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1506"><code>TEXT runtime·panicSlice3AcapU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1507"><code>	MOVD	R2, R0</code></span>
-<span class="codeline" id="line-1508"><code>	MOVD	R3, R1</code></span>
-<span class="codeline" id="line-1509"><code>	JMP	runtime·goPanicSlice3AcapU&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1510"><code>TEXT runtime·panicSlice3B&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1511"><code>	MOVD	R1, R0</code></span>
-<span class="codeline" id="line-1512"><code>	MOVD	R2, R1</code></span>
-<span class="codeline" id="line-1513"><code>	JMP	runtime·goPanicSlice3B&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1514"><code>TEXT runtime·panicSlice3BU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1515"><code>	MOVD	R1, R0</code></span>
-<span class="codeline" id="line-1516"><code>	MOVD	R2, R1</code></span>
-<span class="codeline" id="line-1517"><code>	JMP	runtime·goPanicSlice3BU&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1518"><code>TEXT runtime·panicSlice3C&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1519"><code>	JMP	runtime·goPanicSlice3C&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1520"><code>TEXT runtime·panicSlice3CU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1521"><code>	JMP	runtime·goPanicSlice3CU&lt;ABIInternal&gt;(SB)</code></span>
-<span class="codeline" id="line-1522"><code>TEXT runtime·panicSliceConvert&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
-<span class="codeline" id="line-1523"><code>	MOVD	R2, R0</code></span>
-<span class="codeline" id="line-1524"><code>	MOVD	R3, R1</code></span>
-<span class="codeline" id="line-1525"><code>	JMP	runtime·goPanicSliceConvert&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1142"><code>dropm:</code></span>
+<span class="codeline" id="line-1143"><code>	MOVD	$runtime·dropm(SB), R0</code></span>
+<span class="codeline" id="line-1144"><code>	BL	(R0)</code></span>
+<span class="codeline" id="line-1145"><code>droppedm:</code></span>
+<span class="codeline" id="line-1146"><code></code></span>
+<span class="codeline" id="line-1147"><code>	// Done!</code></span>
+<span class="codeline" id="line-1148"><code>	RET</code></span>
+<span class="codeline" id="line-1149"><code></code></span>
+<span class="codeline" id="line-1150"><code>// Called from cgo wrappers, this function returns g-&gt;m-&gt;curg.stack.hi.</code></span>
+<span class="codeline" id="line-1151"><code>// Must obey the gcc calling convention.</code></span>
+<span class="codeline" id="line-1152"><code>TEXT _cgo_topofstack(SB),NOSPLIT,$24</code></span>
+<span class="codeline" id="line-1153"><code>	// g (R28) and REGTMP (R27)  might be clobbered by load_g. They</code></span>
+<span class="codeline" id="line-1154"><code>	// are callee-save in the gcc calling convention, so save them.</code></span>
+<span class="codeline" id="line-1155"><code>	MOVD	R27, savedR27-8(SP)</code></span>
+<span class="codeline" id="line-1156"><code>	MOVD	g, saveG-16(SP)</code></span>
+<span class="codeline" id="line-1157"><code></code></span>
+<span class="codeline" id="line-1158"><code>	BL	runtime·load_g(SB)</code></span>
+<span class="codeline" id="line-1159"><code>	MOVD	g_m(g), R0</code></span>
+<span class="codeline" id="line-1160"><code>	MOVD	m_curg(R0), R0</code></span>
+<span class="codeline" id="line-1161"><code>	MOVD	(g_stack+stack_hi)(R0), R0</code></span>
+<span class="codeline" id="line-1162"><code></code></span>
+<span class="codeline" id="line-1163"><code>	MOVD	saveG-16(SP), g</code></span>
+<span class="codeline" id="line-1164"><code>	MOVD	savedR28-8(SP), R27</code></span>
+<span class="codeline" id="line-1165"><code>	RET</code></span>
+<span class="codeline" id="line-1166"><code></code></span>
+<span class="codeline" id="line-1167"><code>// void setg(G*); set g. for use by needm.</code></span>
+<span class="codeline" id="line-1168"><code>TEXT runtime·setg(SB), NOSPLIT, $0-8</code></span>
+<span class="codeline" id="line-1169"><code>	MOVD	gg+0(FP), g</code></span>
+<span class="codeline" id="line-1170"><code>	// This only happens if iscgo, so jump straight to save_g</code></span>
+<span class="codeline" id="line-1171"><code>	BL	runtime·save_g(SB)</code></span>
+<span class="codeline" id="line-1172"><code>	RET</code></span>
+<span class="codeline" id="line-1173"><code></code></span>
+<span class="codeline" id="line-1174"><code>// void setg_gcc(G*); set g called from gcc</code></span>
+<span class="codeline" id="line-1175"><code>TEXT setg_gcc&lt;&gt;(SB),NOSPLIT,$8</code></span>
+<span class="codeline" id="line-1176"><code>	MOVD	R0, g</code></span>
+<span class="codeline" id="line-1177"><code>	MOVD	R27, savedR27-8(SP)</code></span>
+<span class="codeline" id="line-1178"><code>	BL	runtime·save_g(SB)</code></span>
+<span class="codeline" id="line-1179"><code>	MOVD	savedR27-8(SP), R27</code></span>
+<span class="codeline" id="line-1180"><code>	RET</code></span>
+<span class="codeline" id="line-1181"><code></code></span>
+<span class="codeline" id="line-1182"><code>TEXT runtime·emptyfunc(SB),0,$0-0</code></span>
+<span class="codeline" id="line-1183"><code>	RET</code></span>
+<span class="codeline" id="line-1184"><code></code></span>
+<span class="codeline" id="line-1185"><code>TEXT runtime·abort(SB),NOSPLIT|NOFRAME,$0-0</code></span>
+<span class="codeline" id="line-1186"><code>	MOVD	ZR, R0</code></span>
+<span class="codeline" id="line-1187"><code>	MOVD	(R0), R0</code></span>
+<span class="codeline" id="line-1188"><code>	UNDEF</code></span>
+<span class="codeline" id="line-1189"><code></code></span>
+<span class="codeline" id="line-1190"><code>TEXT runtime·return0(SB), NOSPLIT, $0</code></span>
+<span class="codeline" id="line-1191"><code>	MOVW	$0, R0</code></span>
+<span class="codeline" id="line-1192"><code>	RET</code></span>
+<span class="codeline" id="line-1193"><code></code></span>
+<span class="codeline" id="line-1194"><code>// The top-most function running on a goroutine</code></span>
+<span class="codeline" id="line-1195"><code>// returns to goexit+PCQuantum.</code></span>
+<span class="codeline" id="line-1196"><code>TEXT runtime·goexit(SB),NOSPLIT|NOFRAME|TOPFRAME,$0-0</code></span>
+<span class="codeline" id="line-1197"><code>	MOVD	R0, R0	// NOP</code></span>
+<span class="codeline" id="line-1198"><code>	BL	runtime·goexit1(SB)	// does not return</code></span>
+<span class="codeline" id="line-1199"><code></code></span>
+<span class="codeline" id="line-1200"><code>// This is called from .init_array and follows the platform, not Go, ABI.</code></span>
+<span class="codeline" id="line-1201"><code>TEXT runtime·addmoduledata(SB),NOSPLIT,$0-0</code></span>
+<span class="codeline" id="line-1202"><code>	SUB	$0x10, RSP</code></span>
+<span class="codeline" id="line-1203"><code>	MOVD	R27, 8(RSP) // The access to global variables below implicitly uses R27, which is callee-save</code></span>
+<span class="codeline" id="line-1204"><code>	MOVD	runtime·lastmoduledatap(SB), R1</code></span>
+<span class="codeline" id="line-1205"><code>	MOVD	R0, moduledata_next(R1)</code></span>
+<span class="codeline" id="line-1206"><code>	MOVD	R0, runtime·lastmoduledatap(SB)</code></span>
+<span class="codeline" id="line-1207"><code>	MOVD	8(RSP), R27</code></span>
+<span class="codeline" id="line-1208"><code>	ADD	$0x10, RSP</code></span>
+<span class="codeline" id="line-1209"><code>	RET</code></span>
+<span class="codeline" id="line-1210"><code></code></span>
+<span class="codeline" id="line-1211"><code>TEXT ·checkASM(SB),NOSPLIT,$0-1</code></span>
+<span class="codeline" id="line-1212"><code>	MOVW	$1, R3</code></span>
+<span class="codeline" id="line-1213"><code>	MOVB	R3, ret+0(FP)</code></span>
+<span class="codeline" id="line-1214"><code>	RET</code></span>
+<span class="codeline" id="line-1215"><code></code></span>
+<span class="codeline" id="line-1216"><code>// gcWriteBarrier informs the GC about heap pointer writes.</code></span>
+<span class="codeline" id="line-1217"><code>//</code></span>
+<span class="codeline" id="line-1218"><code>// gcWriteBarrier does NOT follow the Go ABI. It accepts the</code></span>
+<span class="codeline" id="line-1219"><code>// number of bytes of buffer needed in R25, and returns a pointer</code></span>
+<span class="codeline" id="line-1220"><code>// to the buffer space in R25.</code></span>
+<span class="codeline" id="line-1221"><code>// It clobbers condition codes.</code></span>
+<span class="codeline" id="line-1222"><code>// It does not clobber any general-purpose registers except R27,</code></span>
+<span class="codeline" id="line-1223"><code>// but may clobber others (e.g., floating point registers)</code></span>
+<span class="codeline" id="line-1224"><code>// The act of CALLing gcWriteBarrier will clobber R30 (LR).</code></span>
+<span class="codeline" id="line-1225"><code>TEXT gcWriteBarrier&lt;&gt;(SB),NOSPLIT,$200</code></span>
+<span class="codeline" id="line-1226"><code>	// Save the registers clobbered by the fast path.</code></span>
+<span class="codeline" id="line-1227"><code>	STP	(R0, R1), 184(RSP)</code></span>
+<span class="codeline" id="line-1228"><code>retry:</code></span>
+<span class="codeline" id="line-1229"><code>	MOVD	g_m(g), R0</code></span>
+<span class="codeline" id="line-1230"><code>	MOVD	m_p(R0), R0</code></span>
+<span class="codeline" id="line-1231"><code>	MOVD	(p_wbBuf+wbBuf_next)(R0), R1</code></span>
+<span class="codeline" id="line-1232"><code>	MOVD	(p_wbBuf+wbBuf_end)(R0), R27</code></span>
+<span class="codeline" id="line-1233"><code>	// Increment wbBuf.next position.</code></span>
+<span class="codeline" id="line-1234"><code>	ADD	R25, R1</code></span>
+<span class="codeline" id="line-1235"><code>	// Is the buffer full?</code></span>
+<span class="codeline" id="line-1236"><code>	CMP	R27, R1</code></span>
+<span class="codeline" id="line-1237"><code>	BHI	flush</code></span>
+<span class="codeline" id="line-1238"><code>	// Commit to the larger buffer.</code></span>
+<span class="codeline" id="line-1239"><code>	MOVD	R1, (p_wbBuf+wbBuf_next)(R0)</code></span>
+<span class="codeline" id="line-1240"><code>	// Make return value (the original next position)</code></span>
+<span class="codeline" id="line-1241"><code>	SUB	R25, R1, R25</code></span>
+<span class="codeline" id="line-1242"><code>	// Restore registers.</code></span>
+<span class="codeline" id="line-1243"><code>	LDP	184(RSP), (R0, R1)</code></span>
+<span class="codeline" id="line-1244"><code>	RET</code></span>
+<span class="codeline" id="line-1245"><code></code></span>
+<span class="codeline" id="line-1246"><code>flush:</code></span>
+<span class="codeline" id="line-1247"><code>	// Save all general purpose registers since these could be</code></span>
+<span class="codeline" id="line-1248"><code>	// clobbered by wbBufFlush and were not saved by the caller.</code></span>
+<span class="codeline" id="line-1249"><code>	// R0 and R1 already saved</code></span>
+<span class="codeline" id="line-1250"><code>	STP	(R2, R3), 1*8(RSP)</code></span>
+<span class="codeline" id="line-1251"><code>	STP	(R4, R5), 3*8(RSP)</code></span>
+<span class="codeline" id="line-1252"><code>	STP	(R6, R7), 5*8(RSP)</code></span>
+<span class="codeline" id="line-1253"><code>	STP	(R8, R9), 7*8(RSP)</code></span>
+<span class="codeline" id="line-1254"><code>	STP	(R10, R11), 9*8(RSP)</code></span>
+<span class="codeline" id="line-1255"><code>	STP	(R12, R13), 11*8(RSP)</code></span>
+<span class="codeline" id="line-1256"><code>	STP	(R14, R15), 13*8(RSP)</code></span>
+<span class="codeline" id="line-1257"><code>	// R16, R17 may be clobbered by linker trampoline</code></span>
+<span class="codeline" id="line-1258"><code>	// R18 is unused.</code></span>
+<span class="codeline" id="line-1259"><code>	STP	(R19, R20), 15*8(RSP)</code></span>
+<span class="codeline" id="line-1260"><code>	STP	(R21, R22), 17*8(RSP)</code></span>
+<span class="codeline" id="line-1261"><code>	STP	(R23, R24), 19*8(RSP)</code></span>
+<span class="codeline" id="line-1262"><code>	STP	(R25, R26), 21*8(RSP)</code></span>
+<span class="codeline" id="line-1263"><code>	// R27 is temp register.</code></span>
+<span class="codeline" id="line-1264"><code>	// R28 is g.</code></span>
+<span class="codeline" id="line-1265"><code>	// R29 is frame pointer (unused).</code></span>
+<span class="codeline" id="line-1266"><code>	// R30 is LR, which was saved by the prologue.</code></span>
+<span class="codeline" id="line-1267"><code>	// R31 is SP.</code></span>
+<span class="codeline" id="line-1268"><code></code></span>
+<span class="codeline" id="line-1269"><code>	CALL	runtime·wbBufFlush(SB)</code></span>
+<span class="codeline" id="line-1270"><code>	LDP	1*8(RSP), (R2, R3)</code></span>
+<span class="codeline" id="line-1271"><code>	LDP	3*8(RSP), (R4, R5)</code></span>
+<span class="codeline" id="line-1272"><code>	LDP	5*8(RSP), (R6, R7)</code></span>
+<span class="codeline" id="line-1273"><code>	LDP	7*8(RSP), (R8, R9)</code></span>
+<span class="codeline" id="line-1274"><code>	LDP	9*8(RSP), (R10, R11)</code></span>
+<span class="codeline" id="line-1275"><code>	LDP	11*8(RSP), (R12, R13)</code></span>
+<span class="codeline" id="line-1276"><code>	LDP	13*8(RSP), (R14, R15)</code></span>
+<span class="codeline" id="line-1277"><code>	LDP	15*8(RSP), (R19, R20)</code></span>
+<span class="codeline" id="line-1278"><code>	LDP	17*8(RSP), (R21, R22)</code></span>
+<span class="codeline" id="line-1279"><code>	LDP	19*8(RSP), (R23, R24)</code></span>
+<span class="codeline" id="line-1280"><code>	LDP	21*8(RSP), (R25, R26)</code></span>
+<span class="codeline" id="line-1281"><code>	JMP	retry</code></span>
+<span class="codeline" id="line-1282"><code></code></span>
+<span class="codeline" id="line-1283"><code>TEXT runtime·gcWriteBarrier1&lt;ABIInternal&gt;(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-1284"><code>	MOVD	$8, R25</code></span>
+<span class="codeline" id="line-1285"><code>	JMP	gcWriteBarrier&lt;&gt;(SB)</code></span>
+<span class="codeline" id="line-1286"><code>TEXT runtime·gcWriteBarrier2&lt;ABIInternal&gt;(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-1287"><code>	MOVD	$16, R25</code></span>
+<span class="codeline" id="line-1288"><code>	JMP	gcWriteBarrier&lt;&gt;(SB)</code></span>
+<span class="codeline" id="line-1289"><code>TEXT runtime·gcWriteBarrier3&lt;ABIInternal&gt;(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-1290"><code>	MOVD	$24, R25</code></span>
+<span class="codeline" id="line-1291"><code>	JMP	gcWriteBarrier&lt;&gt;(SB)</code></span>
+<span class="codeline" id="line-1292"><code>TEXT runtime·gcWriteBarrier4&lt;ABIInternal&gt;(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-1293"><code>	MOVD	$32, R25</code></span>
+<span class="codeline" id="line-1294"><code>	JMP	gcWriteBarrier&lt;&gt;(SB)</code></span>
+<span class="codeline" id="line-1295"><code>TEXT runtime·gcWriteBarrier5&lt;ABIInternal&gt;(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-1296"><code>	MOVD	$40, R25</code></span>
+<span class="codeline" id="line-1297"><code>	JMP	gcWriteBarrier&lt;&gt;(SB)</code></span>
+<span class="codeline" id="line-1298"><code>TEXT runtime·gcWriteBarrier6&lt;ABIInternal&gt;(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-1299"><code>	MOVD	$48, R25</code></span>
+<span class="codeline" id="line-1300"><code>	JMP	gcWriteBarrier&lt;&gt;(SB)</code></span>
+<span class="codeline" id="line-1301"><code>TEXT runtime·gcWriteBarrier7&lt;ABIInternal&gt;(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-1302"><code>	MOVD	$56, R25</code></span>
+<span class="codeline" id="line-1303"><code>	JMP	gcWriteBarrier&lt;&gt;(SB)</code></span>
+<span class="codeline" id="line-1304"><code>TEXT runtime·gcWriteBarrier8&lt;ABIInternal&gt;(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-1305"><code>	MOVD	$64, R25</code></span>
+<span class="codeline" id="line-1306"><code>	JMP	gcWriteBarrier&lt;&gt;(SB)</code></span>
+<span class="codeline" id="line-1307"><code></code></span>
+<span class="codeline" id="line-1308"><code>DATA	debugCallFrameTooLarge&lt;&gt;+0x00(SB)/20, $"call frame too large"</code></span>
+<span class="codeline" id="line-1309"><code>GLOBL	debugCallFrameTooLarge&lt;&gt;(SB), RODATA, $20	// Size duplicated below</code></span>
+<span class="codeline" id="line-1310"><code></code></span>
+<span class="codeline" id="line-1311"><code>// debugCallV2 is the entry point for debugger-injected function</code></span>
+<span class="codeline" id="line-1312"><code>// calls on running goroutines. It informs the runtime that a</code></span>
+<span class="codeline" id="line-1313"><code>// debug call has been injected and creates a call frame for the</code></span>
+<span class="codeline" id="line-1314"><code>// debugger to fill in.</code></span>
+<span class="codeline" id="line-1315"><code>//</code></span>
+<span class="codeline" id="line-1316"><code>// To inject a function call, a debugger should:</code></span>
+<span class="codeline" id="line-1317"><code>// 1. Check that the goroutine is in state _Grunning and that</code></span>
+<span class="codeline" id="line-1318"><code>//    there are at least 288 bytes free on the stack.</code></span>
+<span class="codeline" id="line-1319"><code>// 2. Set SP as SP-16.</code></span>
+<span class="codeline" id="line-1320"><code>// 3. Store the current LR in (SP) (using the SP after step 2).</code></span>
+<span class="codeline" id="line-1321"><code>// 4. Store the current PC in the LR register.</code></span>
+<span class="codeline" id="line-1322"><code>// 5. Write the desired argument frame size at SP-16</code></span>
+<span class="codeline" id="line-1323"><code>// 6. Save all machine registers (including flags and fpsimd registers)</code></span>
+<span class="codeline" id="line-1324"><code>//    so they can be restored later by the debugger.</code></span>
+<span class="codeline" id="line-1325"><code>// 7. Set the PC to debugCallV2 and resume execution.</code></span>
+<span class="codeline" id="line-1326"><code>//</code></span>
+<span class="codeline" id="line-1327"><code>// If the goroutine is in state _Grunnable, then it's not generally</code></span>
+<span class="codeline" id="line-1328"><code>// safe to inject a call because it may return out via other runtime</code></span>
+<span class="codeline" id="line-1329"><code>// operations. Instead, the debugger should unwind the stack to find</code></span>
+<span class="codeline" id="line-1330"><code>// the return to non-runtime code, add a temporary breakpoint there,</code></span>
+<span class="codeline" id="line-1331"><code>// and inject the call once that breakpoint is hit.</code></span>
+<span class="codeline" id="line-1332"><code>//</code></span>
+<span class="codeline" id="line-1333"><code>// If the goroutine is in any other state, it's not safe to inject a call.</code></span>
+<span class="codeline" id="line-1334"><code>//</code></span>
+<span class="codeline" id="line-1335"><code>// This function communicates back to the debugger by setting R20 and</code></span>
+<span class="codeline" id="line-1336"><code>// invoking BRK to raise a breakpoint signal. Note that the signal PC of</code></span>
+<span class="codeline" id="line-1337"><code>// the signal triggered by the BRK instruction is the PC where the signal</code></span>
+<span class="codeline" id="line-1338"><code>// is trapped, not the next PC, so to resume execution, the debugger needs</code></span>
+<span class="codeline" id="line-1339"><code>// to set the signal PC to PC+4. See the comments in the implementation for</code></span>
+<span class="codeline" id="line-1340"><code>// the protocol the debugger is expected to follow. InjectDebugCall in the</code></span>
+<span class="codeline" id="line-1341"><code>// runtime tests demonstrates this protocol.</code></span>
+<span class="codeline" id="line-1342"><code>//</code></span>
+<span class="codeline" id="line-1343"><code>// The debugger must ensure that any pointers passed to the function</code></span>
+<span class="codeline" id="line-1344"><code>// obey escape analysis requirements. Specifically, it must not pass</code></span>
+<span class="codeline" id="line-1345"><code>// a stack pointer to an escaping argument. debugCallV2 cannot check</code></span>
+<span class="codeline" id="line-1346"><code>// this invariant.</code></span>
+<span class="codeline" id="line-1347"><code>//</code></span>
+<span class="codeline" id="line-1348"><code>// This is ABIInternal because Go code injects its PC directly into new</code></span>
+<span class="codeline" id="line-1349"><code>// goroutine stacks.</code></span>
+<span class="codeline" id="line-1350"><code>TEXT runtime·debugCallV2&lt;ABIInternal&gt;(SB),NOSPLIT|NOFRAME,$0-0</code></span>
+<span class="codeline" id="line-1351"><code>	STP	(R29, R30), -280(RSP)</code></span>
+<span class="codeline" id="line-1352"><code>	SUB	$272, RSP, RSP</code></span>
+<span class="codeline" id="line-1353"><code>	SUB	$8, RSP, R29</code></span>
+<span class="codeline" id="line-1354"><code>	// Save all registers that may contain pointers so they can be</code></span>
+<span class="codeline" id="line-1355"><code>	// conservatively scanned.</code></span>
+<span class="codeline" id="line-1356"><code>	//</code></span>
+<span class="codeline" id="line-1357"><code>	// We can't do anything that might clobber any of these</code></span>
+<span class="codeline" id="line-1358"><code>	// registers before this.</code></span>
+<span class="codeline" id="line-1359"><code>	STP	(R27, g), (30*8)(RSP)</code></span>
+<span class="codeline" id="line-1360"><code>	STP	(R25, R26), (28*8)(RSP)</code></span>
+<span class="codeline" id="line-1361"><code>	STP	(R23, R24), (26*8)(RSP)</code></span>
+<span class="codeline" id="line-1362"><code>	STP	(R21, R22), (24*8)(RSP)</code></span>
+<span class="codeline" id="line-1363"><code>	STP	(R19, R20), (22*8)(RSP)</code></span>
+<span class="codeline" id="line-1364"><code>	STP	(R16, R17), (20*8)(RSP)</code></span>
+<span class="codeline" id="line-1365"><code>	STP	(R14, R15), (18*8)(RSP)</code></span>
+<span class="codeline" id="line-1366"><code>	STP	(R12, R13), (16*8)(RSP)</code></span>
+<span class="codeline" id="line-1367"><code>	STP	(R10, R11), (14*8)(RSP)</code></span>
+<span class="codeline" id="line-1368"><code>	STP	(R8, R9), (12*8)(RSP)</code></span>
+<span class="codeline" id="line-1369"><code>	STP	(R6, R7), (10*8)(RSP)</code></span>
+<span class="codeline" id="line-1370"><code>	STP	(R4, R5), (8*8)(RSP)</code></span>
+<span class="codeline" id="line-1371"><code>	STP	(R2, R3), (6*8)(RSP)</code></span>
+<span class="codeline" id="line-1372"><code>	STP	(R0, R1), (4*8)(RSP)</code></span>
+<span class="codeline" id="line-1373"><code></code></span>
+<span class="codeline" id="line-1374"><code>	// Perform a safe-point check.</code></span>
+<span class="codeline" id="line-1375"><code>	MOVD	R30, 8(RSP) // Caller's PC</code></span>
+<span class="codeline" id="line-1376"><code>	CALL	runtime·debugCallCheck(SB)</code></span>
+<span class="codeline" id="line-1377"><code>	MOVD	16(RSP), R0</code></span>
+<span class="codeline" id="line-1378"><code>	CBZ	R0, good</code></span>
+<span class="codeline" id="line-1379"><code></code></span>
+<span class="codeline" id="line-1380"><code>	// The safety check failed. Put the reason string at the top</code></span>
+<span class="codeline" id="line-1381"><code>	// of the stack.</code></span>
+<span class="codeline" id="line-1382"><code>	MOVD	R0, 8(RSP)</code></span>
+<span class="codeline" id="line-1383"><code>	MOVD	24(RSP), R0</code></span>
+<span class="codeline" id="line-1384"><code>	MOVD	R0, 16(RSP)</code></span>
+<span class="codeline" id="line-1385"><code></code></span>
+<span class="codeline" id="line-1386"><code>	// Set R20 to 8 and invoke BRK. The debugger should get the</code></span>
+<span class="codeline" id="line-1387"><code>	// reason a call can't be injected from SP+8 and resume execution.</code></span>
+<span class="codeline" id="line-1388"><code>	MOVD	$8, R20</code></span>
+<span class="codeline" id="line-1389"><code>	BREAK</code></span>
+<span class="codeline" id="line-1390"><code>	JMP	restore</code></span>
+<span class="codeline" id="line-1391"><code></code></span>
+<span class="codeline" id="line-1392"><code>good:</code></span>
+<span class="codeline" id="line-1393"><code>	// Registers are saved and it's safe to make a call.</code></span>
+<span class="codeline" id="line-1394"><code>	// Open up a call frame, moving the stack if necessary.</code></span>
+<span class="codeline" id="line-1395"><code>	//</code></span>
+<span class="codeline" id="line-1396"><code>	// Once the frame is allocated, this will set R20 to 0 and</code></span>
+<span class="codeline" id="line-1397"><code>	// invoke BRK. The debugger should write the argument</code></span>
+<span class="codeline" id="line-1398"><code>	// frame for the call at SP+8, set up argument registers,</code></span>
+<span class="codeline" id="line-1399"><code>	// set the LR as the signal PC + 4, set the PC to the function</code></span>
+<span class="codeline" id="line-1400"><code>	// to call, set R26 to point to the closure (if a closure call),</code></span>
+<span class="codeline" id="line-1401"><code>	// and resume execution.</code></span>
+<span class="codeline" id="line-1402"><code>	//</code></span>
+<span class="codeline" id="line-1403"><code>	// If the function returns, this will set R20 to 1 and invoke</code></span>
+<span class="codeline" id="line-1404"><code>	// BRK. The debugger can then inspect any return value saved</code></span>
+<span class="codeline" id="line-1405"><code>	// on the stack at SP+8 and in registers. To resume execution,</code></span>
+<span class="codeline" id="line-1406"><code>	// the debugger should restore the LR from (SP).</code></span>
+<span class="codeline" id="line-1407"><code>	//</code></span>
+<span class="codeline" id="line-1408"><code>	// If the function panics, this will set R20 to 2 and invoke BRK.</code></span>
+<span class="codeline" id="line-1409"><code>	// The interface{} value of the panic will be at SP+8. The debugger</code></span>
+<span class="codeline" id="line-1410"><code>	// can inspect the panic value and resume execution again.</code></span>
+<span class="codeline" id="line-1411"><code>#define DEBUG_CALL_DISPATCH(NAME,MAXSIZE)	\</code></span>
+<span class="codeline" id="line-1412"><code>	CMP	$MAXSIZE, R0;			\</code></span>
+<span class="codeline" id="line-1413"><code>	BGT	5(PC);				\</code></span>
+<span class="codeline" id="line-1414"><code>	MOVD	$NAME(SB), R0;			\</code></span>
+<span class="codeline" id="line-1415"><code>	MOVD	R0, 8(RSP);			\</code></span>
+<span class="codeline" id="line-1416"><code>	CALL	runtime·debugCallWrap(SB);	\</code></span>
+<span class="codeline" id="line-1417"><code>	JMP	restore</code></span>
+<span class="codeline" id="line-1418"><code></code></span>
+<span class="codeline" id="line-1419"><code>	MOVD	256(RSP), R0 // the argument frame size</code></span>
+<span class="codeline" id="line-1420"><code>	DEBUG_CALL_DISPATCH(debugCall32&lt;&gt;, 32)</code></span>
+<span class="codeline" id="line-1421"><code>	DEBUG_CALL_DISPATCH(debugCall64&lt;&gt;, 64)</code></span>
+<span class="codeline" id="line-1422"><code>	DEBUG_CALL_DISPATCH(debugCall128&lt;&gt;, 128)</code></span>
+<span class="codeline" id="line-1423"><code>	DEBUG_CALL_DISPATCH(debugCall256&lt;&gt;, 256)</code></span>
+<span class="codeline" id="line-1424"><code>	DEBUG_CALL_DISPATCH(debugCall512&lt;&gt;, 512)</code></span>
+<span class="codeline" id="line-1425"><code>	DEBUG_CALL_DISPATCH(debugCall1024&lt;&gt;, 1024)</code></span>
+<span class="codeline" id="line-1426"><code>	DEBUG_CALL_DISPATCH(debugCall2048&lt;&gt;, 2048)</code></span>
+<span class="codeline" id="line-1427"><code>	DEBUG_CALL_DISPATCH(debugCall4096&lt;&gt;, 4096)</code></span>
+<span class="codeline" id="line-1428"><code>	DEBUG_CALL_DISPATCH(debugCall8192&lt;&gt;, 8192)</code></span>
+<span class="codeline" id="line-1429"><code>	DEBUG_CALL_DISPATCH(debugCall16384&lt;&gt;, 16384)</code></span>
+<span class="codeline" id="line-1430"><code>	DEBUG_CALL_DISPATCH(debugCall32768&lt;&gt;, 32768)</code></span>
+<span class="codeline" id="line-1431"><code>	DEBUG_CALL_DISPATCH(debugCall65536&lt;&gt;, 65536)</code></span>
+<span class="codeline" id="line-1432"><code>	// The frame size is too large. Report the error.</code></span>
+<span class="codeline" id="line-1433"><code>	MOVD	$debugCallFrameTooLarge&lt;&gt;(SB), R0</code></span>
+<span class="codeline" id="line-1434"><code>	MOVD	R0, 8(RSP)</code></span>
+<span class="codeline" id="line-1435"><code>	MOVD	$20, R0</code></span>
+<span class="codeline" id="line-1436"><code>	MOVD	R0, 16(RSP) // length of debugCallFrameTooLarge string</code></span>
+<span class="codeline" id="line-1437"><code>	MOVD	$8, R20</code></span>
+<span class="codeline" id="line-1438"><code>	BREAK</code></span>
+<span class="codeline" id="line-1439"><code>	JMP	restore</code></span>
+<span class="codeline" id="line-1440"><code></code></span>
+<span class="codeline" id="line-1441"><code>restore:</code></span>
+<span class="codeline" id="line-1442"><code>	// Calls and failures resume here.</code></span>
+<span class="codeline" id="line-1443"><code>	//</code></span>
+<span class="codeline" id="line-1444"><code>	// Set R20 to 16 and invoke BRK. The debugger should restore</code></span>
+<span class="codeline" id="line-1445"><code>	// all registers except for PC and RSP and resume execution.</code></span>
+<span class="codeline" id="line-1446"><code>	MOVD	$16, R20</code></span>
+<span class="codeline" id="line-1447"><code>	BREAK</code></span>
+<span class="codeline" id="line-1448"><code>	// We must not modify flags after this point.</code></span>
+<span class="codeline" id="line-1449"><code></code></span>
+<span class="codeline" id="line-1450"><code>	// Restore pointer-containing registers, which may have been</code></span>
+<span class="codeline" id="line-1451"><code>	// modified from the debugger's copy by stack copying.</code></span>
+<span class="codeline" id="line-1452"><code>	LDP	(30*8)(RSP), (R27, g)</code></span>
+<span class="codeline" id="line-1453"><code>	LDP	(28*8)(RSP), (R25, R26)</code></span>
+<span class="codeline" id="line-1454"><code>	LDP	(26*8)(RSP), (R23, R24)</code></span>
+<span class="codeline" id="line-1455"><code>	LDP	(24*8)(RSP), (R21, R22)</code></span>
+<span class="codeline" id="line-1456"><code>	LDP	(22*8)(RSP), (R19, R20)</code></span>
+<span class="codeline" id="line-1457"><code>	LDP	(20*8)(RSP), (R16, R17)</code></span>
+<span class="codeline" id="line-1458"><code>	LDP	(18*8)(RSP), (R14, R15)</code></span>
+<span class="codeline" id="line-1459"><code>	LDP	(16*8)(RSP), (R12, R13)</code></span>
+<span class="codeline" id="line-1460"><code>	LDP	(14*8)(RSP), (R10, R11)</code></span>
+<span class="codeline" id="line-1461"><code>	LDP	(12*8)(RSP), (R8, R9)</code></span>
+<span class="codeline" id="line-1462"><code>	LDP	(10*8)(RSP), (R6, R7)</code></span>
+<span class="codeline" id="line-1463"><code>	LDP	(8*8)(RSP), (R4, R5)</code></span>
+<span class="codeline" id="line-1464"><code>	LDP	(6*8)(RSP), (R2, R3)</code></span>
+<span class="codeline" id="line-1465"><code>	LDP	(4*8)(RSP), (R0, R1)</code></span>
+<span class="codeline" id="line-1466"><code></code></span>
+<span class="codeline" id="line-1467"><code>	LDP	-8(RSP), (R29, R27)</code></span>
+<span class="codeline" id="line-1468"><code>	ADD	$288, RSP, RSP // Add 16 more bytes, see saveSigContext</code></span>
+<span class="codeline" id="line-1469"><code>	MOVD	-16(RSP), R30 // restore old lr</code></span>
+<span class="codeline" id="line-1470"><code>	JMP	(R27)</code></span>
+<span class="codeline" id="line-1471"><code></code></span>
+<span class="codeline" id="line-1472"><code>// runtime.debugCallCheck assumes that functions defined with the</code></span>
+<span class="codeline" id="line-1473"><code>// DEBUG_CALL_FN macro are safe points to inject calls.</code></span>
+<span class="codeline" id="line-1474"><code>#define DEBUG_CALL_FN(NAME,MAXSIZE)		\</code></span>
+<span class="codeline" id="line-1475"><code>TEXT NAME(SB),WRAPPER,$MAXSIZE-0;		\</code></span>
+<span class="codeline" id="line-1476"><code>	NO_LOCAL_POINTERS;		\</code></span>
+<span class="codeline" id="line-1477"><code>	MOVD	$0, R20;		\</code></span>
+<span class="codeline" id="line-1478"><code>	BREAK;		\</code></span>
+<span class="codeline" id="line-1479"><code>	MOVD	$1, R20;		\</code></span>
+<span class="codeline" id="line-1480"><code>	BREAK;		\</code></span>
+<span class="codeline" id="line-1481"><code>	RET</code></span>
+<span class="codeline" id="line-1482"><code>DEBUG_CALL_FN(debugCall32&lt;&gt;, 32)</code></span>
+<span class="codeline" id="line-1483"><code>DEBUG_CALL_FN(debugCall64&lt;&gt;, 64)</code></span>
+<span class="codeline" id="line-1484"><code>DEBUG_CALL_FN(debugCall128&lt;&gt;, 128)</code></span>
+<span class="codeline" id="line-1485"><code>DEBUG_CALL_FN(debugCall256&lt;&gt;, 256)</code></span>
+<span class="codeline" id="line-1486"><code>DEBUG_CALL_FN(debugCall512&lt;&gt;, 512)</code></span>
+<span class="codeline" id="line-1487"><code>DEBUG_CALL_FN(debugCall1024&lt;&gt;, 1024)</code></span>
+<span class="codeline" id="line-1488"><code>DEBUG_CALL_FN(debugCall2048&lt;&gt;, 2048)</code></span>
+<span class="codeline" id="line-1489"><code>DEBUG_CALL_FN(debugCall4096&lt;&gt;, 4096)</code></span>
+<span class="codeline" id="line-1490"><code>DEBUG_CALL_FN(debugCall8192&lt;&gt;, 8192)</code></span>
+<span class="codeline" id="line-1491"><code>DEBUG_CALL_FN(debugCall16384&lt;&gt;, 16384)</code></span>
+<span class="codeline" id="line-1492"><code>DEBUG_CALL_FN(debugCall32768&lt;&gt;, 32768)</code></span>
+<span class="codeline" id="line-1493"><code>DEBUG_CALL_FN(debugCall65536&lt;&gt;, 65536)</code></span>
+<span class="codeline" id="line-1494"><code></code></span>
+<span class="codeline" id="line-1495"><code>// func debugCallPanicked(val interface{})</code></span>
+<span class="codeline" id="line-1496"><code>TEXT runtime·debugCallPanicked(SB),NOSPLIT,$16-16</code></span>
+<span class="codeline" id="line-1497"><code>	// Copy the panic value to the top of stack at SP+8.</code></span>
+<span class="codeline" id="line-1498"><code>	MOVD	val_type+0(FP), R0</code></span>
+<span class="codeline" id="line-1499"><code>	MOVD	R0, 8(RSP)</code></span>
+<span class="codeline" id="line-1500"><code>	MOVD	val_data+8(FP), R0</code></span>
+<span class="codeline" id="line-1501"><code>	MOVD	R0, 16(RSP)</code></span>
+<span class="codeline" id="line-1502"><code>	MOVD	$2, R20</code></span>
+<span class="codeline" id="line-1503"><code>	BREAK</code></span>
+<span class="codeline" id="line-1504"><code>	RET</code></span>
+<span class="codeline" id="line-1505"><code></code></span>
+<span class="codeline" id="line-1506"><code>// Note: these functions use a special calling convention to save generated code space.</code></span>
+<span class="codeline" id="line-1507"><code>// Arguments are passed in registers, but the space for those arguments are allocated</code></span>
+<span class="codeline" id="line-1508"><code>// in the caller's stack frame. These stubs write the args into that stack space and</code></span>
+<span class="codeline" id="line-1509"><code>// then tail call to the corresponding runtime handler.</code></span>
+<span class="codeline" id="line-1510"><code>// The tail call makes these stubs disappear in backtraces.</code></span>
+<span class="codeline" id="line-1511"><code>//</code></span>
+<span class="codeline" id="line-1512"><code>// Defined as ABIInternal since the compiler generates ABIInternal</code></span>
+<span class="codeline" id="line-1513"><code>// calls to it directly and it does not use the stack-based Go ABI.</code></span>
+<span class="codeline" id="line-1514"><code>TEXT runtime·panicIndex&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1515"><code>	JMP	runtime·goPanicIndex&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1516"><code>TEXT runtime·panicIndexU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1517"><code>	JMP	runtime·goPanicIndexU&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1518"><code>TEXT runtime·panicSliceAlen&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1519"><code>	MOVD	R1, R0</code></span>
+<span class="codeline" id="line-1520"><code>	MOVD	R2, R1</code></span>
+<span class="codeline" id="line-1521"><code>	JMP	runtime·goPanicSliceAlen&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1522"><code>TEXT runtime·panicSliceAlenU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1523"><code>	MOVD	R1, R0</code></span>
+<span class="codeline" id="line-1524"><code>	MOVD	R2, R1</code></span>
+<span class="codeline" id="line-1525"><code>	JMP	runtime·goPanicSliceAlenU&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1526"><code>TEXT runtime·panicSliceAcap&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1527"><code>	MOVD	R1, R0</code></span>
+<span class="codeline" id="line-1528"><code>	MOVD	R2, R1</code></span>
+<span class="codeline" id="line-1529"><code>	JMP	runtime·goPanicSliceAcap&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1530"><code>TEXT runtime·panicSliceAcapU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1531"><code>	MOVD	R1, R0</code></span>
+<span class="codeline" id="line-1532"><code>	MOVD	R2, R1</code></span>
+<span class="codeline" id="line-1533"><code>	JMP	runtime·goPanicSliceAcapU&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1534"><code>TEXT runtime·panicSliceB&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1535"><code>	JMP	runtime·goPanicSliceB&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1536"><code>TEXT runtime·panicSliceBU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1537"><code>	JMP	runtime·goPanicSliceBU&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1538"><code>TEXT runtime·panicSlice3Alen&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1539"><code>	MOVD	R2, R0</code></span>
+<span class="codeline" id="line-1540"><code>	MOVD	R3, R1</code></span>
+<span class="codeline" id="line-1541"><code>	JMP	runtime·goPanicSlice3Alen&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1542"><code>TEXT runtime·panicSlice3AlenU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1543"><code>	MOVD	R2, R0</code></span>
+<span class="codeline" id="line-1544"><code>	MOVD	R3, R1</code></span>
+<span class="codeline" id="line-1545"><code>	JMP	runtime·goPanicSlice3AlenU&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1546"><code>TEXT runtime·panicSlice3Acap&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1547"><code>	MOVD	R2, R0</code></span>
+<span class="codeline" id="line-1548"><code>	MOVD	R3, R1</code></span>
+<span class="codeline" id="line-1549"><code>	JMP	runtime·goPanicSlice3Acap&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1550"><code>TEXT runtime·panicSlice3AcapU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1551"><code>	MOVD	R2, R0</code></span>
+<span class="codeline" id="line-1552"><code>	MOVD	R3, R1</code></span>
+<span class="codeline" id="line-1553"><code>	JMP	runtime·goPanicSlice3AcapU&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1554"><code>TEXT runtime·panicSlice3B&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1555"><code>	MOVD	R1, R0</code></span>
+<span class="codeline" id="line-1556"><code>	MOVD	R2, R1</code></span>
+<span class="codeline" id="line-1557"><code>	JMP	runtime·goPanicSlice3B&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1558"><code>TEXT runtime·panicSlice3BU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1559"><code>	MOVD	R1, R0</code></span>
+<span class="codeline" id="line-1560"><code>	MOVD	R2, R1</code></span>
+<span class="codeline" id="line-1561"><code>	JMP	runtime·goPanicSlice3BU&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1562"><code>TEXT runtime·panicSlice3C&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1563"><code>	JMP	runtime·goPanicSlice3C&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1564"><code>TEXT runtime·panicSlice3CU&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1565"><code>	JMP	runtime·goPanicSlice3CU&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1566"><code>TEXT runtime·panicSliceConvert&lt;ABIInternal&gt;(SB),NOSPLIT,$0-16</code></span>
+<span class="codeline" id="line-1567"><code>	MOVD	R2, R0</code></span>
+<span class="codeline" id="line-1568"><code>	MOVD	R3, R1</code></span>
+<span class="codeline" id="line-1569"><code>	JMP	runtime·goPanicSliceConvert&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-1570"><code></code></span>
+<span class="codeline" id="line-1571"><code>TEXT ·getfp&lt;ABIInternal&gt;(SB),NOSPLIT|NOFRAME,$0</code></span>
+<span class="codeline" id="line-1572"><code>	MOVD R29, R0</code></span>
+<span class="codeline" id="line-1573"><code>	RET</code></span>
 </pre><pre id="footer">
 <table><tr><td><img src="../../png/go101-twitter.png"></td>
-<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.6.6</i>. (GOOS=darwin GOARCH=arm64)
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.6.7</i>. (GOOS=darwin GOARCH=arm64)
 <b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
 PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
 Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -1,0 +1,96 @@
+package log // import "github.com/epwr/better-science/internal/common/eplog"
+
+log provides a structured logging solution that has the same basic interface as
+slog, but is intended to be simpler (convention > configuration) and to output
+jsonl lines to power GCP's logging system.
+
+NOTE: currently, log can only handle the basic primitives as args to the log
+functions. Check addArgs for a complete list of what is usable.
+
+Copywrite 2023 Eric Power - All Rights Reserved
+
+CONSTANTS
+
+const (
+	DEBUG    log_level = "DEBUG"
+	INFO               = "INFO"
+	WARN               = "WARN"
+	ERROR              = "ERROR"
+	CRITICAL           = "CRITICAL"
+)
+
+FUNCTIONS
+
+func Critical(msg string, args ...any)
+    Critical writes a message to the logs with a severity Level of CRITICAL.
+
+    The first argument is a message string, and the remaining arguments should
+    be an even numbered amount of values that represent key:value pairs (eg.
+    args[0] is a key, args[1] is a value).
+
+func Error(msg string, args ...any)
+    Error writes a message to the logs with a severity Level of ERROR.
+
+    The first argument is a message string, and the remaining arguments should
+    be an even numbered amount of values that represent key:value pairs (eg.
+    args[0] is a key, args[1] is a value).
+
+func Info(msg string, args ...any)
+    Info writes a message to the logs with a severity Level of INFO.
+
+    The first argument is a message string, and the remaining arguments should
+    be an even numbered amount of values that represent key:value pairs (eg.
+    args[0] is a key, args[1] is a value).
+
+func Warn(msg string, args ...any)
+    Warn writes a message to the logs with a severity Level of WARN.
+
+    The first argument is a message string, and the remaining arguments should
+    be an even numbered amount of values that represent key:value pairs (eg.
+    args[0] is a key, args[1] is a value).
+
+func createBadKeyPair(argument any) (string, any)
+    createBadKeyPair returns a key, value pair where the key is set to "!BADKEY"
+    to match slog's behaviour.
+
+func write_log_record(record log_record)
+    write_log_record writes out the contents of a log_record to stdout.
+
+
+TYPES
+
+type code_location struct {
+	Function string `json:"function"`
+	File     string `json:"file"`
+	Line     int    `json:"line"`
+}
+    code_location specifies a location in the code.
+
+    NOTE: fields are exported so they can be encoded into JSON.
+
+func get_location_of_caller() code_location
+    get_location_of_caller returns the code_location (function name, file,
+    and line number) of where this function's caller was called from (2 levels
+    back down the call stack).
+
+type log_level string
+
+type log_record struct {
+	Level   string         `json:"level"`
+	Message string         `json:"message"`
+	Caller  code_location  `json:"location"`
+	Data    map[string]any `json:"data"`
+}
+    log_record stores the core information needed to write to the logs
+
+    NOTE: fields are exported so they can be encoded into JSON.
+
+func (r *log_record) addArgs(args ...any)
+    addArgs parses the args list into a map, then sets the record's Data field
+    to the map. It follows the behaviour of slog, in that:
+
+    1. If an argument is a string and this is not the last argument, the
+    following argument is treated as the value
+
+    2. Otherwise, the argument is treated as a value with key "!BADKEY".
+

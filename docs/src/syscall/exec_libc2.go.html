@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Source: exec_libc2.go in package syscall</title>
-<link href="../../css/auto-v0.6.6.css" rel="stylesheet">
-<script src="../../jvs/golds-v0.6.6.js"></script>
+<link href="../../css/auto-v0.6.7.css" rel="stylesheet">
+<script src="../../jvs/golds-v0.6.7.js"></script>
 <body onload="onPageLoad()"><div>
 
 <pre id="header"><code><span class="title">Source File</span>
@@ -42,7 +42,8 @@ input[id=r22]:checked ~pre label[for=r22],
 input[id=r23]:checked ~pre label[for=r23],
 input[id=r24]:checked ~pre label[for=r24],
 input[id=r25]:checked ~pre label[for=r25],
-input[id=r26]:checked ~pre label[for=r26]
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27]
 {background: #226; color: #ff8;}
 input[id=i0]:checked ~pre .i0,
 input[id=i1]:checked ~pre .i1,
@@ -75,6 +76,7 @@ input[id=i2]:checked ~pre .i2
 <input id="r24" type="radio" name="g"/>
 <input id="r25" type="radio" name="g"/>
 <input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
 <input id="i0" type="radio" name="i"/>
 <input id="i1" type="radio" name="i"/>
 <input id="i2" type="radio" name="i"/>
@@ -96,7 +98,7 @@ input[id=i2]:checked ~pre .i2
 <span class="codeline" id="line-14"><code></code></span>
 <span class="codeline" id="line-15"><code><span class="keyword">type</span> <a href="../../pkg/syscall.html#name-SysProcAttr" class="ident">SysProcAttr</a> <span class="keyword">struct</span> {</code></span>
 <span class="codeline" id="line-16"><code>	Chroot     <a href="../../pkg/builtin.html#name-string" class="ident">string</a>      <span class="comment">// Chroot.</span></code></span>
-<span class="codeline" id="line-17"><code>	Credential *<a href="exec_unix.go.html#line-122" class="ident">Credential</a> <span class="comment">// Credential.</span></code></span>
+<span class="codeline" id="line-17"><code>	Credential *<a href="exec_unix.go.html#line-121" class="ident">Credential</a> <span class="comment">// Credential.</span></code></span>
 <span class="codeline" id="line-18"><code>	Ptrace     <a href="../../pkg/builtin.html#name-bool" class="ident">bool</a>        <span class="comment">// Enable tracing.</span></code></span>
 <span class="codeline" id="line-19"><code>	Setsid     <a href="../../pkg/builtin.html#name-bool" class="ident">bool</a>        <span class="comment">// Create session.</span></code></span>
 <span class="codeline" id="line-20"><code>	<span class="comment">// Setpgid sets the process group ID of the child to Pgid,</span></code></span>
@@ -134,236 +136,246 @@ input[id=i2]:checked ~pre .i2
 <span class="codeline" id="line-52"><code><span class="comment">// functions that do not grow the stack.</span></code></span>
 <span class="codeline" id="line-53"><code><span class="comment">//</span></code></span>
 <span class="codeline" id="line-54"><code><span class="comment">//go:norace</span></code></span>
-<span class="codeline" id="line-55"><code><span class="keyword">func</span> <label for="r3" class="ident"><a href="../../pkg/syscall.html#name-forkAndExecInChild" class="ident">forkAndExecInChild</a></label>(<label for="r4" class="ident">argv0</label> *<a href="../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r5" class="ident">argv</label>, <label for="r6" class="ident">envv</label> []*<a href="../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r7" class="ident">chroot</label>, <label for="r8" class="ident">dir</label> *<a href="../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r9" class="ident">attr</label> *<a href="exec_unix.go.html#line-131" class="ident">ProcAttr</a>, <label for="r10" class="ident">sys</label> *<a href="#line-15" class="ident">SysProcAttr</a>, <label for="r11" class="ident">pipe</label> <a href="../../pkg/builtin.html#name-int" class="ident">int</a>) (<label for="r12" class="ident">pid</label> <a href="../../pkg/builtin.html#name-int" class="ident">int</a>, <label for="r13" class="ident">err</label> <a href="syscall_unix.go.html#line-110" class="ident">Errno</a>) {</code></span>
+<span class="codeline" id="line-55"><code><span class="keyword">func</span> <label for="r3" class="ident"><a href="../../pkg/syscall.html#name-forkAndExecInChild" class="ident">forkAndExecInChild</a></label>(<label for="r4" class="ident">argv0</label> *<a href="../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r5" class="ident">argv</label>, <label for="r6" class="ident">envv</label> []*<a href="../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r7" class="ident">chroot</label>, <label for="r8" class="ident">dir</label> *<a href="../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r9" class="ident">attr</label> *<a href="exec_unix.go.html#line-130" class="ident">ProcAttr</a>, <label for="r10" class="ident">sys</label> *<a href="#line-15" class="ident">SysProcAttr</a>, <label for="r11" class="ident">pipe</label> <a href="../../pkg/builtin.html#name-int" class="ident">int</a>) (<label for="r12" class="ident">pid</label> <a href="../../pkg/builtin.html#name-int" class="ident">int</a>, <label for="r13" class="ident">err1</label> <a href="syscall_unix.go.html#line-106" class="ident">Errno</a>) {</code></span>
 <span class="codeline" id="line-56"><code>	<span class="comment">// Declare all variables at top in case any</span></code></span>
 <span class="codeline" id="line-57"><code><span class="comment">	// declarations require heap allocation (e.g., err1).</span></code></span>
 <span class="codeline" id="line-58"><code>	<span class="keyword">var</span> (</code></span>
-<span class="codeline" id="line-59"><code>		<label for="r14" class="ident">r1</label>     <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a></code></span>
-<span class="codeline" id="line-60"><code>		<label for="r15" class="ident">err1</label>   <a href="syscall_unix.go.html#line-110" class="ident">Errno</a></code></span>
-<span class="codeline" id="line-61"><code>		<label for="r16" class="ident">nextfd</label> <a href="../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
-<span class="codeline" id="line-62"><code>		<label for="r17" class="ident">i</label>      <a href="../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
-<span class="codeline" id="line-63"><code>	)</code></span>
-<span class="codeline" id="line-64"><code></code></span>
-<span class="codeline" id="line-65"><code>	<span class="comment">// guard against side effects of shuffling fds below.</span></code></span>
-<span class="codeline" id="line-66"><code><span class="comment">	// Make sure that nextfd is beyond any currently open files so</span></code></span>
-<span class="codeline" id="line-67"><code><span class="comment">	// that we can't run the risk of overwriting any of them.</span></code></span>
-<span class="codeline" id="line-68"><code>	<label for="r18" class="ident">fd</label> := <a href="../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="../../pkg/builtin.html#name-int" class="ident">int</a>, <a href="../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r9" class="ident">attr</label>.<a href="exec_unix.go.html#line-134" class="ident">Files</a>))</code></span>
-<span class="codeline" id="line-69"><code>	<label for="r16" class="ident">nextfd</label> = <a href="../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r9" class="ident">attr</label>.<a href="exec_unix.go.html#line-134" class="ident">Files</a>)</code></span>
-<span class="codeline" id="line-70"><code>	<span class="keyword">for</span> <label for="r19" class="ident">i</label>, <label for="r20" class="ident">ufd</label> := <span class="keyword">range</span> <label for="r9" class="ident">attr</label>.<a href="exec_unix.go.html#line-134" class="ident">Files</a> {</code></span>
-<span class="codeline" id="line-71"><code>		<span class="keyword">if</span> <label for="r16" class="ident">nextfd</label> &lt; <a href="../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r20" class="ident">ufd</label>) {</code></span>
-<span class="codeline" id="line-72"><code>			<label for="r16" class="ident">nextfd</label> = <a href="../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r20" class="ident">ufd</label>)</code></span>
-<span class="codeline" id="line-73"><code>		}</code></span>
-<span class="codeline" id="line-74"><code>		<label for="r18" class="ident">fd</label>[<label for="r19" class="ident">i</label>] = <a href="../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r20" class="ident">ufd</label>)</code></span>
-<span class="codeline" id="line-75"><code>	}</code></span>
-<span class="codeline" id="line-76"><code>	<label for="r16" class="ident">nextfd</label>++</code></span>
-<span class="codeline" id="line-77"><code></code></span>
-<span class="codeline" id="line-78"><code>	<span class="comment">// About to call fork.</span></code></span>
-<span class="codeline" id="line-79"><code><span class="comment">	// No more allocation or calls of non-assembly functions.</span></code></span>
-<span class="codeline" id="line-80"><code>	<a href="#line-40" class="ident">runtime_BeforeFork</a>()</code></span>
-<span class="codeline" id="line-81"><code>	<label for="r14" class="ident">r1</label>, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1726" class="ident">libc_fork_trampoline</a>), <span class="lit-number">0</span>, <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-82"><code>	<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-83"><code>		<a href="#line-41" class="ident">runtime_AfterFork</a>()</code></span>
-<span class="codeline" id="line-84"><code>		<span class="keyword">return</span> <span class="lit-number">0</span>, <label for="r15" class="ident">err1</label></code></span>
-<span class="codeline" id="line-85"><code>	}</code></span>
-<span class="codeline" id="line-86"><code></code></span>
-<span class="codeline" id="line-87"><code>	<span class="keyword">if</span> <label for="r14" class="ident">r1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-88"><code>		<span class="comment">// parent; return PID</span></code></span>
-<span class="codeline" id="line-89"><code>		<a href="#line-41" class="ident">runtime_AfterFork</a>()</code></span>
-<span class="codeline" id="line-90"><code>		<span class="keyword">return</span> <a href="../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r14" class="ident">r1</label>), <span class="lit-number">0</span></code></span>
-<span class="codeline" id="line-91"><code>	}</code></span>
-<span class="codeline" id="line-92"><code></code></span>
-<span class="codeline" id="line-93"><code>	<span class="comment">// Fork succeeded, now in child.</span></code></span>
-<span class="codeline" id="line-94"><code></code></span>
-<span class="codeline" id="line-95"><code>	<span class="comment">// Enable tracing if requested.</span></code></span>
-<span class="codeline" id="line-96"><code>	<span class="keyword">if</span> <label for="r10" class="ident">sys</label>.<a href="#line-18" class="ident">Ptrace</a> {</code></span>
-<span class="codeline" id="line-97"><code>		<span class="keyword">if</span> <label for="r21" class="ident">err</label> := <a href="ptrace_darwin.go.html#line-12" class="ident">ptrace</a>(<a href="ztypes_darwin_arm64.go.html#line-281" class="ident">PTRACE_TRACEME</a>, <span class="lit-number">0</span>, <span class="lit-number">0</span>, <span class="lit-number">0</span>); <label for="r21" class="ident">err</label> != <a href="../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
-<span class="codeline" id="line-98"><code>			<label for="r15" class="ident">err1</label> = <label for="r21" class="ident">err</label>.(<a href="syscall_unix.go.html#line-110" class="ident">Errno</a>)</code></span>
-<span class="codeline" id="line-99"><code>			<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-100"><code>		}</code></span>
-<span class="codeline" id="line-101"><code>	}</code></span>
-<span class="codeline" id="line-102"><code></code></span>
-<span class="codeline" id="line-103"><code>	<span class="comment">// Session ID</span></code></span>
-<span class="codeline" id="line-104"><code>	<span class="keyword">if</span> <label for="r10" class="ident">sys</label>.<a href="#line-19" class="ident">Setsid</a> {</code></span>
-<span class="codeline" id="line-105"><code>		_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1486" class="ident">libc_setsid_trampoline</a>), <span class="lit-number">0</span>, <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-106"><code>		<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-107"><code>			<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-108"><code>		}</code></span>
-<span class="codeline" id="line-109"><code>	}</code></span>
-<span class="codeline" id="line-110"><code></code></span>
-<span class="codeline" id="line-111"><code>	<span class="comment">// Set process group</span></code></span>
-<span class="codeline" id="line-112"><code>	<span class="keyword">if</span> <label for="r10" class="ident">sys</label>.<a href="#line-22" class="ident">Setpgid</a> || <label for="r10" class="ident">sys</label>.<a href="#line-35" class="ident">Foreground</a> {</code></span>
-<span class="codeline" id="line-113"><code>		<span class="comment">// Place child in process group.</span></code></span>
-<span class="codeline" id="line-114"><code>		_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1401" class="ident">libc_setpgid_trampoline</a>), <span class="lit-number">0</span>, <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r10" class="ident">sys</label>.<a href="#line-36" class="ident">Pgid</a>), <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-115"><code>		<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-116"><code>			<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-117"><code>		}</code></span>
-<span class="codeline" id="line-118"><code>	}</code></span>
-<span class="codeline" id="line-119"><code></code></span>
-<span class="codeline" id="line-120"><code>	<span class="keyword">if</span> <label for="r10" class="ident">sys</label>.<a href="#line-35" class="ident">Foreground</a> {</code></span>
-<span class="codeline" id="line-121"><code>		<span class="comment">// This should really be pid_t, however _C_int (aka int32) is</span></code></span>
-<span class="codeline" id="line-122"><code><span class="comment">		// generally equivalent.</span></code></span>
-<span class="codeline" id="line-123"><code>		<label for="r23" class="ident">pgrp</label> := <a href="ztypes_darwin_arm64.go.html#line-18" class="ident">_C_int</a>(<label for="r10" class="ident">sys</label>.<a href="#line-36" class="ident">Pgid</a>)</code></span>
-<span class="codeline" id="line-124"><code>		<span class="keyword">if</span> <label for="r23" class="ident">pgrp</label> == <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-125"><code>			<label for="r14" class="ident">r1</label>, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-783" class="ident">libc_getpid_trampoline</a>), <span class="lit-number">0</span>, <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-126"><code>			<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-127"><code>				<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-128"><code>			}</code></span>
-<span class="codeline" id="line-129"><code>			<label for="r23" class="ident">pgrp</label> = <a href="ztypes_darwin_arm64.go.html#line-18" class="ident">_C_int</a>(<label for="r14" class="ident">r1</label>)</code></span>
-<span class="codeline" id="line-130"><code>		}</code></span>
-<span class="codeline" id="line-131"><code></code></span>
-<span class="codeline" id="line-132"><code>		<span class="comment">// Place process group in foreground.</span></code></span>
-<span class="codeline" id="line-133"><code>		_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1740" class="ident">libc_ioctl_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r10" class="ident">sys</label>.<a href="#line-29" class="ident">Ctty</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="zerrors_darwin_arm64.go.html#line-1105" class="ident">TIOCSPGRP</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(&amp;<label for="r23" class="ident">pgrp</label>)))</code></span>
-<span class="codeline" id="line-134"><code>		<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-135"><code>			<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-136"><code>		}</code></span>
-<span class="codeline" id="line-137"><code>	}</code></span>
-<span class="codeline" id="line-138"><code></code></span>
-<span class="codeline" id="line-139"><code>	<span class="comment">// Restore the signal mask. We do this after TIOCSPGRP to avoid</span></code></span>
-<span class="codeline" id="line-140"><code><span class="comment">	// having the kernel send a SIGTTOU signal to the process group.</span></code></span>
-<span class="codeline" id="line-141"><code>	<a href="#line-42" class="ident">runtime_AfterForkInChild</a>()</code></span>
-<span class="codeline" id="line-142"><code></code></span>
-<span class="codeline" id="line-143"><code>	<span class="comment">// Chroot</span></code></span>
-<span class="codeline" id="line-144"><code>	<span class="keyword">if</span> <label for="r7" class="ident">chroot</label> != <a href="../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
-<span class="codeline" id="line-145"><code>		_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-502" class="ident">libc_chroot_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(<label for="r7" class="ident">chroot</label>)), <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-146"><code>		<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-147"><code>			<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-148"><code>		}</code></span>
-<span class="codeline" id="line-149"><code>	}</code></span>
-<span class="codeline" id="line-150"><code></code></span>
-<span class="codeline" id="line-151"><code>	<span class="comment">// User and groups</span></code></span>
-<span class="codeline" id="line-152"><code>	<span class="keyword">if</span> <label for="r24" class="ident">cred</label> := <label for="r10" class="ident">sys</label>.<a href="#line-17" class="ident">Credential</a>; <label for="r24" class="ident">cred</label> != <a href="../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
-<span class="codeline" id="line-153"><code>		<label for="r25" class="ident">ngroups</label> := <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r24" class="ident">cred</label>.<a href="exec_unix.go.html#line-125" class="ident">Groups</a>))</code></span>
-<span class="codeline" id="line-154"><code>		<label for="r26" class="ident">groups</label> := <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-155"><code>		<span class="keyword">if</span> <label for="r25" class="ident">ngroups</label> &gt; <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-156"><code>			<label for="r26" class="ident">groups</label> = <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(&amp;<label for="r24" class="ident">cred</label>.<a href="exec_unix.go.html#line-125" class="ident">Groups</a>[<span class="lit-number">0</span>]))</code></span>
-<span class="codeline" id="line-157"><code>		}</code></span>
-<span class="codeline" id="line-158"><code>		<span class="keyword">if</span> !<label for="r24" class="ident">cred</label>.<a href="exec_unix.go.html#line-126" class="ident">NoSetGroups</a> {</code></span>
-<span class="codeline" id="line-159"><code>			_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-36" class="ident">libc_setgroups_trampoline</a>), <label for="r25" class="ident">ngroups</label>, <label for="r26" class="ident">groups</label>, <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-160"><code>			<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-161"><code>				<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-162"><code>			}</code></span>
-<span class="codeline" id="line-163"><code>		}</code></span>
-<span class="codeline" id="line-164"><code>		_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1368" class="ident">libc_setgid_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r24" class="ident">cred</label>.<a href="exec_unix.go.html#line-124" class="ident">Gid</a>), <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-165"><code>		<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-166"><code>			<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-167"><code>		}</code></span>
-<span class="codeline" id="line-168"><code>		_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1514" class="ident">libc_setuid_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r24" class="ident">cred</label>.<a href="exec_unix.go.html#line-123" class="ident">Uid</a>), <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-169"><code>		<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-170"><code>			<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-171"><code>		}</code></span>
-<span class="codeline" id="line-172"><code>	}</code></span>
-<span class="codeline" id="line-173"><code></code></span>
-<span class="codeline" id="line-174"><code>	<span class="comment">// Chdir</span></code></span>
-<span class="codeline" id="line-175"><code>	<span class="keyword">if</span> <label for="r8" class="ident">dir</label> != <a href="../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
-<span class="codeline" id="line-176"><code>		_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-426" class="ident">libc_chdir_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(<label for="r8" class="ident">dir</label>)), <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-177"><code>		<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-178"><code>			<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-179"><code>		}</code></span>
-<span class="codeline" id="line-180"><code>	}</code></span>
-<span class="codeline" id="line-181"><code></code></span>
-<span class="codeline" id="line-182"><code>	<span class="comment">// Pass 1: look for fd[i] &lt; i and move those up above len(fd)</span></code></span>
-<span class="codeline" id="line-183"><code><span class="comment">	// so that pass 2 won't stomp on an fd it needs later.</span></code></span>
-<span class="codeline" id="line-184"><code>	<span class="keyword">if</span> <label for="r11" class="ident">pipe</label> &lt; <label for="r16" class="ident">nextfd</label> {</code></span>
-<span class="codeline" id="line-185"><code>		<span class="keyword">if</span> <a href="../../pkg/runtime.html" class="ident i1">runtime</a>.<a href="../runtime/extern.go.html#line-283" class="ident">GOOS</a> == <span class="lit-string">"openbsd"</span> {</code></span>
-<span class="codeline" id="line-186"><code>			_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="syscall_darwin.go.html#line-25" class="ident">dupTrampoline</a>, <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r11" class="ident">pipe</label>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r16" class="ident">nextfd</label>), <a href="zerrors_darwin_arm64.go.html#line-740" class="ident">O_CLOEXEC</a>)</code></span>
-<span class="codeline" id="line-187"><code>		} <span class="keyword">else</span> {</code></span>
-<span class="codeline" id="line-188"><code>			_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="syscall_darwin.go.html#line-25" class="ident">dupTrampoline</a>, <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r11" class="ident">pipe</label>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r16" class="ident">nextfd</label>), <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-189"><code>			<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-190"><code>				<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-191"><code>			}</code></span>
-<span class="codeline" id="line-192"><code>			_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-327" class="ident">libc_fcntl_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r16" class="ident">nextfd</label>), <a href="zerrors_darwin_arm64.go.html#line-265" class="ident">F_SETFD</a>, <a href="zerrors_darwin_arm64.go.html#line-227" class="ident">FD_CLOEXEC</a>)</code></span>
-<span class="codeline" id="line-193"><code>		}</code></span>
-<span class="codeline" id="line-194"><code>		<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-195"><code>			<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-196"><code>		}</code></span>
-<span class="codeline" id="line-197"><code>		<label for="r11" class="ident">pipe</label> = <label for="r16" class="ident">nextfd</label></code></span>
-<span class="codeline" id="line-198"><code>		<label for="r16" class="ident">nextfd</label>++</code></span>
-<span class="codeline" id="line-199"><code>	}</code></span>
-<span class="codeline" id="line-200"><code>	<span class="keyword">for</span> <label for="r17" class="ident">i</label> = <span class="lit-number">0</span>; <label for="r17" class="ident">i</label> &lt; <a href="../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r18" class="ident">fd</label>); <label for="r17" class="ident">i</label>++ {</code></span>
-<span class="codeline" id="line-201"><code>		<span class="keyword">if</span> <label for="r18" class="ident">fd</label>[<label for="r17" class="ident">i</label>] &gt;= <span class="lit-number">0</span> &amp;&amp; <label for="r18" class="ident">fd</label>[<label for="r17" class="ident">i</label>] &lt; <a href="../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r17" class="ident">i</label>) {</code></span>
-<span class="codeline" id="line-202"><code>			<span class="keyword">if</span> <label for="r16" class="ident">nextfd</label> == <label for="r11" class="ident">pipe</label> { <span class="comment">// don't stomp on pipe</span></code></span>
-<span class="codeline" id="line-203"><code>				<label for="r16" class="ident">nextfd</label>++</code></span>
-<span class="codeline" id="line-204"><code>			}</code></span>
-<span class="codeline" id="line-205"><code>			<span class="keyword">if</span> <a href="../../pkg/runtime.html" class="ident i1">runtime</a>.<a href="../runtime/extern.go.html#line-283" class="ident">GOOS</a> == <span class="lit-string">"openbsd"</span> {</code></span>
-<span class="codeline" id="line-206"><code>				_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="syscall_darwin.go.html#line-25" class="ident">dupTrampoline</a>, <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r18" class="ident">fd</label>[<label for="r17" class="ident">i</label>]), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r16" class="ident">nextfd</label>), <a href="zerrors_darwin_arm64.go.html#line-740" class="ident">O_CLOEXEC</a>)</code></span>
-<span class="codeline" id="line-207"><code>			} <span class="keyword">else</span> {</code></span>
-<span class="codeline" id="line-208"><code>				_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="syscall_darwin.go.html#line-25" class="ident">dupTrampoline</a>, <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r18" class="ident">fd</label>[<label for="r17" class="ident">i</label>]), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r16" class="ident">nextfd</label>), <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-209"><code>				<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-210"><code>					<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-211"><code>				}</code></span>
-<span class="codeline" id="line-212"><code>				_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-327" class="ident">libc_fcntl_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r16" class="ident">nextfd</label>), <a href="zerrors_darwin_arm64.go.html#line-265" class="ident">F_SETFD</a>, <a href="zerrors_darwin_arm64.go.html#line-227" class="ident">FD_CLOEXEC</a>)</code></span>
-<span class="codeline" id="line-213"><code>			}</code></span>
-<span class="codeline" id="line-214"><code>			<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-215"><code>				<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-216"><code>			}</code></span>
-<span class="codeline" id="line-217"><code>			<label for="r18" class="ident">fd</label>[<label for="r17" class="ident">i</label>] = <label for="r16" class="ident">nextfd</label></code></span>
-<span class="codeline" id="line-218"><code>			<label for="r16" class="ident">nextfd</label>++</code></span>
-<span class="codeline" id="line-219"><code>		}</code></span>
-<span class="codeline" id="line-220"><code>	}</code></span>
-<span class="codeline" id="line-221"><code></code></span>
-<span class="codeline" id="line-222"><code>	<span class="comment">// Pass 2: dup fd[i] down onto i.</span></code></span>
-<span class="codeline" id="line-223"><code>	<span class="keyword">for</span> <label for="r17" class="ident">i</label> = <span class="lit-number">0</span>; <label for="r17" class="ident">i</label> &lt; <a href="../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r18" class="ident">fd</label>); <label for="r17" class="ident">i</label>++ {</code></span>
-<span class="codeline" id="line-224"><code>		<span class="keyword">if</span> <label for="r18" class="ident">fd</label>[<label for="r17" class="ident">i</label>] == -<span class="lit-number">1</span> {</code></span>
-<span class="codeline" id="line-225"><code>			<a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-516" class="ident">libc_close_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r17" class="ident">i</label>), <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-226"><code>			<span class="keyword">continue</span></code></span>
-<span class="codeline" id="line-227"><code>		}</code></span>
-<span class="codeline" id="line-228"><code>		<span class="keyword">if</span> <label for="r18" class="ident">fd</label>[<label for="r17" class="ident">i</label>] == <a href="../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r17" class="ident">i</label>) {</code></span>
-<span class="codeline" id="line-229"><code>			<span class="comment">// dup2(i, i) won't clear close-on-exec flag on Linux,</span></code></span>
-<span class="codeline" id="line-230"><code><span class="comment">			// probably not elsewhere either.</span></code></span>
-<span class="codeline" id="line-231"><code>			_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-327" class="ident">libc_fcntl_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r18" class="ident">fd</label>[<label for="r17" class="ident">i</label>]), <a href="zerrors_darwin_arm64.go.html#line-265" class="ident">F_SETFD</a>, <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-232"><code>			<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-233"><code>				<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-234"><code>			}</code></span>
-<span class="codeline" id="line-235"><code>			<span class="keyword">continue</span></code></span>
-<span class="codeline" id="line-236"><code>		}</code></span>
-<span class="codeline" id="line-237"><code>		<span class="comment">// The new fd is created NOT close-on-exec,</span></code></span>
-<span class="codeline" id="line-238"><code><span class="comment">		// which is exactly what we want.</span></code></span>
-<span class="codeline" id="line-239"><code>		_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-559" class="ident">libc_dup2_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r18" class="ident">fd</label>[<label for="r17" class="ident">i</label>]), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r17" class="ident">i</label>), <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-240"><code>		<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-241"><code>			<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-242"><code>		}</code></span>
-<span class="codeline" id="line-243"><code>	}</code></span>
-<span class="codeline" id="line-244"><code></code></span>
-<span class="codeline" id="line-245"><code>	<span class="comment">// By convention, we don't close-on-exec the fds we are</span></code></span>
-<span class="codeline" id="line-246"><code><span class="comment">	// started with, so if len(fd) &lt; 3, close 0, 1, 2 as needed.</span></code></span>
-<span class="codeline" id="line-247"><code><span class="comment">	// Programs that know they inherit fds &gt;= 3 will need</span></code></span>
-<span class="codeline" id="line-248"><code><span class="comment">	// to set them close-on-exec.</span></code></span>
-<span class="codeline" id="line-249"><code>	<span class="keyword">for</span> <label for="r17" class="ident">i</label> = <a href="../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r18" class="ident">fd</label>); <label for="r17" class="ident">i</label> &lt; <span class="lit-number">3</span>; <label for="r17" class="ident">i</label>++ {</code></span>
-<span class="codeline" id="line-250"><code>		<a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-516" class="ident">libc_close_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r17" class="ident">i</label>), <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-251"><code>	}</code></span>
-<span class="codeline" id="line-252"><code></code></span>
-<span class="codeline" id="line-253"><code>	<span class="comment">// Detach fd 0 from tty</span></code></span>
-<span class="codeline" id="line-254"><code>	<span class="keyword">if</span> <label for="r10" class="ident">sys</label>.<a href="#line-28" class="ident">Noctty</a> {</code></span>
-<span class="codeline" id="line-255"><code>		_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1740" class="ident">libc_ioctl_trampoline</a>), <span class="lit-number">0</span>, <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="zerrors_darwin_arm64.go.html#line-1079" class="ident">TIOCNOTTY</a>), <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-256"><code>		<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-257"><code>			<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-258"><code>		}</code></span>
-<span class="codeline" id="line-259"><code>	}</code></span>
-<span class="codeline" id="line-260"><code></code></span>
-<span class="codeline" id="line-261"><code>	<span class="comment">// Set the controlling TTY to Ctty</span></code></span>
-<span class="codeline" id="line-262"><code>	<span class="keyword">if</span> <label for="r10" class="ident">sys</label>.<a href="#line-27" class="ident">Setctty</a> {</code></span>
-<span class="codeline" id="line-263"><code>		_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1740" class="ident">libc_ioctl_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r10" class="ident">sys</label>.<a href="#line-29" class="ident">Ctty</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="zerrors_darwin_arm64.go.html#line-1097" class="ident">TIOCSCTTY</a>), <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-264"><code>		<span class="keyword">if</span> <label for="r15" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
-<span class="codeline" id="line-265"><code>			<span class="keyword">goto</span> <label for="r22" class="ident">childerror</label></code></span>
-<span class="codeline" id="line-266"><code>		}</code></span>
-<span class="codeline" id="line-267"><code>	}</code></span>
-<span class="codeline" id="line-268"><code></code></span>
-<span class="codeline" id="line-269"><code>	<span class="comment">// Time to exec.</span></code></span>
-<span class="codeline" id="line-270"><code>	_, _, <label for="r15" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1764" class="ident">libc_execve_trampoline</a>),</code></span>
-<span class="codeline" id="line-271"><code>		<a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(<label for="r4" class="ident">argv0</label>)),</code></span>
-<span class="codeline" id="line-272"><code>		<a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(&amp;<label for="r5" class="ident">argv</label>[<span class="lit-number">0</span>])),</code></span>
-<span class="codeline" id="line-273"><code>		<a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(&amp;<label for="r6" class="ident">envv</label>[<span class="lit-number">0</span>])))</code></span>
-<span class="codeline" id="line-274"><code></code></span>
-<span class="codeline" id="line-275"><code><label for="r22" class="ident">childerror</label>:</code></span>
-<span class="codeline" id="line-276"><code>	<span class="comment">// send error code on pipe</span></code></span>
-<span class="codeline" id="line-277"><code>	<a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1661" class="ident">libc_write_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r11" class="ident">pipe</label>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(&amp;<label for="r15" class="ident">err1</label>)), <a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Sizeof" class="ident">Sizeof</a>(<label for="r15" class="ident">err1</label>))</code></span>
-<span class="codeline" id="line-278"><code>	<span class="keyword">for</span> {</code></span>
-<span class="codeline" id="line-279"><code>		<a href="syscall_darwin.go.html#line-337" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/abi.go.html#line-117" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1778" class="ident">libc_exit_trampoline</a>), <span class="lit-number">253</span>, <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
-<span class="codeline" id="line-280"><code>	}</code></span>
-<span class="codeline" id="line-281"><code>}</code></span>
+<span class="codeline" id="line-59"><code>		<label for="r14" class="ident">r1</label>              <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a></code></span>
+<span class="codeline" id="line-60"><code>		<label for="r15" class="ident">nextfd</label>          <a href="../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-61"><code>		<label for="r16" class="ident">i</label>               <a href="../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-62"><code>		<label for="r17" class="ident">err</label>             <a href="../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-63"><code>		<label for="r18" class="ident">pgrp</label>            <a href="ztypes_darwin_arm64.go.html#line-18" class="ident">_C_int</a></code></span>
+<span class="codeline" id="line-64"><code>		<label for="r19" class="ident">cred</label>            *<a href="exec_unix.go.html#line-121" class="ident">Credential</a></code></span>
+<span class="codeline" id="line-65"><code>		<label for="r20" class="ident">ngroups</label>, <label for="r21" class="ident">groups</label> <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a></code></span>
+<span class="codeline" id="line-66"><code>	)</code></span>
+<span class="codeline" id="line-67"><code></code></span>
+<span class="codeline" id="line-68"><code>	<label for="r22" class="ident">rlim</label>, <label for="r23" class="ident">rlimOK</label> := <a href="rlimit.go.html#line-16" class="ident">origRlimitNofile</a>.<a href="../sync/atomic/value.go.html#line-28" class="ident">Load</a>().(<a href="ztypes_darwin_arm64.go.html#line-58" class="ident">Rlimit</a>)</code></span>
+<span class="codeline" id="line-69"><code></code></span>
+<span class="codeline" id="line-70"><code>	<span class="comment">// guard against side effects of shuffling fds below.</span></code></span>
+<span class="codeline" id="line-71"><code><span class="comment">	// Make sure that nextfd is beyond any currently open files so</span></code></span>
+<span class="codeline" id="line-72"><code><span class="comment">	// that we can't run the risk of overwriting any of them.</span></code></span>
+<span class="codeline" id="line-73"><code>	<label for="r24" class="ident">fd</label> := <a href="../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="../../pkg/builtin.html#name-int" class="ident">int</a>, <a href="../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r9" class="ident">attr</label>.<a href="exec_unix.go.html#line-133" class="ident">Files</a>))</code></span>
+<span class="codeline" id="line-74"><code>	<label for="r15" class="ident">nextfd</label> = <a href="../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r9" class="ident">attr</label>.<a href="exec_unix.go.html#line-133" class="ident">Files</a>)</code></span>
+<span class="codeline" id="line-75"><code>	<span class="keyword">for</span> <label for="r25" class="ident">i</label>, <label for="r26" class="ident">ufd</label> := <span class="keyword">range</span> <label for="r9" class="ident">attr</label>.<a href="exec_unix.go.html#line-133" class="ident">Files</a> {</code></span>
+<span class="codeline" id="line-76"><code>		<span class="keyword">if</span> <label for="r15" class="ident">nextfd</label> &lt; <a href="../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r26" class="ident">ufd</label>) {</code></span>
+<span class="codeline" id="line-77"><code>			<label for="r15" class="ident">nextfd</label> = <a href="../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r26" class="ident">ufd</label>)</code></span>
+<span class="codeline" id="line-78"><code>		}</code></span>
+<span class="codeline" id="line-79"><code>		<label for="r24" class="ident">fd</label>[<label for="r25" class="ident">i</label>] = <a href="../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r26" class="ident">ufd</label>)</code></span>
+<span class="codeline" id="line-80"><code>	}</code></span>
+<span class="codeline" id="line-81"><code>	<label for="r15" class="ident">nextfd</label>++</code></span>
+<span class="codeline" id="line-82"><code></code></span>
+<span class="codeline" id="line-83"><code>	<span class="comment">// About to call fork.</span></code></span>
+<span class="codeline" id="line-84"><code><span class="comment">	// No more allocation or calls of non-assembly functions.</span></code></span>
+<span class="codeline" id="line-85"><code>	<a href="#line-40" class="ident">runtime_BeforeFork</a>()</code></span>
+<span class="codeline" id="line-86"><code>	<label for="r14" class="ident">r1</label>, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1746" class="ident">libc_fork_trampoline</a>), <span class="lit-number">0</span>, <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-87"><code>	<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-88"><code>		<a href="#line-41" class="ident">runtime_AfterFork</a>()</code></span>
+<span class="codeline" id="line-89"><code>		<span class="keyword">return</span> <span class="lit-number">0</span>, <label for="r13" class="ident">err1</label></code></span>
+<span class="codeline" id="line-90"><code>	}</code></span>
+<span class="codeline" id="line-91"><code></code></span>
+<span class="codeline" id="line-92"><code>	<span class="keyword">if</span> <label for="r14" class="ident">r1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-93"><code>		<span class="comment">// parent; return PID</span></code></span>
+<span class="codeline" id="line-94"><code>		<a href="#line-41" class="ident">runtime_AfterFork</a>()</code></span>
+<span class="codeline" id="line-95"><code>		<span class="keyword">return</span> <a href="../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r14" class="ident">r1</label>), <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-96"><code>	}</code></span>
+<span class="codeline" id="line-97"><code></code></span>
+<span class="codeline" id="line-98"><code>	<span class="comment">// Fork succeeded, now in child.</span></code></span>
+<span class="codeline" id="line-99"><code></code></span>
+<span class="codeline" id="line-100"><code>	<span class="comment">// Enable tracing if requested.</span></code></span>
+<span class="codeline" id="line-101"><code>	<span class="keyword">if</span> <label for="r10" class="ident">sys</label>.<a href="#line-18" class="ident">Ptrace</a> {</code></span>
+<span class="codeline" id="line-102"><code>		<span class="keyword">if</span> <label for="r17" class="ident">err</label> = <a href="ptrace_darwin.go.html#line-14" class="ident">ptrace</a>(<a href="ztypes_darwin_arm64.go.html#line-281" class="ident">PTRACE_TRACEME</a>, <span class="lit-number">0</span>, <span class="lit-number">0</span>, <span class="lit-number">0</span>); <label for="r17" class="ident">err</label> != <a href="../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-103"><code>			<label for="r13" class="ident">err1</label> = <label for="r17" class="ident">err</label>.(<a href="syscall_unix.go.html#line-106" class="ident">Errno</a>)</code></span>
+<span class="codeline" id="line-104"><code>			<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-105"><code>		}</code></span>
+<span class="codeline" id="line-106"><code>	}</code></span>
+<span class="codeline" id="line-107"><code></code></span>
+<span class="codeline" id="line-108"><code>	<span class="comment">// Session ID</span></code></span>
+<span class="codeline" id="line-109"><code>	<span class="keyword">if</span> <label for="r10" class="ident">sys</label>.<a href="#line-19" class="ident">Setsid</a> {</code></span>
+<span class="codeline" id="line-110"><code>		_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1506" class="ident">libc_setsid_trampoline</a>), <span class="lit-number">0</span>, <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-111"><code>		<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-112"><code>			<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-113"><code>		}</code></span>
+<span class="codeline" id="line-114"><code>	}</code></span>
+<span class="codeline" id="line-115"><code></code></span>
+<span class="codeline" id="line-116"><code>	<span class="comment">// Set process group</span></code></span>
+<span class="codeline" id="line-117"><code>	<span class="keyword">if</span> <label for="r10" class="ident">sys</label>.<a href="#line-22" class="ident">Setpgid</a> || <label for="r10" class="ident">sys</label>.<a href="#line-35" class="ident">Foreground</a> {</code></span>
+<span class="codeline" id="line-118"><code>		<span class="comment">// Place child in process group.</span></code></span>
+<span class="codeline" id="line-119"><code>		_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1421" class="ident">libc_setpgid_trampoline</a>), <span class="lit-number">0</span>, <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r10" class="ident">sys</label>.<a href="#line-36" class="ident">Pgid</a>), <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-120"><code>		<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-121"><code>			<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-122"><code>		}</code></span>
+<span class="codeline" id="line-123"><code>	}</code></span>
+<span class="codeline" id="line-124"><code></code></span>
+<span class="codeline" id="line-125"><code>	<span class="keyword">if</span> <label for="r10" class="ident">sys</label>.<a href="#line-35" class="ident">Foreground</a> {</code></span>
+<span class="codeline" id="line-126"><code>		<span class="comment">// This should really be pid_t, however _C_int (aka int32) is</span></code></span>
+<span class="codeline" id="line-127"><code><span class="comment">		// generally equivalent.</span></code></span>
+<span class="codeline" id="line-128"><code>		<label for="r18" class="ident">pgrp</label> = <a href="ztypes_darwin_arm64.go.html#line-18" class="ident">_C_int</a>(<label for="r10" class="ident">sys</label>.<a href="#line-36" class="ident">Pgid</a>)</code></span>
+<span class="codeline" id="line-129"><code>		<span class="keyword">if</span> <label for="r18" class="ident">pgrp</label> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-130"><code>			<label for="r14" class="ident">r1</label>, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-783" class="ident">libc_getpid_trampoline</a>), <span class="lit-number">0</span>, <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-131"><code>			<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-132"><code>				<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-133"><code>			}</code></span>
+<span class="codeline" id="line-134"><code>			<label for="r18" class="ident">pgrp</label> = <a href="ztypes_darwin_arm64.go.html#line-18" class="ident">_C_int</a>(<label for="r14" class="ident">r1</label>)</code></span>
+<span class="codeline" id="line-135"><code>		}</code></span>
+<span class="codeline" id="line-136"><code></code></span>
+<span class="codeline" id="line-137"><code>		<span class="comment">// Place process group in foreground.</span></code></span>
+<span class="codeline" id="line-138"><code>		_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1760" class="ident">libc_ioctl_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r10" class="ident">sys</label>.<a href="#line-29" class="ident">Ctty</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="zerrors_darwin_arm64.go.html#line-1105" class="ident">TIOCSPGRP</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(&amp;<label for="r18" class="ident">pgrp</label>)))</code></span>
+<span class="codeline" id="line-139"><code>		<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-140"><code>			<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-141"><code>		}</code></span>
+<span class="codeline" id="line-142"><code>	}</code></span>
+<span class="codeline" id="line-143"><code></code></span>
+<span class="codeline" id="line-144"><code>	<span class="comment">// Restore the signal mask. We do this after TIOCSPGRP to avoid</span></code></span>
+<span class="codeline" id="line-145"><code><span class="comment">	// having the kernel send a SIGTTOU signal to the process group.</span></code></span>
+<span class="codeline" id="line-146"><code>	<a href="#line-42" class="ident">runtime_AfterForkInChild</a>()</code></span>
+<span class="codeline" id="line-147"><code></code></span>
+<span class="codeline" id="line-148"><code>	<span class="comment">// Chroot</span></code></span>
+<span class="codeline" id="line-149"><code>	<span class="keyword">if</span> <label for="r7" class="ident">chroot</label> != <a href="../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-150"><code>		_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-502" class="ident">libc_chroot_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(<label for="r7" class="ident">chroot</label>)), <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-151"><code>		<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-152"><code>			<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-153"><code>		}</code></span>
+<span class="codeline" id="line-154"><code>	}</code></span>
+<span class="codeline" id="line-155"><code></code></span>
+<span class="codeline" id="line-156"><code>	<span class="comment">// User and groups</span></code></span>
+<span class="codeline" id="line-157"><code>	<span class="keyword">if</span> <label for="r19" class="ident">cred</label> = <label for="r10" class="ident">sys</label>.<a href="#line-17" class="ident">Credential</a>; <label for="r19" class="ident">cred</label> != <a href="../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-158"><code>		<label for="r20" class="ident">ngroups</label> = <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r19" class="ident">cred</label>.<a href="exec_unix.go.html#line-124" class="ident">Groups</a>))</code></span>
+<span class="codeline" id="line-159"><code>		<label for="r21" class="ident">groups</label> = <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-160"><code>		<span class="keyword">if</span> <label for="r20" class="ident">ngroups</label> &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-161"><code>			<label for="r21" class="ident">groups</label> = <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(&amp;<label for="r19" class="ident">cred</label>.<a href="exec_unix.go.html#line-124" class="ident">Groups</a>[<span class="lit-number">0</span>]))</code></span>
+<span class="codeline" id="line-162"><code>		}</code></span>
+<span class="codeline" id="line-163"><code>		<span class="keyword">if</span> !<label for="r19" class="ident">cred</label>.<a href="exec_unix.go.html#line-125" class="ident">NoSetGroups</a> {</code></span>
+<span class="codeline" id="line-164"><code>			_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-36" class="ident">libc_setgroups_trampoline</a>), <label for="r20" class="ident">ngroups</label>, <label for="r21" class="ident">groups</label>, <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-165"><code>			<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-166"><code>				<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-167"><code>			}</code></span>
+<span class="codeline" id="line-168"><code>		}</code></span>
+<span class="codeline" id="line-169"><code>		_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1388" class="ident">libc_setgid_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r19" class="ident">cred</label>.<a href="exec_unix.go.html#line-123" class="ident">Gid</a>), <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-170"><code>		<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-171"><code>			<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-172"><code>		}</code></span>
+<span class="codeline" id="line-173"><code>		_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1534" class="ident">libc_setuid_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r19" class="ident">cred</label>.<a href="exec_unix.go.html#line-122" class="ident">Uid</a>), <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-174"><code>		<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-175"><code>			<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-176"><code>		}</code></span>
+<span class="codeline" id="line-177"><code>	}</code></span>
+<span class="codeline" id="line-178"><code></code></span>
+<span class="codeline" id="line-179"><code>	<span class="comment">// Chdir</span></code></span>
+<span class="codeline" id="line-180"><code>	<span class="keyword">if</span> <label for="r8" class="ident">dir</label> != <a href="../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-181"><code>		_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-426" class="ident">libc_chdir_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(<label for="r8" class="ident">dir</label>)), <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-182"><code>		<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-183"><code>			<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-184"><code>		}</code></span>
+<span class="codeline" id="line-185"><code>	}</code></span>
+<span class="codeline" id="line-186"><code></code></span>
+<span class="codeline" id="line-187"><code>	<span class="comment">// Pass 1: look for fd[i] &lt; i and move those up above len(fd)</span></code></span>
+<span class="codeline" id="line-188"><code><span class="comment">	// so that pass 2 won't stomp on an fd it needs later.</span></code></span>
+<span class="codeline" id="line-189"><code>	<span class="keyword">if</span> <label for="r11" class="ident">pipe</label> &lt; <label for="r15" class="ident">nextfd</label> {</code></span>
+<span class="codeline" id="line-190"><code>		<span class="keyword">if</span> <a href="../../pkg/runtime.html" class="ident i1">runtime</a>.<a href="../runtime/extern.go.html#line-337" class="ident">GOOS</a> == <span class="lit-string">"openbsd"</span> {</code></span>
+<span class="codeline" id="line-191"><code>			_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="syscall_darwin.go.html#line-25" class="ident">dupTrampoline</a>, <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r11" class="ident">pipe</label>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r15" class="ident">nextfd</label>), <a href="zerrors_darwin_arm64.go.html#line-740" class="ident">O_CLOEXEC</a>)</code></span>
+<span class="codeline" id="line-192"><code>		} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-193"><code>			_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="syscall_darwin.go.html#line-25" class="ident">dupTrampoline</a>, <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r11" class="ident">pipe</label>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r15" class="ident">nextfd</label>), <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-194"><code>			<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-195"><code>				<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-196"><code>			}</code></span>
+<span class="codeline" id="line-197"><code>			_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-327" class="ident">libc_fcntl_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r15" class="ident">nextfd</label>), <a href="zerrors_darwin_arm64.go.html#line-265" class="ident">F_SETFD</a>, <a href="zerrors_darwin_arm64.go.html#line-227" class="ident">FD_CLOEXEC</a>)</code></span>
+<span class="codeline" id="line-198"><code>		}</code></span>
+<span class="codeline" id="line-199"><code>		<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-200"><code>			<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-201"><code>		}</code></span>
+<span class="codeline" id="line-202"><code>		<label for="r11" class="ident">pipe</label> = <label for="r15" class="ident">nextfd</label></code></span>
+<span class="codeline" id="line-203"><code>		<label for="r15" class="ident">nextfd</label>++</code></span>
+<span class="codeline" id="line-204"><code>	}</code></span>
+<span class="codeline" id="line-205"><code>	<span class="keyword">for</span> <label for="r16" class="ident">i</label> = <span class="lit-number">0</span>; <label for="r16" class="ident">i</label> &lt; <a href="../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r24" class="ident">fd</label>); <label for="r16" class="ident">i</label>++ {</code></span>
+<span class="codeline" id="line-206"><code>		<span class="keyword">if</span> <label for="r24" class="ident">fd</label>[<label for="r16" class="ident">i</label>] &gt;= <span class="lit-number">0</span> &amp;&amp; <label for="r24" class="ident">fd</label>[<label for="r16" class="ident">i</label>] &lt; <label for="r16" class="ident">i</label> {</code></span>
+<span class="codeline" id="line-207"><code>			<span class="keyword">if</span> <label for="r15" class="ident">nextfd</label> == <label for="r11" class="ident">pipe</label> { <span class="comment">// don't stomp on pipe</span></code></span>
+<span class="codeline" id="line-208"><code>				<label for="r15" class="ident">nextfd</label>++</code></span>
+<span class="codeline" id="line-209"><code>			}</code></span>
+<span class="codeline" id="line-210"><code>			<span class="keyword">if</span> <a href="../../pkg/runtime.html" class="ident i1">runtime</a>.<a href="../runtime/extern.go.html#line-337" class="ident">GOOS</a> == <span class="lit-string">"openbsd"</span> {</code></span>
+<span class="codeline" id="line-211"><code>				_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="syscall_darwin.go.html#line-25" class="ident">dupTrampoline</a>, <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r24" class="ident">fd</label>[<label for="r16" class="ident">i</label>]), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r15" class="ident">nextfd</label>), <a href="zerrors_darwin_arm64.go.html#line-740" class="ident">O_CLOEXEC</a>)</code></span>
+<span class="codeline" id="line-212"><code>			} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-213"><code>				_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="syscall_darwin.go.html#line-25" class="ident">dupTrampoline</a>, <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r24" class="ident">fd</label>[<label for="r16" class="ident">i</label>]), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r15" class="ident">nextfd</label>), <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-214"><code>				<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-215"><code>					<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-216"><code>				}</code></span>
+<span class="codeline" id="line-217"><code>				_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-327" class="ident">libc_fcntl_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r15" class="ident">nextfd</label>), <a href="zerrors_darwin_arm64.go.html#line-265" class="ident">F_SETFD</a>, <a href="zerrors_darwin_arm64.go.html#line-227" class="ident">FD_CLOEXEC</a>)</code></span>
+<span class="codeline" id="line-218"><code>			}</code></span>
+<span class="codeline" id="line-219"><code>			<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-220"><code>				<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-221"><code>			}</code></span>
+<span class="codeline" id="line-222"><code>			<label for="r24" class="ident">fd</label>[<label for="r16" class="ident">i</label>] = <label for="r15" class="ident">nextfd</label></code></span>
+<span class="codeline" id="line-223"><code>			<label for="r15" class="ident">nextfd</label>++</code></span>
+<span class="codeline" id="line-224"><code>		}</code></span>
+<span class="codeline" id="line-225"><code>	}</code></span>
+<span class="codeline" id="line-226"><code></code></span>
+<span class="codeline" id="line-227"><code>	<span class="comment">// Pass 2: dup fd[i] down onto i.</span></code></span>
+<span class="codeline" id="line-228"><code>	<span class="keyword">for</span> <label for="r16" class="ident">i</label> = <span class="lit-number">0</span>; <label for="r16" class="ident">i</label> &lt; <a href="../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r24" class="ident">fd</label>); <label for="r16" class="ident">i</label>++ {</code></span>
+<span class="codeline" id="line-229"><code>		<span class="keyword">if</span> <label for="r24" class="ident">fd</label>[<label for="r16" class="ident">i</label>] == -<span class="lit-number">1</span> {</code></span>
+<span class="codeline" id="line-230"><code>			<a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-516" class="ident">libc_close_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r16" class="ident">i</label>), <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-231"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-232"><code>		}</code></span>
+<span class="codeline" id="line-233"><code>		<span class="keyword">if</span> <label for="r24" class="ident">fd</label>[<label for="r16" class="ident">i</label>] == <label for="r16" class="ident">i</label> {</code></span>
+<span class="codeline" id="line-234"><code>			<span class="comment">// dup2(i, i) won't clear close-on-exec flag on Linux,</span></code></span>
+<span class="codeline" id="line-235"><code><span class="comment">			// probably not elsewhere either.</span></code></span>
+<span class="codeline" id="line-236"><code>			_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-327" class="ident">libc_fcntl_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r24" class="ident">fd</label>[<label for="r16" class="ident">i</label>]), <a href="zerrors_darwin_arm64.go.html#line-265" class="ident">F_SETFD</a>, <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-237"><code>			<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-238"><code>				<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-239"><code>			}</code></span>
+<span class="codeline" id="line-240"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-241"><code>		}</code></span>
+<span class="codeline" id="line-242"><code>		<span class="comment">// The new fd is created NOT close-on-exec,</span></code></span>
+<span class="codeline" id="line-243"><code><span class="comment">		// which is exactly what we want.</span></code></span>
+<span class="codeline" id="line-244"><code>		_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-559" class="ident">libc_dup2_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r24" class="ident">fd</label>[<label for="r16" class="ident">i</label>]), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r16" class="ident">i</label>), <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-245"><code>		<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-246"><code>			<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-247"><code>		}</code></span>
+<span class="codeline" id="line-248"><code>	}</code></span>
+<span class="codeline" id="line-249"><code></code></span>
+<span class="codeline" id="line-250"><code>	<span class="comment">// By convention, we don't close-on-exec the fds we are</span></code></span>
+<span class="codeline" id="line-251"><code><span class="comment">	// started with, so if len(fd) &lt; 3, close 0, 1, 2 as needed.</span></code></span>
+<span class="codeline" id="line-252"><code><span class="comment">	// Programs that know they inherit fds &gt;= 3 will need</span></code></span>
+<span class="codeline" id="line-253"><code><span class="comment">	// to set them close-on-exec.</span></code></span>
+<span class="codeline" id="line-254"><code>	<span class="keyword">for</span> <label for="r16" class="ident">i</label> = <a href="../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r24" class="ident">fd</label>); <label for="r16" class="ident">i</label> &lt; <span class="lit-number">3</span>; <label for="r16" class="ident">i</label>++ {</code></span>
+<span class="codeline" id="line-255"><code>		<a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-516" class="ident">libc_close_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r16" class="ident">i</label>), <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-256"><code>	}</code></span>
+<span class="codeline" id="line-257"><code></code></span>
+<span class="codeline" id="line-258"><code>	<span class="comment">// Detach fd 0 from tty</span></code></span>
+<span class="codeline" id="line-259"><code>	<span class="keyword">if</span> <label for="r10" class="ident">sys</label>.<a href="#line-28" class="ident">Noctty</a> {</code></span>
+<span class="codeline" id="line-260"><code>		_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1760" class="ident">libc_ioctl_trampoline</a>), <span class="lit-number">0</span>, <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="zerrors_darwin_arm64.go.html#line-1079" class="ident">TIOCNOTTY</a>), <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-261"><code>		<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-262"><code>			<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-263"><code>		}</code></span>
+<span class="codeline" id="line-264"><code>	}</code></span>
+<span class="codeline" id="line-265"><code></code></span>
+<span class="codeline" id="line-266"><code>	<span class="comment">// Set the controlling TTY to Ctty</span></code></span>
+<span class="codeline" id="line-267"><code>	<span class="keyword">if</span> <label for="r10" class="ident">sys</label>.<a href="#line-27" class="ident">Setctty</a> {</code></span>
+<span class="codeline" id="line-268"><code>		_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1760" class="ident">libc_ioctl_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r10" class="ident">sys</label>.<a href="#line-29" class="ident">Ctty</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="zerrors_darwin_arm64.go.html#line-1097" class="ident">TIOCSCTTY</a>), <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-269"><code>		<span class="keyword">if</span> <label for="r13" class="ident">err1</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-270"><code>			<span class="keyword">goto</span> <label for="r27" class="ident">childerror</label></code></span>
+<span class="codeline" id="line-271"><code>		}</code></span>
+<span class="codeline" id="line-272"><code>	}</code></span>
+<span class="codeline" id="line-273"><code></code></span>
+<span class="codeline" id="line-274"><code>	<span class="comment">// Restore original rlimit.</span></code></span>
+<span class="codeline" id="line-275"><code>	<span class="keyword">if</span> <label for="r23" class="ident">rlimOK</label> &amp;&amp; <label for="r22" class="ident">rlim</label>.<a href="ztypes_darwin_arm64.go.html#line-59" class="ident">Cur</a> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-276"><code>		<a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1491" class="ident">libc_setrlimit_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="zerrors_darwin_arm64.go.html#line-796" class="ident">RLIMIT_NOFILE</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(&amp;<label for="r22" class="ident">rlim</label>)), <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-277"><code>	}</code></span>
+<span class="codeline" id="line-278"><code></code></span>
+<span class="codeline" id="line-279"><code>	<span class="comment">// Time to exec.</span></code></span>
+<span class="codeline" id="line-280"><code>	_, _, <label for="r13" class="ident">err1</label> = <a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1784" class="ident">libc_execve_trampoline</a>),</code></span>
+<span class="codeline" id="line-281"><code>		<a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(<label for="r4" class="ident">argv0</label>)),</code></span>
+<span class="codeline" id="line-282"><code>		<a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(&amp;<label for="r5" class="ident">argv</label>[<span class="lit-number">0</span>])),</code></span>
+<span class="codeline" id="line-283"><code>		<a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(&amp;<label for="r6" class="ident">envv</label>[<span class="lit-number">0</span>])))</code></span>
+<span class="codeline" id="line-284"><code></code></span>
+<span class="codeline" id="line-285"><code><label for="r27" class="ident">childerror</label>:</code></span>
+<span class="codeline" id="line-286"><code>	<span class="comment">// send error code on pipe</span></code></span>
+<span class="codeline" id="line-287"><code>	<a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1681" class="ident">libc_write_trampoline</a>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<label for="r11" class="ident">pipe</label>), <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(&amp;<label for="r13" class="ident">err1</label>)), <a href="../../pkg/unsafe.html" class="ident i2">unsafe</a>.<a href="../../pkg/unsafe.html#name-Sizeof" class="ident">Sizeof</a>(<label for="r13" class="ident">err1</label>))</code></span>
+<span class="codeline" id="line-288"><code>	<span class="keyword">for</span> {</code></span>
+<span class="codeline" id="line-289"><code>		<a href="syscall_darwin.go.html#line-333" class="ident">rawSyscall</a>(<a href="../../pkg/internal/abi.html" class="ident i0">abi</a>.<a href="../internal/abi/funcpc.go.html#line-22" class="ident">FuncPCABI0</a>(<a href="zsyscall_darwin_arm64.go.html#line-1798" class="ident">libc_exit_trampoline</a>), <span class="lit-number">253</span>, <span class="lit-number">0</span>, <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-290"><code>	}</code></span>
+<span class="codeline" id="line-291"><code>}</code></span>
 </pre><pre id="footer">
 <table><tr><td><img src="../../png/go101-twitter.png"></td>
-<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.6.6</i>. (GOOS=darwin GOARCH=arm64)
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.6.7</i>. (GOOS=darwin GOARCH=arm64)
 <b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
 PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
 Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

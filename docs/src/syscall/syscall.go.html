@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Source: syscall.go in package syscall</title>
-<link href="../../css/auto-v0.6.6.css" rel="stylesheet">
-<script src="../../jvs/golds-v0.6.6.js"></script>
+<link href="../../css/auto-v0.6.7.css" rel="stylesheet">
+<script src="../../jvs/golds-v0.6.7.js"></script>
 <body onload="onPageLoad()"><div>
 
 <pre id="header"><code><span class="title">Source File</span>
@@ -43,7 +43,12 @@ input[id=r23]:checked ~pre label[for=r23],
 input[id=r24]:checked ~pre label[for=r24],
 input[id=r25]:checked ~pre label[for=r25],
 input[id=r26]:checked ~pre label[for=r26],
-input[id=r27]:checked ~pre label[for=r27]
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32]
 {background: #226; color: #ff8;}
 input[id=i0]:checked ~pre .i0
 {background: brown; color: #eed;}
@@ -75,6 +80,11 @@ input[id=i0]:checked ~pre .i0
 <input id="r25" type="radio" name="g"/>
 <input id="r26" type="radio" name="g"/>
 <input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
 <input id="i0" type="radio" name="i"/>
 
 <pre class="line-numbers">
@@ -179,9 +189,13 @@ input[id=i0]:checked ~pre .i0
 <span class="codeline" id="line-100"><code></code></span>
 <span class="codeline" id="line-101"><code><span class="keyword">func</span> <label for="r25" class="ident"><a href="../../pkg/syscall.html#name-Getpagesize" class="ident">Getpagesize</a></label>() <a href="../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
 <span class="codeline" id="line-102"><code><span class="keyword">func</span> <label for="r26" class="ident"><a href="../../pkg/syscall.html#name-Exit" class="ident">Exit</a></label>(<label for="r27" class="ident">code</label> <a href="../../pkg/builtin.html#name-int" class="ident">int</a>)</code></span>
+<span class="codeline" id="line-103"><code></code></span>
+<span class="codeline" id="line-104"><code><span class="comment">// runtimeSetenv and runtimeUnsetenv are provided by the runtime.</span></code></span>
+<span class="codeline" id="line-105"><code><span class="keyword">func</span> <label for="r28" class="ident"><a href="../../pkg/syscall.html#name-runtimeSetenv" class="ident">runtimeSetenv</a></label>(<label for="r29" class="ident">k</label>, <label for="r30" class="ident">v</label> <a href="../../pkg/builtin.html#name-string" class="ident">string</a>)</code></span>
+<span class="codeline" id="line-106"><code><span class="keyword">func</span> <label for="r31" class="ident"><a href="../../pkg/syscall.html#name-runtimeUnsetenv" class="ident">runtimeUnsetenv</a></label>(<label for="r32" class="ident">k</label> <a href="../../pkg/builtin.html#name-string" class="ident">string</a>)</code></span>
 </pre><pre id="footer">
 <table><tr><td><img src="../../png/go101-twitter.png"></td>
-<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.6.6</i>. (GOOS=darwin GOARCH=arm64)
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.6.7</i>. (GOOS=darwin GOARCH=arm64)
 <b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
 PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
 Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Source: sys_darwin_arm64.s in package runtime</title>
-<link href="../../css/auto-v0.6.6.css" rel="stylesheet">
-<script src="../../jvs/golds-v0.6.6.js"></script>
+<link href="../../css/auto-v0.6.7.css" rel="stylesheet">
+<script src="../../jvs/golds-v0.6.7.js"></script>
 <body onload="onPageLoad()"><div>
 
 <pre id="header"><code><span class="title">Source File</span>
@@ -328,389 +328,467 @@
 <span class="codeline" id="line-309"><code></code></span>
 <span class="codeline" id="line-310"><code>TEXT runtime·fcntl_trampoline(SB),NOSPLIT,$0</code></span>
 <span class="codeline" id="line-311"><code>	SUB	$16, RSP</code></span>
-<span class="codeline" id="line-312"><code>	MOVW	4(R0), R1	// arg 2 cmd</code></span>
-<span class="codeline" id="line-313"><code>	MOVW	8(R0), R2	// arg 3 arg</code></span>
-<span class="codeline" id="line-314"><code>	MOVW	R2, (RSP)	// arg 3 is variadic, pass on stack</code></span>
-<span class="codeline" id="line-315"><code>	MOVW	0(R0), R0	// arg 1 fd</code></span>
-<span class="codeline" id="line-316"><code>	BL	libc_fcntl(SB)</code></span>
-<span class="codeline" id="line-317"><code>	ADD	$16, RSP</code></span>
-<span class="codeline" id="line-318"><code>	RET</code></span>
-<span class="codeline" id="line-319"><code></code></span>
-<span class="codeline" id="line-320"><code>TEXT runtime·sigaltstack_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-321"><code>#ifdef GOOS_ios</code></span>
-<span class="codeline" id="line-322"><code>	// sigaltstack on iOS is not supported and will always</code></span>
-<span class="codeline" id="line-323"><code>	// run the signal handler on the main stack, so our sigtramp has</code></span>
-<span class="codeline" id="line-324"><code>	// to do the stack switch ourselves.</code></span>
-<span class="codeline" id="line-325"><code>	MOVW	$43, R0</code></span>
-<span class="codeline" id="line-326"><code>	BL	libc_exit(SB)</code></span>
-<span class="codeline" id="line-327"><code>#else</code></span>
-<span class="codeline" id="line-328"><code>	MOVD	8(R0), R1		// arg 2 old</code></span>
-<span class="codeline" id="line-329"><code>	MOVD	0(R0), R0		// arg 1 new</code></span>
-<span class="codeline" id="line-330"><code>	CALL	libc_sigaltstack(SB)</code></span>
-<span class="codeline" id="line-331"><code>	CBZ	R0, 2(PC)</code></span>
-<span class="codeline" id="line-332"><code>	BL	notok&lt;&gt;(SB)</code></span>
-<span class="codeline" id="line-333"><code>#endif</code></span>
-<span class="codeline" id="line-334"><code>	RET</code></span>
-<span class="codeline" id="line-335"><code></code></span>
-<span class="codeline" id="line-336"><code>// Thread related functions</code></span>
-<span class="codeline" id="line-337"><code></code></span>
-<span class="codeline" id="line-338"><code>// mstart_stub is the first function executed on a new thread started by pthread_create.</code></span>
-<span class="codeline" id="line-339"><code>// It just does some low-level setup and then calls mstart.</code></span>
-<span class="codeline" id="line-340"><code>// Note: called with the C calling convention.</code></span>
-<span class="codeline" id="line-341"><code>TEXT runtime·mstart_stub(SB),NOSPLIT,$160</code></span>
-<span class="codeline" id="line-342"><code>	// R0 points to the m.</code></span>
-<span class="codeline" id="line-343"><code>	// We are already on m's g0 stack.</code></span>
-<span class="codeline" id="line-344"><code></code></span>
-<span class="codeline" id="line-345"><code>	// Save callee-save registers.</code></span>
-<span class="codeline" id="line-346"><code>	SAVE_R19_TO_R28(8)</code></span>
-<span class="codeline" id="line-347"><code>	SAVE_F8_TO_F15(88)</code></span>
+<span class="codeline" id="line-312"><code>	MOVD	R0, R19</code></span>
+<span class="codeline" id="line-313"><code>	MOVW	0(R19), R0	// arg 1 fd</code></span>
+<span class="codeline" id="line-314"><code>	MOVW	4(R19), R1	// arg 2 cmd</code></span>
+<span class="codeline" id="line-315"><code>	MOVW	8(R19), R2	// arg 3 arg</code></span>
+<span class="codeline" id="line-316"><code>	MOVW	R2, (RSP)	// arg 3 is variadic, pass on stack</code></span>
+<span class="codeline" id="line-317"><code>	BL	libc_fcntl(SB)</code></span>
+<span class="codeline" id="line-318"><code>	MOVD	$0, R1</code></span>
+<span class="codeline" id="line-319"><code>	MOVD	$-1, R2</code></span>
+<span class="codeline" id="line-320"><code>	CMP	R0, R2</code></span>
+<span class="codeline" id="line-321"><code>	BNE	noerr</code></span>
+<span class="codeline" id="line-322"><code>	BL	libc_error(SB)</code></span>
+<span class="codeline" id="line-323"><code>	MOVW	(R0), R1</code></span>
+<span class="codeline" id="line-324"><code>	MOVW	$-1, R0</code></span>
+<span class="codeline" id="line-325"><code>noerr:</code></span>
+<span class="codeline" id="line-326"><code>	MOVW	R0, 12(R19)</code></span>
+<span class="codeline" id="line-327"><code>	MOVW	R1, 16(R19)</code></span>
+<span class="codeline" id="line-328"><code>	ADD	$16, RSP</code></span>
+<span class="codeline" id="line-329"><code>	RET</code></span>
+<span class="codeline" id="line-330"><code></code></span>
+<span class="codeline" id="line-331"><code>TEXT runtime·sigaltstack_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-332"><code>#ifdef GOOS_ios</code></span>
+<span class="codeline" id="line-333"><code>	// sigaltstack on iOS is not supported and will always</code></span>
+<span class="codeline" id="line-334"><code>	// run the signal handler on the main stack, so our sigtramp has</code></span>
+<span class="codeline" id="line-335"><code>	// to do the stack switch ourselves.</code></span>
+<span class="codeline" id="line-336"><code>	MOVW	$43, R0</code></span>
+<span class="codeline" id="line-337"><code>	BL	libc_exit(SB)</code></span>
+<span class="codeline" id="line-338"><code>#else</code></span>
+<span class="codeline" id="line-339"><code>	MOVD	8(R0), R1		// arg 2 old</code></span>
+<span class="codeline" id="line-340"><code>	MOVD	0(R0), R0		// arg 1 new</code></span>
+<span class="codeline" id="line-341"><code>	CALL	libc_sigaltstack(SB)</code></span>
+<span class="codeline" id="line-342"><code>	CBZ	R0, 2(PC)</code></span>
+<span class="codeline" id="line-343"><code>	BL	notok&lt;&gt;(SB)</code></span>
+<span class="codeline" id="line-344"><code>#endif</code></span>
+<span class="codeline" id="line-345"><code>	RET</code></span>
+<span class="codeline" id="line-346"><code></code></span>
+<span class="codeline" id="line-347"><code>// Thread related functions</code></span>
 <span class="codeline" id="line-348"><code></code></span>
-<span class="codeline" id="line-349"><code>	MOVD	m_g0(R0), g</code></span>
-<span class="codeline" id="line-350"><code>	BL	·save_g(SB)</code></span>
-<span class="codeline" id="line-351"><code></code></span>
-<span class="codeline" id="line-352"><code>	BL	runtime·mstart(SB)</code></span>
-<span class="codeline" id="line-353"><code></code></span>
-<span class="codeline" id="line-354"><code>	// Restore callee-save registers.</code></span>
-<span class="codeline" id="line-355"><code>	RESTORE_R19_TO_R28(8)</code></span>
-<span class="codeline" id="line-356"><code>	RESTORE_F8_TO_F15(88)</code></span>
-<span class="codeline" id="line-357"><code></code></span>
-<span class="codeline" id="line-358"><code>	// Go is all done with this OS thread.</code></span>
-<span class="codeline" id="line-359"><code>	// Tell pthread everything is ok (we never join with this thread, so</code></span>
-<span class="codeline" id="line-360"><code>	// the value here doesn't really matter).</code></span>
-<span class="codeline" id="line-361"><code>	MOVD	$0, R0</code></span>
+<span class="codeline" id="line-349"><code>// mstart_stub is the first function executed on a new thread started by pthread_create.</code></span>
+<span class="codeline" id="line-350"><code>// It just does some low-level setup and then calls mstart.</code></span>
+<span class="codeline" id="line-351"><code>// Note: called with the C calling convention.</code></span>
+<span class="codeline" id="line-352"><code>TEXT runtime·mstart_stub(SB),NOSPLIT,$160</code></span>
+<span class="codeline" id="line-353"><code>	// R0 points to the m.</code></span>
+<span class="codeline" id="line-354"><code>	// We are already on m's g0 stack.</code></span>
+<span class="codeline" id="line-355"><code></code></span>
+<span class="codeline" id="line-356"><code>	// Save callee-save registers.</code></span>
+<span class="codeline" id="line-357"><code>	SAVE_R19_TO_R28(8)</code></span>
+<span class="codeline" id="line-358"><code>	SAVE_F8_TO_F15(88)</code></span>
+<span class="codeline" id="line-359"><code></code></span>
+<span class="codeline" id="line-360"><code>	MOVD	m_g0(R0), g</code></span>
+<span class="codeline" id="line-361"><code>	BL	·save_g(SB)</code></span>
 <span class="codeline" id="line-362"><code></code></span>
-<span class="codeline" id="line-363"><code>	RET</code></span>
+<span class="codeline" id="line-363"><code>	BL	runtime·mstart(SB)</code></span>
 <span class="codeline" id="line-364"><code></code></span>
-<span class="codeline" id="line-365"><code>TEXT runtime·pthread_attr_init_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-366"><code>	MOVD	0(R0), R0	// arg 1 attr</code></span>
-<span class="codeline" id="line-367"><code>	BL	libc_pthread_attr_init(SB)</code></span>
-<span class="codeline" id="line-368"><code>	RET</code></span>
-<span class="codeline" id="line-369"><code></code></span>
-<span class="codeline" id="line-370"><code>TEXT runtime·pthread_attr_getstacksize_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-371"><code>	MOVD	8(R0), R1	// arg 2 size</code></span>
-<span class="codeline" id="line-372"><code>	MOVD	0(R0), R0	// arg 1 attr</code></span>
-<span class="codeline" id="line-373"><code>	BL	libc_pthread_attr_getstacksize(SB)</code></span>
+<span class="codeline" id="line-365"><code>	// Restore callee-save registers.</code></span>
+<span class="codeline" id="line-366"><code>	RESTORE_R19_TO_R28(8)</code></span>
+<span class="codeline" id="line-367"><code>	RESTORE_F8_TO_F15(88)</code></span>
+<span class="codeline" id="line-368"><code></code></span>
+<span class="codeline" id="line-369"><code>	// Go is all done with this OS thread.</code></span>
+<span class="codeline" id="line-370"><code>	// Tell pthread everything is ok (we never join with this thread, so</code></span>
+<span class="codeline" id="line-371"><code>	// the value here doesn't really matter).</code></span>
+<span class="codeline" id="line-372"><code>	MOVD	$0, R0</code></span>
+<span class="codeline" id="line-373"><code></code></span>
 <span class="codeline" id="line-374"><code>	RET</code></span>
 <span class="codeline" id="line-375"><code></code></span>
-<span class="codeline" id="line-376"><code>TEXT runtime·pthread_attr_setdetachstate_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-377"><code>	MOVD	8(R0), R1	// arg 2 state</code></span>
-<span class="codeline" id="line-378"><code>	MOVD	0(R0), R0	// arg 1 attr</code></span>
-<span class="codeline" id="line-379"><code>	BL	libc_pthread_attr_setdetachstate(SB)</code></span>
-<span class="codeline" id="line-380"><code>	RET</code></span>
-<span class="codeline" id="line-381"><code></code></span>
-<span class="codeline" id="line-382"><code>TEXT runtime·pthread_create_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-383"><code>	SUB	$16, RSP</code></span>
-<span class="codeline" id="line-384"><code>	MOVD	0(R0), R1	// arg 2 state</code></span>
-<span class="codeline" id="line-385"><code>	MOVD	8(R0), R2	// arg 3 start</code></span>
-<span class="codeline" id="line-386"><code>	MOVD	16(R0), R3	// arg 4 arg</code></span>
-<span class="codeline" id="line-387"><code>	MOVD	RSP, R0 	// arg 1 &amp;threadid (which we throw away)</code></span>
-<span class="codeline" id="line-388"><code>	BL	libc_pthread_create(SB)</code></span>
-<span class="codeline" id="line-389"><code>	ADD	$16, RSP</code></span>
-<span class="codeline" id="line-390"><code>	RET</code></span>
-<span class="codeline" id="line-391"><code></code></span>
-<span class="codeline" id="line-392"><code>TEXT runtime·raise_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-393"><code>	MOVW	0(R0), R0	// arg 1 sig</code></span>
-<span class="codeline" id="line-394"><code>	BL	libc_raise(SB)</code></span>
-<span class="codeline" id="line-395"><code>	RET</code></span>
-<span class="codeline" id="line-396"><code></code></span>
-<span class="codeline" id="line-397"><code>TEXT runtime·pthread_mutex_init_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-398"><code>	MOVD	8(R0), R1	// arg 2 attr</code></span>
-<span class="codeline" id="line-399"><code>	MOVD	0(R0), R0	// arg 1 mutex</code></span>
-<span class="codeline" id="line-400"><code>	BL	libc_pthread_mutex_init(SB)</code></span>
+<span class="codeline" id="line-376"><code>TEXT runtime·pthread_attr_init_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-377"><code>	MOVD	0(R0), R0	// arg 1 attr</code></span>
+<span class="codeline" id="line-378"><code>	BL	libc_pthread_attr_init(SB)</code></span>
+<span class="codeline" id="line-379"><code>	RET</code></span>
+<span class="codeline" id="line-380"><code></code></span>
+<span class="codeline" id="line-381"><code>TEXT runtime·pthread_attr_getstacksize_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-382"><code>	MOVD	8(R0), R1	// arg 2 size</code></span>
+<span class="codeline" id="line-383"><code>	MOVD	0(R0), R0	// arg 1 attr</code></span>
+<span class="codeline" id="line-384"><code>	BL	libc_pthread_attr_getstacksize(SB)</code></span>
+<span class="codeline" id="line-385"><code>	RET</code></span>
+<span class="codeline" id="line-386"><code></code></span>
+<span class="codeline" id="line-387"><code>TEXT runtime·pthread_attr_setdetachstate_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-388"><code>	MOVD	8(R0), R1	// arg 2 state</code></span>
+<span class="codeline" id="line-389"><code>	MOVD	0(R0), R0	// arg 1 attr</code></span>
+<span class="codeline" id="line-390"><code>	BL	libc_pthread_attr_setdetachstate(SB)</code></span>
+<span class="codeline" id="line-391"><code>	RET</code></span>
+<span class="codeline" id="line-392"><code></code></span>
+<span class="codeline" id="line-393"><code>TEXT runtime·pthread_create_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-394"><code>	SUB	$16, RSP</code></span>
+<span class="codeline" id="line-395"><code>	MOVD	0(R0), R1	// arg 2 state</code></span>
+<span class="codeline" id="line-396"><code>	MOVD	8(R0), R2	// arg 3 start</code></span>
+<span class="codeline" id="line-397"><code>	MOVD	16(R0), R3	// arg 4 arg</code></span>
+<span class="codeline" id="line-398"><code>	MOVD	RSP, R0 	// arg 1 &amp;threadid (which we throw away)</code></span>
+<span class="codeline" id="line-399"><code>	BL	libc_pthread_create(SB)</code></span>
+<span class="codeline" id="line-400"><code>	ADD	$16, RSP</code></span>
 <span class="codeline" id="line-401"><code>	RET</code></span>
 <span class="codeline" id="line-402"><code></code></span>
-<span class="codeline" id="line-403"><code>TEXT runtime·pthread_mutex_lock_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-404"><code>	MOVD	0(R0), R0	// arg 1 mutex</code></span>
-<span class="codeline" id="line-405"><code>	BL	libc_pthread_mutex_lock(SB)</code></span>
+<span class="codeline" id="line-403"><code>TEXT runtime·raise_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-404"><code>	MOVW	0(R0), R0	// arg 1 sig</code></span>
+<span class="codeline" id="line-405"><code>	BL	libc_raise(SB)</code></span>
 <span class="codeline" id="line-406"><code>	RET</code></span>
 <span class="codeline" id="line-407"><code></code></span>
-<span class="codeline" id="line-408"><code>TEXT runtime·pthread_mutex_unlock_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-409"><code>	MOVD	0(R0), R0	// arg 1 mutex</code></span>
-<span class="codeline" id="line-410"><code>	BL	libc_pthread_mutex_unlock(SB)</code></span>
-<span class="codeline" id="line-411"><code>	RET</code></span>
-<span class="codeline" id="line-412"><code></code></span>
-<span class="codeline" id="line-413"><code>TEXT runtime·pthread_cond_init_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-414"><code>	MOVD	8(R0), R1	// arg 2 attr</code></span>
-<span class="codeline" id="line-415"><code>	MOVD	0(R0), R0	// arg 1 cond</code></span>
-<span class="codeline" id="line-416"><code>	BL	libc_pthread_cond_init(SB)</code></span>
+<span class="codeline" id="line-408"><code>TEXT runtime·pthread_mutex_init_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-409"><code>	MOVD	8(R0), R1	// arg 2 attr</code></span>
+<span class="codeline" id="line-410"><code>	MOVD	0(R0), R0	// arg 1 mutex</code></span>
+<span class="codeline" id="line-411"><code>	BL	libc_pthread_mutex_init(SB)</code></span>
+<span class="codeline" id="line-412"><code>	RET</code></span>
+<span class="codeline" id="line-413"><code></code></span>
+<span class="codeline" id="line-414"><code>TEXT runtime·pthread_mutex_lock_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-415"><code>	MOVD	0(R0), R0	// arg 1 mutex</code></span>
+<span class="codeline" id="line-416"><code>	BL	libc_pthread_mutex_lock(SB)</code></span>
 <span class="codeline" id="line-417"><code>	RET</code></span>
 <span class="codeline" id="line-418"><code></code></span>
-<span class="codeline" id="line-419"><code>TEXT runtime·pthread_cond_wait_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-420"><code>	MOVD	8(R0), R1	// arg 2 mutex</code></span>
-<span class="codeline" id="line-421"><code>	MOVD	0(R0), R0	// arg 1 cond</code></span>
-<span class="codeline" id="line-422"><code>	BL	libc_pthread_cond_wait(SB)</code></span>
-<span class="codeline" id="line-423"><code>	RET</code></span>
-<span class="codeline" id="line-424"><code></code></span>
-<span class="codeline" id="line-425"><code>TEXT runtime·pthread_cond_timedwait_relative_np_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-426"><code>	MOVD	8(R0), R1	// arg 2 mutex</code></span>
-<span class="codeline" id="line-427"><code>	MOVD	16(R0), R2	// arg 3 timeout</code></span>
-<span class="codeline" id="line-428"><code>	MOVD	0(R0), R0	// arg 1 cond</code></span>
-<span class="codeline" id="line-429"><code>	BL	libc_pthread_cond_timedwait_relative_np(SB)</code></span>
-<span class="codeline" id="line-430"><code>	RET</code></span>
-<span class="codeline" id="line-431"><code></code></span>
-<span class="codeline" id="line-432"><code>TEXT runtime·pthread_cond_signal_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-433"><code>	MOVD	0(R0), R0	// arg 1 cond</code></span>
-<span class="codeline" id="line-434"><code>	BL	libc_pthread_cond_signal(SB)</code></span>
-<span class="codeline" id="line-435"><code>	RET</code></span>
-<span class="codeline" id="line-436"><code></code></span>
-<span class="codeline" id="line-437"><code>TEXT runtime·pthread_self_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-438"><code>	MOVD	R0, R19		// R19 is callee-save</code></span>
-<span class="codeline" id="line-439"><code>	BL	libc_pthread_self(SB)</code></span>
-<span class="codeline" id="line-440"><code>	MOVD	R0, 0(R19)	// return value</code></span>
+<span class="codeline" id="line-419"><code>TEXT runtime·pthread_mutex_unlock_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-420"><code>	MOVD	0(R0), R0	// arg 1 mutex</code></span>
+<span class="codeline" id="line-421"><code>	BL	libc_pthread_mutex_unlock(SB)</code></span>
+<span class="codeline" id="line-422"><code>	RET</code></span>
+<span class="codeline" id="line-423"><code></code></span>
+<span class="codeline" id="line-424"><code>TEXT runtime·pthread_cond_init_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-425"><code>	MOVD	8(R0), R1	// arg 2 attr</code></span>
+<span class="codeline" id="line-426"><code>	MOVD	0(R0), R0	// arg 1 cond</code></span>
+<span class="codeline" id="line-427"><code>	BL	libc_pthread_cond_init(SB)</code></span>
+<span class="codeline" id="line-428"><code>	RET</code></span>
+<span class="codeline" id="line-429"><code></code></span>
+<span class="codeline" id="line-430"><code>TEXT runtime·pthread_cond_wait_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-431"><code>	MOVD	8(R0), R1	// arg 2 mutex</code></span>
+<span class="codeline" id="line-432"><code>	MOVD	0(R0), R0	// arg 1 cond</code></span>
+<span class="codeline" id="line-433"><code>	BL	libc_pthread_cond_wait(SB)</code></span>
+<span class="codeline" id="line-434"><code>	RET</code></span>
+<span class="codeline" id="line-435"><code></code></span>
+<span class="codeline" id="line-436"><code>TEXT runtime·pthread_cond_timedwait_relative_np_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-437"><code>	MOVD	8(R0), R1	// arg 2 mutex</code></span>
+<span class="codeline" id="line-438"><code>	MOVD	16(R0), R2	// arg 3 timeout</code></span>
+<span class="codeline" id="line-439"><code>	MOVD	0(R0), R0	// arg 1 cond</code></span>
+<span class="codeline" id="line-440"><code>	BL	libc_pthread_cond_timedwait_relative_np(SB)</code></span>
 <span class="codeline" id="line-441"><code>	RET</code></span>
 <span class="codeline" id="line-442"><code></code></span>
-<span class="codeline" id="line-443"><code>TEXT runtime·pthread_kill_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-444"><code>	MOVD	8(R0), R1	// arg 2 sig</code></span>
-<span class="codeline" id="line-445"><code>	MOVD	0(R0), R0	// arg 1 thread</code></span>
-<span class="codeline" id="line-446"><code>	BL	libc_pthread_kill(SB)</code></span>
-<span class="codeline" id="line-447"><code>	RET</code></span>
-<span class="codeline" id="line-448"><code></code></span>
-<span class="codeline" id="line-449"><code>TEXT runtime·pthread_key_create_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-450"><code>	MOVD	8(R0), R1	// arg 2 destructor</code></span>
-<span class="codeline" id="line-451"><code>	MOVD	0(R0), R0	// arg 1 *key</code></span>
-<span class="codeline" id="line-452"><code>	BL	libc_pthread_key_create(SB)</code></span>
-<span class="codeline" id="line-453"><code>	RET</code></span>
-<span class="codeline" id="line-454"><code></code></span>
-<span class="codeline" id="line-455"><code>TEXT runtime·pthread_setspecific_trampoline(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-456"><code>	MOVD	8(R0), R1	// arg 2 value</code></span>
-<span class="codeline" id="line-457"><code>	MOVD	0(R0), R0	// arg 1 key</code></span>
-<span class="codeline" id="line-458"><code>	BL	libc_pthread_setspecific(SB)</code></span>
-<span class="codeline" id="line-459"><code>	RET</code></span>
-<span class="codeline" id="line-460"><code></code></span>
-<span class="codeline" id="line-461"><code>// syscall calls a function in libc on behalf of the syscall package.</code></span>
-<span class="codeline" id="line-462"><code>// syscall takes a pointer to a struct like:</code></span>
-<span class="codeline" id="line-463"><code>// struct {</code></span>
-<span class="codeline" id="line-464"><code>//	fn    uintptr</code></span>
-<span class="codeline" id="line-465"><code>//	a1    uintptr</code></span>
-<span class="codeline" id="line-466"><code>//	a2    uintptr</code></span>
-<span class="codeline" id="line-467"><code>//	a3    uintptr</code></span>
-<span class="codeline" id="line-468"><code>//	r1    uintptr</code></span>
-<span class="codeline" id="line-469"><code>//	r2    uintptr</code></span>
-<span class="codeline" id="line-470"><code>//	err   uintptr</code></span>
-<span class="codeline" id="line-471"><code>// }</code></span>
-<span class="codeline" id="line-472"><code>// syscall must be called on the g0 stack with the</code></span>
-<span class="codeline" id="line-473"><code>// C calling convention (use libcCall).</code></span>
-<span class="codeline" id="line-474"><code>TEXT runtime·syscall(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-475"><code>	SUB	$16, RSP	// push structure pointer</code></span>
-<span class="codeline" id="line-476"><code>	MOVD	R0, 8(RSP)</code></span>
+<span class="codeline" id="line-443"><code>TEXT runtime·pthread_cond_signal_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-444"><code>	MOVD	0(R0), R0	// arg 1 cond</code></span>
+<span class="codeline" id="line-445"><code>	BL	libc_pthread_cond_signal(SB)</code></span>
+<span class="codeline" id="line-446"><code>	RET</code></span>
+<span class="codeline" id="line-447"><code></code></span>
+<span class="codeline" id="line-448"><code>TEXT runtime·pthread_self_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-449"><code>	MOVD	R0, R19		// R19 is callee-save</code></span>
+<span class="codeline" id="line-450"><code>	BL	libc_pthread_self(SB)</code></span>
+<span class="codeline" id="line-451"><code>	MOVD	R0, 0(R19)	// return value</code></span>
+<span class="codeline" id="line-452"><code>	RET</code></span>
+<span class="codeline" id="line-453"><code></code></span>
+<span class="codeline" id="line-454"><code>TEXT runtime·pthread_kill_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-455"><code>	MOVD	8(R0), R1	// arg 2 sig</code></span>
+<span class="codeline" id="line-456"><code>	MOVD	0(R0), R0	// arg 1 thread</code></span>
+<span class="codeline" id="line-457"><code>	BL	libc_pthread_kill(SB)</code></span>
+<span class="codeline" id="line-458"><code>	RET</code></span>
+<span class="codeline" id="line-459"><code></code></span>
+<span class="codeline" id="line-460"><code>TEXT runtime·pthread_key_create_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-461"><code>	MOVD	8(R0), R1	// arg 2 destructor</code></span>
+<span class="codeline" id="line-462"><code>	MOVD	0(R0), R0	// arg 1 *key</code></span>
+<span class="codeline" id="line-463"><code>	BL	libc_pthread_key_create(SB)</code></span>
+<span class="codeline" id="line-464"><code>	RET</code></span>
+<span class="codeline" id="line-465"><code></code></span>
+<span class="codeline" id="line-466"><code>TEXT runtime·pthread_setspecific_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-467"><code>	MOVD	8(R0), R1	// arg 2 value</code></span>
+<span class="codeline" id="line-468"><code>	MOVD	0(R0), R0	// arg 1 key</code></span>
+<span class="codeline" id="line-469"><code>	BL	libc_pthread_setspecific(SB)</code></span>
+<span class="codeline" id="line-470"><code>	RET</code></span>
+<span class="codeline" id="line-471"><code></code></span>
+<span class="codeline" id="line-472"><code>TEXT runtime·osinit_hack_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-473"><code>	MOVD	$0, R0	// arg 1 val</code></span>
+<span class="codeline" id="line-474"><code>	BL	libc_notify_is_valid_token(SB)</code></span>
+<span class="codeline" id="line-475"><code>	BL	libc_xpc_date_create_from_current(SB)</code></span>
+<span class="codeline" id="line-476"><code>	RET</code></span>
 <span class="codeline" id="line-477"><code></code></span>
-<span class="codeline" id="line-478"><code>	MOVD	0(R0), R12	// fn</code></span>
-<span class="codeline" id="line-479"><code>	MOVD	16(R0), R1	// a2</code></span>
-<span class="codeline" id="line-480"><code>	MOVD	24(R0), R2	// a3</code></span>
-<span class="codeline" id="line-481"><code>	MOVD	8(R0), R0	// a1</code></span>
-<span class="codeline" id="line-482"><code></code></span>
-<span class="codeline" id="line-483"><code>	// If fn is declared as vararg, we have to pass the vararg arguments on the stack.</code></span>
-<span class="codeline" id="line-484"><code>	// (Because ios decided not to adhere to the standard arm64 calling convention, sigh...)</code></span>
-<span class="codeline" id="line-485"><code>	// The only libSystem calls we support that are vararg are open, fcntl, and ioctl,</code></span>
-<span class="codeline" id="line-486"><code>	// which are all of the form fn(x, y, ...). So we just need to put the 3rd arg</code></span>
-<span class="codeline" id="line-487"><code>	// on the stack as well.</code></span>
-<span class="codeline" id="line-488"><code>	// If we ever have other vararg libSystem calls, we might need to handle more cases.</code></span>
-<span class="codeline" id="line-489"><code>	MOVD	R2, (RSP)</code></span>
-<span class="codeline" id="line-490"><code></code></span>
-<span class="codeline" id="line-491"><code>	BL	(R12)</code></span>
-<span class="codeline" id="line-492"><code></code></span>
-<span class="codeline" id="line-493"><code>	MOVD	8(RSP), R2	// pop structure pointer</code></span>
-<span class="codeline" id="line-494"><code>	ADD	$16, RSP</code></span>
-<span class="codeline" id="line-495"><code>	MOVD	R0, 32(R2)	// save r1</code></span>
-<span class="codeline" id="line-496"><code>	MOVD	R1, 40(R2)	// save r2</code></span>
-<span class="codeline" id="line-497"><code>	CMPW	$-1, R0</code></span>
-<span class="codeline" id="line-498"><code>	BNE	ok</code></span>
-<span class="codeline" id="line-499"><code>	SUB	$16, RSP	// push structure pointer</code></span>
-<span class="codeline" id="line-500"><code>	MOVD	R2, 8(RSP)</code></span>
-<span class="codeline" id="line-501"><code>	BL	libc_error(SB)</code></span>
-<span class="codeline" id="line-502"><code>	MOVW	(R0), R0</code></span>
-<span class="codeline" id="line-503"><code>	MOVD	8(RSP), R2	// pop structure pointer</code></span>
-<span class="codeline" id="line-504"><code>	ADD	$16, RSP</code></span>
-<span class="codeline" id="line-505"><code>	MOVD	R0, 48(R2)	// save err</code></span>
-<span class="codeline" id="line-506"><code>ok:</code></span>
-<span class="codeline" id="line-507"><code>	RET</code></span>
-<span class="codeline" id="line-508"><code></code></span>
-<span class="codeline" id="line-509"><code>// syscallX calls a function in libc on behalf of the syscall package.</code></span>
-<span class="codeline" id="line-510"><code>// syscallX takes a pointer to a struct like:</code></span>
-<span class="codeline" id="line-511"><code>// struct {</code></span>
-<span class="codeline" id="line-512"><code>//	fn    uintptr</code></span>
-<span class="codeline" id="line-513"><code>//	a1    uintptr</code></span>
-<span class="codeline" id="line-514"><code>//	a2    uintptr</code></span>
-<span class="codeline" id="line-515"><code>//	a3    uintptr</code></span>
-<span class="codeline" id="line-516"><code>//	r1    uintptr</code></span>
-<span class="codeline" id="line-517"><code>//	r2    uintptr</code></span>
-<span class="codeline" id="line-518"><code>//	err   uintptr</code></span>
-<span class="codeline" id="line-519"><code>// }</code></span>
-<span class="codeline" id="line-520"><code>// syscallX must be called on the g0 stack with the</code></span>
-<span class="codeline" id="line-521"><code>// C calling convention (use libcCall).</code></span>
-<span class="codeline" id="line-522"><code>TEXT runtime·syscallX(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-523"><code>	SUB	$16, RSP	// push structure pointer</code></span>
-<span class="codeline" id="line-524"><code>	MOVD	R0, (RSP)</code></span>
+<span class="codeline" id="line-478"><code>// syscall calls a function in libc on behalf of the syscall package.</code></span>
+<span class="codeline" id="line-479"><code>// syscall takes a pointer to a struct like:</code></span>
+<span class="codeline" id="line-480"><code>// struct {</code></span>
+<span class="codeline" id="line-481"><code>//	fn    uintptr</code></span>
+<span class="codeline" id="line-482"><code>//	a1    uintptr</code></span>
+<span class="codeline" id="line-483"><code>//	a2    uintptr</code></span>
+<span class="codeline" id="line-484"><code>//	a3    uintptr</code></span>
+<span class="codeline" id="line-485"><code>//	r1    uintptr</code></span>
+<span class="codeline" id="line-486"><code>//	r2    uintptr</code></span>
+<span class="codeline" id="line-487"><code>//	err   uintptr</code></span>
+<span class="codeline" id="line-488"><code>// }</code></span>
+<span class="codeline" id="line-489"><code>// syscall must be called on the g0 stack with the</code></span>
+<span class="codeline" id="line-490"><code>// C calling convention (use libcCall).</code></span>
+<span class="codeline" id="line-491"><code>TEXT runtime·syscall(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-492"><code>	SUB	$16, RSP	// push structure pointer</code></span>
+<span class="codeline" id="line-493"><code>	MOVD	R0, 8(RSP)</code></span>
+<span class="codeline" id="line-494"><code></code></span>
+<span class="codeline" id="line-495"><code>	MOVD	0(R0), R12	// fn</code></span>
+<span class="codeline" id="line-496"><code>	MOVD	16(R0), R1	// a2</code></span>
+<span class="codeline" id="line-497"><code>	MOVD	24(R0), R2	// a3</code></span>
+<span class="codeline" id="line-498"><code>	MOVD	8(R0), R0	// a1</code></span>
+<span class="codeline" id="line-499"><code></code></span>
+<span class="codeline" id="line-500"><code>	// If fn is declared as vararg, we have to pass the vararg arguments on the stack.</code></span>
+<span class="codeline" id="line-501"><code>	// (Because ios decided not to adhere to the standard arm64 calling convention, sigh...)</code></span>
+<span class="codeline" id="line-502"><code>	// The only libSystem calls we support that are vararg are open, fcntl, and ioctl,</code></span>
+<span class="codeline" id="line-503"><code>	// which are all of the form fn(x, y, ...). So we just need to put the 3rd arg</code></span>
+<span class="codeline" id="line-504"><code>	// on the stack as well.</code></span>
+<span class="codeline" id="line-505"><code>	// If we ever have other vararg libSystem calls, we might need to handle more cases.</code></span>
+<span class="codeline" id="line-506"><code>	MOVD	R2, (RSP)</code></span>
+<span class="codeline" id="line-507"><code></code></span>
+<span class="codeline" id="line-508"><code>	BL	(R12)</code></span>
+<span class="codeline" id="line-509"><code></code></span>
+<span class="codeline" id="line-510"><code>	MOVD	8(RSP), R2	// pop structure pointer</code></span>
+<span class="codeline" id="line-511"><code>	ADD	$16, RSP</code></span>
+<span class="codeline" id="line-512"><code>	MOVD	R0, 32(R2)	// save r1</code></span>
+<span class="codeline" id="line-513"><code>	MOVD	R1, 40(R2)	// save r2</code></span>
+<span class="codeline" id="line-514"><code>	CMPW	$-1, R0</code></span>
+<span class="codeline" id="line-515"><code>	BNE	ok</code></span>
+<span class="codeline" id="line-516"><code>	SUB	$16, RSP	// push structure pointer</code></span>
+<span class="codeline" id="line-517"><code>	MOVD	R2, 8(RSP)</code></span>
+<span class="codeline" id="line-518"><code>	BL	libc_error(SB)</code></span>
+<span class="codeline" id="line-519"><code>	MOVW	(R0), R0</code></span>
+<span class="codeline" id="line-520"><code>	MOVD	8(RSP), R2	// pop structure pointer</code></span>
+<span class="codeline" id="line-521"><code>	ADD	$16, RSP</code></span>
+<span class="codeline" id="line-522"><code>	MOVD	R0, 48(R2)	// save err</code></span>
+<span class="codeline" id="line-523"><code>ok:</code></span>
+<span class="codeline" id="line-524"><code>	RET</code></span>
 <span class="codeline" id="line-525"><code></code></span>
-<span class="codeline" id="line-526"><code>	MOVD	0(R0), R12	// fn</code></span>
-<span class="codeline" id="line-527"><code>	MOVD	16(R0), R1	// a2</code></span>
-<span class="codeline" id="line-528"><code>	MOVD	24(R0), R2	// a3</code></span>
-<span class="codeline" id="line-529"><code>	MOVD	8(R0), R0	// a1</code></span>
-<span class="codeline" id="line-530"><code>	BL	(R12)</code></span>
-<span class="codeline" id="line-531"><code></code></span>
-<span class="codeline" id="line-532"><code>	MOVD	(RSP), R2	// pop structure pointer</code></span>
-<span class="codeline" id="line-533"><code>	ADD	$16, RSP</code></span>
-<span class="codeline" id="line-534"><code>	MOVD	R0, 32(R2)	// save r1</code></span>
-<span class="codeline" id="line-535"><code>	MOVD	R1, 40(R2)	// save r2</code></span>
-<span class="codeline" id="line-536"><code>	CMP	$-1, R0</code></span>
-<span class="codeline" id="line-537"><code>	BNE	ok</code></span>
-<span class="codeline" id="line-538"><code>	SUB	$16, RSP	// push structure pointer</code></span>
-<span class="codeline" id="line-539"><code>	MOVD	R2, (RSP)</code></span>
-<span class="codeline" id="line-540"><code>	BL	libc_error(SB)</code></span>
-<span class="codeline" id="line-541"><code>	MOVW	(R0), R0</code></span>
-<span class="codeline" id="line-542"><code>	MOVD	(RSP), R2	// pop structure pointer</code></span>
-<span class="codeline" id="line-543"><code>	ADD	$16, RSP</code></span>
-<span class="codeline" id="line-544"><code>	MOVD	R0, 48(R2)	// save err</code></span>
-<span class="codeline" id="line-545"><code>ok:</code></span>
-<span class="codeline" id="line-546"><code>	RET</code></span>
-<span class="codeline" id="line-547"><code></code></span>
-<span class="codeline" id="line-548"><code>// syscallPtr is like syscallX except that the libc function reports an</code></span>
-<span class="codeline" id="line-549"><code>// error by returning NULL and setting errno.</code></span>
-<span class="codeline" id="line-550"><code>TEXT runtime·syscallPtr(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-551"><code>	SUB	$16, RSP	// push structure pointer</code></span>
-<span class="codeline" id="line-552"><code>	MOVD	R0, (RSP)</code></span>
-<span class="codeline" id="line-553"><code></code></span>
-<span class="codeline" id="line-554"><code>	MOVD	0(R0), R12	// fn</code></span>
-<span class="codeline" id="line-555"><code>	MOVD	16(R0), R1	// a2</code></span>
-<span class="codeline" id="line-556"><code>	MOVD	24(R0), R2	// a3</code></span>
-<span class="codeline" id="line-557"><code>	MOVD	8(R0), R0	// a1</code></span>
-<span class="codeline" id="line-558"><code>	BL	(R12)</code></span>
-<span class="codeline" id="line-559"><code></code></span>
-<span class="codeline" id="line-560"><code>	MOVD	(RSP), R2	// pop structure pointer</code></span>
-<span class="codeline" id="line-561"><code>	ADD	$16, RSP</code></span>
-<span class="codeline" id="line-562"><code>	MOVD	R0, 32(R2)	// save r1</code></span>
-<span class="codeline" id="line-563"><code>	MOVD	R1, 40(R2)	// save r2</code></span>
-<span class="codeline" id="line-564"><code>	CMP	$0, R0</code></span>
-<span class="codeline" id="line-565"><code>	BNE	ok</code></span>
-<span class="codeline" id="line-566"><code>	SUB	$16, RSP	// push structure pointer</code></span>
-<span class="codeline" id="line-567"><code>	MOVD	R2, (RSP)</code></span>
-<span class="codeline" id="line-568"><code>	BL	libc_error(SB)</code></span>
-<span class="codeline" id="line-569"><code>	MOVW	(R0), R0</code></span>
-<span class="codeline" id="line-570"><code>	MOVD	(RSP), R2	// pop structure pointer</code></span>
-<span class="codeline" id="line-571"><code>	ADD	$16, RSP</code></span>
-<span class="codeline" id="line-572"><code>	MOVD	R0, 48(R2)	// save err</code></span>
-<span class="codeline" id="line-573"><code>ok:</code></span>
-<span class="codeline" id="line-574"><code>	RET</code></span>
-<span class="codeline" id="line-575"><code></code></span>
-<span class="codeline" id="line-576"><code>// syscall6 calls a function in libc on behalf of the syscall package.</code></span>
-<span class="codeline" id="line-577"><code>// syscall6 takes a pointer to a struct like:</code></span>
-<span class="codeline" id="line-578"><code>// struct {</code></span>
-<span class="codeline" id="line-579"><code>//	fn    uintptr</code></span>
-<span class="codeline" id="line-580"><code>//	a1    uintptr</code></span>
-<span class="codeline" id="line-581"><code>//	a2    uintptr</code></span>
-<span class="codeline" id="line-582"><code>//	a3    uintptr</code></span>
-<span class="codeline" id="line-583"><code>//	a4    uintptr</code></span>
-<span class="codeline" id="line-584"><code>//	a5    uintptr</code></span>
-<span class="codeline" id="line-585"><code>//	a6    uintptr</code></span>
-<span class="codeline" id="line-586"><code>//	r1    uintptr</code></span>
-<span class="codeline" id="line-587"><code>//	r2    uintptr</code></span>
-<span class="codeline" id="line-588"><code>//	err   uintptr</code></span>
-<span class="codeline" id="line-589"><code>// }</code></span>
-<span class="codeline" id="line-590"><code>// syscall6 must be called on the g0 stack with the</code></span>
-<span class="codeline" id="line-591"><code>// C calling convention (use libcCall).</code></span>
-<span class="codeline" id="line-592"><code>TEXT runtime·syscall6(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-593"><code>	SUB	$16, RSP	// push structure pointer</code></span>
-<span class="codeline" id="line-594"><code>	MOVD	R0, 8(RSP)</code></span>
-<span class="codeline" id="line-595"><code></code></span>
-<span class="codeline" id="line-596"><code>	MOVD	0(R0), R12	// fn</code></span>
-<span class="codeline" id="line-597"><code>	MOVD	16(R0), R1	// a2</code></span>
-<span class="codeline" id="line-598"><code>	MOVD	24(R0), R2	// a3</code></span>
-<span class="codeline" id="line-599"><code>	MOVD	32(R0), R3	// a4</code></span>
-<span class="codeline" id="line-600"><code>	MOVD	40(R0), R4	// a5</code></span>
-<span class="codeline" id="line-601"><code>	MOVD	48(R0), R5	// a6</code></span>
-<span class="codeline" id="line-602"><code>	MOVD	8(R0), R0	// a1</code></span>
-<span class="codeline" id="line-603"><code></code></span>
-<span class="codeline" id="line-604"><code>	// If fn is declared as vararg, we have to pass the vararg arguments on the stack.</code></span>
-<span class="codeline" id="line-605"><code>	// See syscall above. The only function this applies to is openat, for which the 4th</code></span>
-<span class="codeline" id="line-606"><code>	// arg must be on the stack.</code></span>
-<span class="codeline" id="line-607"><code>	MOVD	R3, (RSP)</code></span>
-<span class="codeline" id="line-608"><code></code></span>
-<span class="codeline" id="line-609"><code>	BL	(R12)</code></span>
-<span class="codeline" id="line-610"><code></code></span>
-<span class="codeline" id="line-611"><code>	MOVD	8(RSP), R2	// pop structure pointer</code></span>
-<span class="codeline" id="line-612"><code>	ADD	$16, RSP</code></span>
-<span class="codeline" id="line-613"><code>	MOVD	R0, 56(R2)	// save r1</code></span>
-<span class="codeline" id="line-614"><code>	MOVD	R1, 64(R2)	// save r2</code></span>
-<span class="codeline" id="line-615"><code>	CMPW	$-1, R0</code></span>
-<span class="codeline" id="line-616"><code>	BNE	ok</code></span>
-<span class="codeline" id="line-617"><code>	SUB	$16, RSP	// push structure pointer</code></span>
-<span class="codeline" id="line-618"><code>	MOVD	R2, 8(RSP)</code></span>
-<span class="codeline" id="line-619"><code>	BL	libc_error(SB)</code></span>
-<span class="codeline" id="line-620"><code>	MOVW	(R0), R0</code></span>
-<span class="codeline" id="line-621"><code>	MOVD	8(RSP), R2	// pop structure pointer</code></span>
-<span class="codeline" id="line-622"><code>	ADD	$16, RSP</code></span>
-<span class="codeline" id="line-623"><code>	MOVD	R0, 72(R2)	// save err</code></span>
-<span class="codeline" id="line-624"><code>ok:</code></span>
-<span class="codeline" id="line-625"><code>	RET</code></span>
-<span class="codeline" id="line-626"><code></code></span>
-<span class="codeline" id="line-627"><code>// syscall6X calls a function in libc on behalf of the syscall package.</code></span>
-<span class="codeline" id="line-628"><code>// syscall6X takes a pointer to a struct like:</code></span>
-<span class="codeline" id="line-629"><code>// struct {</code></span>
-<span class="codeline" id="line-630"><code>//	fn    uintptr</code></span>
-<span class="codeline" id="line-631"><code>//	a1    uintptr</code></span>
-<span class="codeline" id="line-632"><code>//	a2    uintptr</code></span>
-<span class="codeline" id="line-633"><code>//	a3    uintptr</code></span>
-<span class="codeline" id="line-634"><code>//	a4    uintptr</code></span>
-<span class="codeline" id="line-635"><code>//	a5    uintptr</code></span>
-<span class="codeline" id="line-636"><code>//	a6    uintptr</code></span>
-<span class="codeline" id="line-637"><code>//	r1    uintptr</code></span>
-<span class="codeline" id="line-638"><code>//	r2    uintptr</code></span>
-<span class="codeline" id="line-639"><code>//	err   uintptr</code></span>
-<span class="codeline" id="line-640"><code>// }</code></span>
-<span class="codeline" id="line-641"><code>// syscall6X must be called on the g0 stack with the</code></span>
-<span class="codeline" id="line-642"><code>// C calling convention (use libcCall).</code></span>
-<span class="codeline" id="line-643"><code>TEXT runtime·syscall6X(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-644"><code>	SUB	$16, RSP	// push structure pointer</code></span>
-<span class="codeline" id="line-645"><code>	MOVD	R0, (RSP)</code></span>
-<span class="codeline" id="line-646"><code></code></span>
-<span class="codeline" id="line-647"><code>	MOVD	0(R0), R12	// fn</code></span>
-<span class="codeline" id="line-648"><code>	MOVD	16(R0), R1	// a2</code></span>
-<span class="codeline" id="line-649"><code>	MOVD	24(R0), R2	// a3</code></span>
-<span class="codeline" id="line-650"><code>	MOVD	32(R0), R3	// a4</code></span>
-<span class="codeline" id="line-651"><code>	MOVD	40(R0), R4	// a5</code></span>
-<span class="codeline" id="line-652"><code>	MOVD	48(R0), R5	// a6</code></span>
-<span class="codeline" id="line-653"><code>	MOVD	8(R0), R0	// a1</code></span>
-<span class="codeline" id="line-654"><code>	BL	(R12)</code></span>
-<span class="codeline" id="line-655"><code></code></span>
-<span class="codeline" id="line-656"><code>	MOVD	(RSP), R2	// pop structure pointer</code></span>
-<span class="codeline" id="line-657"><code>	ADD	$16, RSP</code></span>
-<span class="codeline" id="line-658"><code>	MOVD	R0, 56(R2)	// save r1</code></span>
-<span class="codeline" id="line-659"><code>	MOVD	R1, 64(R2)	// save r2</code></span>
-<span class="codeline" id="line-660"><code>	CMP	$-1, R0</code></span>
-<span class="codeline" id="line-661"><code>	BNE	ok</code></span>
-<span class="codeline" id="line-662"><code>	SUB	$16, RSP	// push structure pointer</code></span>
-<span class="codeline" id="line-663"><code>	MOVD	R2, (RSP)</code></span>
-<span class="codeline" id="line-664"><code>	BL	libc_error(SB)</code></span>
-<span class="codeline" id="line-665"><code>	MOVW	(R0), R0</code></span>
-<span class="codeline" id="line-666"><code>	MOVD	(RSP), R2	// pop structure pointer</code></span>
-<span class="codeline" id="line-667"><code>	ADD	$16, RSP</code></span>
-<span class="codeline" id="line-668"><code>	MOVD	R0, 72(R2)	// save err</code></span>
-<span class="codeline" id="line-669"><code>ok:</code></span>
-<span class="codeline" id="line-670"><code>	RET</code></span>
-<span class="codeline" id="line-671"><code></code></span>
-<span class="codeline" id="line-672"><code>// syscall_x509 is for crypto/x509. It is like syscall6 but does not check for errors,</code></span>
-<span class="codeline" id="line-673"><code>// takes 5 uintptrs and 1 float64, and only returns one value,</code></span>
-<span class="codeline" id="line-674"><code>// for use with standard C ABI functions.</code></span>
-<span class="codeline" id="line-675"><code>TEXT runtime·syscall_x509(SB),NOSPLIT,$0</code></span>
-<span class="codeline" id="line-676"><code>	SUB	$16, RSP	// push structure pointer</code></span>
-<span class="codeline" id="line-677"><code>	MOVD	R0, (RSP)</code></span>
-<span class="codeline" id="line-678"><code></code></span>
-<span class="codeline" id="line-679"><code>	MOVD	0(R0), R12	// fn</code></span>
-<span class="codeline" id="line-680"><code>	MOVD	16(R0), R1	// a2</code></span>
-<span class="codeline" id="line-681"><code>	MOVD	24(R0), R2	// a3</code></span>
-<span class="codeline" id="line-682"><code>	MOVD	32(R0), R3	// a4</code></span>
-<span class="codeline" id="line-683"><code>	MOVD	40(R0), R4	// a5</code></span>
-<span class="codeline" id="line-684"><code>	FMOVD	48(R0), F0	// f1</code></span>
-<span class="codeline" id="line-685"><code>	MOVD	8(R0), R0	// a1</code></span>
-<span class="codeline" id="line-686"><code>	BL	(R12)</code></span>
-<span class="codeline" id="line-687"><code></code></span>
-<span class="codeline" id="line-688"><code>	MOVD	(RSP), R2	// pop structure pointer</code></span>
-<span class="codeline" id="line-689"><code>	ADD	$16, RSP</code></span>
-<span class="codeline" id="line-690"><code>	MOVD	R0, 56(R2)	// save r1</code></span>
-<span class="codeline" id="line-691"><code>	RET</code></span>
+<span class="codeline" id="line-526"><code>// syscallX calls a function in libc on behalf of the syscall package.</code></span>
+<span class="codeline" id="line-527"><code>// syscallX takes a pointer to a struct like:</code></span>
+<span class="codeline" id="line-528"><code>// struct {</code></span>
+<span class="codeline" id="line-529"><code>//	fn    uintptr</code></span>
+<span class="codeline" id="line-530"><code>//	a1    uintptr</code></span>
+<span class="codeline" id="line-531"><code>//	a2    uintptr</code></span>
+<span class="codeline" id="line-532"><code>//	a3    uintptr</code></span>
+<span class="codeline" id="line-533"><code>//	r1    uintptr</code></span>
+<span class="codeline" id="line-534"><code>//	r2    uintptr</code></span>
+<span class="codeline" id="line-535"><code>//	err   uintptr</code></span>
+<span class="codeline" id="line-536"><code>// }</code></span>
+<span class="codeline" id="line-537"><code>// syscallX must be called on the g0 stack with the</code></span>
+<span class="codeline" id="line-538"><code>// C calling convention (use libcCall).</code></span>
+<span class="codeline" id="line-539"><code>TEXT runtime·syscallX(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-540"><code>	SUB	$16, RSP	// push structure pointer</code></span>
+<span class="codeline" id="line-541"><code>	MOVD	R0, (RSP)</code></span>
+<span class="codeline" id="line-542"><code></code></span>
+<span class="codeline" id="line-543"><code>	MOVD	0(R0), R12	// fn</code></span>
+<span class="codeline" id="line-544"><code>	MOVD	16(R0), R1	// a2</code></span>
+<span class="codeline" id="line-545"><code>	MOVD	24(R0), R2	// a3</code></span>
+<span class="codeline" id="line-546"><code>	MOVD	8(R0), R0	// a1</code></span>
+<span class="codeline" id="line-547"><code>	BL	(R12)</code></span>
+<span class="codeline" id="line-548"><code></code></span>
+<span class="codeline" id="line-549"><code>	MOVD	(RSP), R2	// pop structure pointer</code></span>
+<span class="codeline" id="line-550"><code>	ADD	$16, RSP</code></span>
+<span class="codeline" id="line-551"><code>	MOVD	R0, 32(R2)	// save r1</code></span>
+<span class="codeline" id="line-552"><code>	MOVD	R1, 40(R2)	// save r2</code></span>
+<span class="codeline" id="line-553"><code>	CMP	$-1, R0</code></span>
+<span class="codeline" id="line-554"><code>	BNE	ok</code></span>
+<span class="codeline" id="line-555"><code>	SUB	$16, RSP	// push structure pointer</code></span>
+<span class="codeline" id="line-556"><code>	MOVD	R2, (RSP)</code></span>
+<span class="codeline" id="line-557"><code>	BL	libc_error(SB)</code></span>
+<span class="codeline" id="line-558"><code>	MOVW	(R0), R0</code></span>
+<span class="codeline" id="line-559"><code>	MOVD	(RSP), R2	// pop structure pointer</code></span>
+<span class="codeline" id="line-560"><code>	ADD	$16, RSP</code></span>
+<span class="codeline" id="line-561"><code>	MOVD	R0, 48(R2)	// save err</code></span>
+<span class="codeline" id="line-562"><code>ok:</code></span>
+<span class="codeline" id="line-563"><code>	RET</code></span>
+<span class="codeline" id="line-564"><code></code></span>
+<span class="codeline" id="line-565"><code>// syscallPtr is like syscallX except that the libc function reports an</code></span>
+<span class="codeline" id="line-566"><code>// error by returning NULL and setting errno.</code></span>
+<span class="codeline" id="line-567"><code>TEXT runtime·syscallPtr(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-568"><code>	SUB	$16, RSP	// push structure pointer</code></span>
+<span class="codeline" id="line-569"><code>	MOVD	R0, (RSP)</code></span>
+<span class="codeline" id="line-570"><code></code></span>
+<span class="codeline" id="line-571"><code>	MOVD	0(R0), R12	// fn</code></span>
+<span class="codeline" id="line-572"><code>	MOVD	16(R0), R1	// a2</code></span>
+<span class="codeline" id="line-573"><code>	MOVD	24(R0), R2	// a3</code></span>
+<span class="codeline" id="line-574"><code>	MOVD	8(R0), R0	// a1</code></span>
+<span class="codeline" id="line-575"><code>	BL	(R12)</code></span>
+<span class="codeline" id="line-576"><code></code></span>
+<span class="codeline" id="line-577"><code>	MOVD	(RSP), R2	// pop structure pointer</code></span>
+<span class="codeline" id="line-578"><code>	ADD	$16, RSP</code></span>
+<span class="codeline" id="line-579"><code>	MOVD	R0, 32(R2)	// save r1</code></span>
+<span class="codeline" id="line-580"><code>	MOVD	R1, 40(R2)	// save r2</code></span>
+<span class="codeline" id="line-581"><code>	CMP	$0, R0</code></span>
+<span class="codeline" id="line-582"><code>	BNE	ok</code></span>
+<span class="codeline" id="line-583"><code>	SUB	$16, RSP	// push structure pointer</code></span>
+<span class="codeline" id="line-584"><code>	MOVD	R2, (RSP)</code></span>
+<span class="codeline" id="line-585"><code>	BL	libc_error(SB)</code></span>
+<span class="codeline" id="line-586"><code>	MOVW	(R0), R0</code></span>
+<span class="codeline" id="line-587"><code>	MOVD	(RSP), R2	// pop structure pointer</code></span>
+<span class="codeline" id="line-588"><code>	ADD	$16, RSP</code></span>
+<span class="codeline" id="line-589"><code>	MOVD	R0, 48(R2)	// save err</code></span>
+<span class="codeline" id="line-590"><code>ok:</code></span>
+<span class="codeline" id="line-591"><code>	RET</code></span>
+<span class="codeline" id="line-592"><code></code></span>
+<span class="codeline" id="line-593"><code>// syscall6 calls a function in libc on behalf of the syscall package.</code></span>
+<span class="codeline" id="line-594"><code>// syscall6 takes a pointer to a struct like:</code></span>
+<span class="codeline" id="line-595"><code>// struct {</code></span>
+<span class="codeline" id="line-596"><code>//	fn    uintptr</code></span>
+<span class="codeline" id="line-597"><code>//	a1    uintptr</code></span>
+<span class="codeline" id="line-598"><code>//	a2    uintptr</code></span>
+<span class="codeline" id="line-599"><code>//	a3    uintptr</code></span>
+<span class="codeline" id="line-600"><code>//	a4    uintptr</code></span>
+<span class="codeline" id="line-601"><code>//	a5    uintptr</code></span>
+<span class="codeline" id="line-602"><code>//	a6    uintptr</code></span>
+<span class="codeline" id="line-603"><code>//	r1    uintptr</code></span>
+<span class="codeline" id="line-604"><code>//	r2    uintptr</code></span>
+<span class="codeline" id="line-605"><code>//	err   uintptr</code></span>
+<span class="codeline" id="line-606"><code>// }</code></span>
+<span class="codeline" id="line-607"><code>// syscall6 must be called on the g0 stack with the</code></span>
+<span class="codeline" id="line-608"><code>// C calling convention (use libcCall).</code></span>
+<span class="codeline" id="line-609"><code>TEXT runtime·syscall6(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-610"><code>	SUB	$16, RSP	// push structure pointer</code></span>
+<span class="codeline" id="line-611"><code>	MOVD	R0, 8(RSP)</code></span>
+<span class="codeline" id="line-612"><code></code></span>
+<span class="codeline" id="line-613"><code>	MOVD	0(R0), R12	// fn</code></span>
+<span class="codeline" id="line-614"><code>	MOVD	16(R0), R1	// a2</code></span>
+<span class="codeline" id="line-615"><code>	MOVD	24(R0), R2	// a3</code></span>
+<span class="codeline" id="line-616"><code>	MOVD	32(R0), R3	// a4</code></span>
+<span class="codeline" id="line-617"><code>	MOVD	40(R0), R4	// a5</code></span>
+<span class="codeline" id="line-618"><code>	MOVD	48(R0), R5	// a6</code></span>
+<span class="codeline" id="line-619"><code>	MOVD	8(R0), R0	// a1</code></span>
+<span class="codeline" id="line-620"><code></code></span>
+<span class="codeline" id="line-621"><code>	// If fn is declared as vararg, we have to pass the vararg arguments on the stack.</code></span>
+<span class="codeline" id="line-622"><code>	// See syscall above. The only function this applies to is openat, for which the 4th</code></span>
+<span class="codeline" id="line-623"><code>	// arg must be on the stack.</code></span>
+<span class="codeline" id="line-624"><code>	MOVD	R3, (RSP)</code></span>
+<span class="codeline" id="line-625"><code></code></span>
+<span class="codeline" id="line-626"><code>	BL	(R12)</code></span>
+<span class="codeline" id="line-627"><code></code></span>
+<span class="codeline" id="line-628"><code>	MOVD	8(RSP), R2	// pop structure pointer</code></span>
+<span class="codeline" id="line-629"><code>	ADD	$16, RSP</code></span>
+<span class="codeline" id="line-630"><code>	MOVD	R0, 56(R2)	// save r1</code></span>
+<span class="codeline" id="line-631"><code>	MOVD	R1, 64(R2)	// save r2</code></span>
+<span class="codeline" id="line-632"><code>	CMPW	$-1, R0</code></span>
+<span class="codeline" id="line-633"><code>	BNE	ok</code></span>
+<span class="codeline" id="line-634"><code>	SUB	$16, RSP	// push structure pointer</code></span>
+<span class="codeline" id="line-635"><code>	MOVD	R2, 8(RSP)</code></span>
+<span class="codeline" id="line-636"><code>	BL	libc_error(SB)</code></span>
+<span class="codeline" id="line-637"><code>	MOVW	(R0), R0</code></span>
+<span class="codeline" id="line-638"><code>	MOVD	8(RSP), R2	// pop structure pointer</code></span>
+<span class="codeline" id="line-639"><code>	ADD	$16, RSP</code></span>
+<span class="codeline" id="line-640"><code>	MOVD	R0, 72(R2)	// save err</code></span>
+<span class="codeline" id="line-641"><code>ok:</code></span>
+<span class="codeline" id="line-642"><code>	RET</code></span>
+<span class="codeline" id="line-643"><code></code></span>
+<span class="codeline" id="line-644"><code>// syscall6X calls a function in libc on behalf of the syscall package.</code></span>
+<span class="codeline" id="line-645"><code>// syscall6X takes a pointer to a struct like:</code></span>
+<span class="codeline" id="line-646"><code>// struct {</code></span>
+<span class="codeline" id="line-647"><code>//	fn    uintptr</code></span>
+<span class="codeline" id="line-648"><code>//	a1    uintptr</code></span>
+<span class="codeline" id="line-649"><code>//	a2    uintptr</code></span>
+<span class="codeline" id="line-650"><code>//	a3    uintptr</code></span>
+<span class="codeline" id="line-651"><code>//	a4    uintptr</code></span>
+<span class="codeline" id="line-652"><code>//	a5    uintptr</code></span>
+<span class="codeline" id="line-653"><code>//	a6    uintptr</code></span>
+<span class="codeline" id="line-654"><code>//	r1    uintptr</code></span>
+<span class="codeline" id="line-655"><code>//	r2    uintptr</code></span>
+<span class="codeline" id="line-656"><code>//	err   uintptr</code></span>
+<span class="codeline" id="line-657"><code>// }</code></span>
+<span class="codeline" id="line-658"><code>// syscall6X must be called on the g0 stack with the</code></span>
+<span class="codeline" id="line-659"><code>// C calling convention (use libcCall).</code></span>
+<span class="codeline" id="line-660"><code>TEXT runtime·syscall6X(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-661"><code>	SUB	$16, RSP	// push structure pointer</code></span>
+<span class="codeline" id="line-662"><code>	MOVD	R0, (RSP)</code></span>
+<span class="codeline" id="line-663"><code></code></span>
+<span class="codeline" id="line-664"><code>	MOVD	0(R0), R12	// fn</code></span>
+<span class="codeline" id="line-665"><code>	MOVD	16(R0), R1	// a2</code></span>
+<span class="codeline" id="line-666"><code>	MOVD	24(R0), R2	// a3</code></span>
+<span class="codeline" id="line-667"><code>	MOVD	32(R0), R3	// a4</code></span>
+<span class="codeline" id="line-668"><code>	MOVD	40(R0), R4	// a5</code></span>
+<span class="codeline" id="line-669"><code>	MOVD	48(R0), R5	// a6</code></span>
+<span class="codeline" id="line-670"><code>	MOVD	8(R0), R0	// a1</code></span>
+<span class="codeline" id="line-671"><code>	BL	(R12)</code></span>
+<span class="codeline" id="line-672"><code></code></span>
+<span class="codeline" id="line-673"><code>	MOVD	(RSP), R2	// pop structure pointer</code></span>
+<span class="codeline" id="line-674"><code>	ADD	$16, RSP</code></span>
+<span class="codeline" id="line-675"><code>	MOVD	R0, 56(R2)	// save r1</code></span>
+<span class="codeline" id="line-676"><code>	MOVD	R1, 64(R2)	// save r2</code></span>
+<span class="codeline" id="line-677"><code>	CMP	$-1, R0</code></span>
+<span class="codeline" id="line-678"><code>	BNE	ok</code></span>
+<span class="codeline" id="line-679"><code>	SUB	$16, RSP	// push structure pointer</code></span>
+<span class="codeline" id="line-680"><code>	MOVD	R2, (RSP)</code></span>
+<span class="codeline" id="line-681"><code>	BL	libc_error(SB)</code></span>
+<span class="codeline" id="line-682"><code>	MOVW	(R0), R0</code></span>
+<span class="codeline" id="line-683"><code>	MOVD	(RSP), R2	// pop structure pointer</code></span>
+<span class="codeline" id="line-684"><code>	ADD	$16, RSP</code></span>
+<span class="codeline" id="line-685"><code>	MOVD	R0, 72(R2)	// save err</code></span>
+<span class="codeline" id="line-686"><code>ok:</code></span>
+<span class="codeline" id="line-687"><code>	RET</code></span>
+<span class="codeline" id="line-688"><code></code></span>
+<span class="codeline" id="line-689"><code>// syscall9 calls a function in libc on behalf of the syscall package.</code></span>
+<span class="codeline" id="line-690"><code>// syscall9 takes a pointer to a struct like:</code></span>
+<span class="codeline" id="line-691"><code>// struct {</code></span>
+<span class="codeline" id="line-692"><code>//	fn    uintptr</code></span>
+<span class="codeline" id="line-693"><code>//	a1    uintptr</code></span>
+<span class="codeline" id="line-694"><code>//	a2    uintptr</code></span>
+<span class="codeline" id="line-695"><code>//	a3    uintptr</code></span>
+<span class="codeline" id="line-696"><code>//	a4    uintptr</code></span>
+<span class="codeline" id="line-697"><code>//	a5    uintptr</code></span>
+<span class="codeline" id="line-698"><code>//	a6    uintptr</code></span>
+<span class="codeline" id="line-699"><code>//	a7    uintptr</code></span>
+<span class="codeline" id="line-700"><code>//	a8    uintptr</code></span>
+<span class="codeline" id="line-701"><code>//	a9    uintptr</code></span>
+<span class="codeline" id="line-702"><code>//	r1    uintptr</code></span>
+<span class="codeline" id="line-703"><code>//	r2    uintptr</code></span>
+<span class="codeline" id="line-704"><code>//	err   uintptr</code></span>
+<span class="codeline" id="line-705"><code>// }</code></span>
+<span class="codeline" id="line-706"><code>// syscall9 must be called on the g0 stack with the</code></span>
+<span class="codeline" id="line-707"><code>// C calling convention (use libcCall).</code></span>
+<span class="codeline" id="line-708"><code>TEXT runtime·syscall9(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-709"><code>	SUB	$16, RSP	// push structure pointer</code></span>
+<span class="codeline" id="line-710"><code>	MOVD	R0, 8(RSP)</code></span>
+<span class="codeline" id="line-711"><code></code></span>
+<span class="codeline" id="line-712"><code>	MOVD	0(R0), R12	// fn</code></span>
+<span class="codeline" id="line-713"><code>	MOVD	16(R0), R1	// a2</code></span>
+<span class="codeline" id="line-714"><code>	MOVD	24(R0), R2	// a3</code></span>
+<span class="codeline" id="line-715"><code>	MOVD	32(R0), R3	// a4</code></span>
+<span class="codeline" id="line-716"><code>	MOVD	40(R0), R4	// a5</code></span>
+<span class="codeline" id="line-717"><code>	MOVD	48(R0), R5	// a6</code></span>
+<span class="codeline" id="line-718"><code>	MOVD	56(R0), R6	// a7</code></span>
+<span class="codeline" id="line-719"><code>	MOVD	64(R0), R7	// a8</code></span>
+<span class="codeline" id="line-720"><code>	MOVD	72(R0), R8	// a9</code></span>
+<span class="codeline" id="line-721"><code>	MOVD	8(R0), R0	// a1</code></span>
+<span class="codeline" id="line-722"><code></code></span>
+<span class="codeline" id="line-723"><code>	// If fn is declared as vararg, we have to pass the vararg arguments on the stack.</code></span>
+<span class="codeline" id="line-724"><code>	// See syscall above. The only function this applies to is openat, for which the 4th</code></span>
+<span class="codeline" id="line-725"><code>	// arg must be on the stack.</code></span>
+<span class="codeline" id="line-726"><code>	MOVD	R3, (RSP)</code></span>
+<span class="codeline" id="line-727"><code></code></span>
+<span class="codeline" id="line-728"><code>	BL	(R12)</code></span>
+<span class="codeline" id="line-729"><code></code></span>
+<span class="codeline" id="line-730"><code>	MOVD	8(RSP), R2	// pop structure pointer</code></span>
+<span class="codeline" id="line-731"><code>	ADD	$16, RSP</code></span>
+<span class="codeline" id="line-732"><code>	MOVD	R0, 80(R2)	// save r1</code></span>
+<span class="codeline" id="line-733"><code>	MOVD	R1, 88(R2)	// save r2</code></span>
+<span class="codeline" id="line-734"><code>	CMPW	$-1, R0</code></span>
+<span class="codeline" id="line-735"><code>	BNE	ok</code></span>
+<span class="codeline" id="line-736"><code>	SUB	$16, RSP	// push structure pointer</code></span>
+<span class="codeline" id="line-737"><code>	MOVD	R2, 8(RSP)</code></span>
+<span class="codeline" id="line-738"><code>	BL	libc_error(SB)</code></span>
+<span class="codeline" id="line-739"><code>	MOVW	(R0), R0</code></span>
+<span class="codeline" id="line-740"><code>	MOVD	8(RSP), R2	// pop structure pointer</code></span>
+<span class="codeline" id="line-741"><code>	ADD	$16, RSP</code></span>
+<span class="codeline" id="line-742"><code>	MOVD	R0, 96(R2)	// save err</code></span>
+<span class="codeline" id="line-743"><code>ok:</code></span>
+<span class="codeline" id="line-744"><code>	RET</code></span>
+<span class="codeline" id="line-745"><code></code></span>
+<span class="codeline" id="line-746"><code>// syscall_x509 is for crypto/x509. It is like syscall6 but does not check for errors,</code></span>
+<span class="codeline" id="line-747"><code>// takes 5 uintptrs and 1 float64, and only returns one value,</code></span>
+<span class="codeline" id="line-748"><code>// for use with standard C ABI functions.</code></span>
+<span class="codeline" id="line-749"><code>TEXT runtime·syscall_x509(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-750"><code>	SUB	$16, RSP	// push structure pointer</code></span>
+<span class="codeline" id="line-751"><code>	MOVD	R0, (RSP)</code></span>
+<span class="codeline" id="line-752"><code></code></span>
+<span class="codeline" id="line-753"><code>	MOVD	0(R0), R12	// fn</code></span>
+<span class="codeline" id="line-754"><code>	MOVD	16(R0), R1	// a2</code></span>
+<span class="codeline" id="line-755"><code>	MOVD	24(R0), R2	// a3</code></span>
+<span class="codeline" id="line-756"><code>	MOVD	32(R0), R3	// a4</code></span>
+<span class="codeline" id="line-757"><code>	MOVD	40(R0), R4	// a5</code></span>
+<span class="codeline" id="line-758"><code>	FMOVD	48(R0), F0	// f1</code></span>
+<span class="codeline" id="line-759"><code>	MOVD	8(R0), R0	// a1</code></span>
+<span class="codeline" id="line-760"><code>	BL	(R12)</code></span>
+<span class="codeline" id="line-761"><code></code></span>
+<span class="codeline" id="line-762"><code>	MOVD	(RSP), R2	// pop structure pointer</code></span>
+<span class="codeline" id="line-763"><code>	ADD	$16, RSP</code></span>
+<span class="codeline" id="line-764"><code>	MOVD	R0, 56(R2)	// save r1</code></span>
+<span class="codeline" id="line-765"><code>	RET</code></span>
+<span class="codeline" id="line-766"><code></code></span>
+<span class="codeline" id="line-767"><code>TEXT runtime·issetugid_trampoline(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-768"><code>	BL	libc_issetugid(SB)</code></span>
+<span class="codeline" id="line-769"><code>	RET</code></span>
 </pre><pre id="footer">
 <table><tr><td><img src="../../png/go101-twitter.png"></td>
-<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.6.6</i>. (GOOS=darwin GOARCH=arm64)
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.6.7</i>. (GOOS=darwin GOARCH=arm64)
 <b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
 PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
 Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

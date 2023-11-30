@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Package: builtin</title>
-<link href="../css/auto-v0.6.6.css" rel="stylesheet">
-<script src="../jvs/golds-v0.6.6.js"></script>
+<link href="../css/auto-v0.6.7.css" rel="stylesheet">
+<script src="../jvs/golds-v0.6.7.js"></script>
 <body onload="onPageLoad()"><div>
 
 <pre id="package-details"><code><span style="font-size:xx-large;">package <b>builtin</b></span>
@@ -49,13 +49,13 @@
 <span class="md-text">		complex64 is the set of all complex numbers with float32 real and
 		imaginary parts.</span>
 
-</span></div><div class="anchor type-res" id="name-error" data-popularity="6050">	<input type='checkbox' class="fold" id="error-fold-content"><label for="error-fold-content"> type error <b><i>(interface)</i></b></label><span id='error-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor type-res" id="name-error" data-popularity="6500">	<input type='checkbox' class="fold" id="error-fold-content"><label for="error-fold-content"> type error <b><i>(interface)</i></b></label><span id='error-fold-content-docs' class="fold-docs">
 <span class="md-text">		The error built-in interface type is the conventional interface for
 		representing an error condition, with the nil value representing no error.</span>
 
 		<input type='checkbox' checked class="fold" id="error-fold-methods"><label for="error-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='error-fold-methods-items' class="fold-items"><span>
 			<span class="nodocs">( error) Error() <a href="#name-string">string</a></span></span></span>
-		<input type='checkbox' class="fold" id="error-fold-impledby"><label for="error-fold-impledby">Implemented By (<i>at least 40, in which 21 are exported</i>)</label><span id='error-fold-impledby-items' class="fold-items"><span>
+		<input type='checkbox' class="fold" id="error-fold-impledby"><label for="error-fold-impledby">Implemented By (<i>at least 43, in which 22 are exported</i>)</label><span id='error-fold-impledby-items' class="fold-items"><span>
 			 encoding/base64.<a href="encoding/base64.html#name-CorruptInputError">CorruptInputError</a></span><span>
 			*encoding/json.<a href="encoding/json.html#name-InvalidUnmarshalError">InvalidUnmarshalError</a></span><span>
 			*encoding/json.<a href="encoding/json.html#name-InvalidUTF8Error">InvalidUTF8Error</a></span><span>
@@ -73,14 +73,17 @@
 			*os.<a href="os.html#name-SyscallError">SyscallError</a></span><span>
 			*reflect.<a href="reflect.html#name-ValueError">ValueError</a></span><span>
 			 runtime.<a href="runtime.html#name-Error">Error</a> <i>(interface)</i></span><span>
+			*runtime.<a href="runtime.html#name-PanicNilError">PanicNilError</a></span><span>
 			*runtime.<a href="runtime.html#name-TypeAssertionError">TypeAssertionError</a></span><span>
 			*strconv.<a href="strconv.html#name-NumError">NumError</a></span><span>
 			 syscall.<a href="syscall.html#name-Errno">Errno</a></span><span>
 			*time.<a href="time.html#name-ParseError">ParseError</a></span>
-			<input type='checkbox' class="showhide" id="error-showhide-impedBys"><i><label for="error-showhide-impedBys" class="show-inline">/* 19+ unexporteds ... */</label><label for="error-showhide-impedBys" class="hide-inline">/* 19+ unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="showhide" id="error-showhide-impedBys"><i><label for="error-showhide-impedBys" class="show-inline">/* 21+ unexporteds ... */</label><label for="error-showhide-impedBys" class="hide-inline">/* 21+ unexporteds: */</label></i><span class="hidden"><i>
 			 encoding/json.<a href="encoding/json.html#name-jsonError">jsonError</a></i></span><span class="hidden"><i>
 			*errors.<a href="errors.html#name-errorString">errorString</a></i></span><span class="hidden"><i>
+			*errors.<a href="errors.html#name-joinError">joinError</a></i></span><span class="hidden"><i>
 			*fmt.<a href="fmt.html#name-wrapError">wrapError</a></i></span><span class="hidden"><i>
+			*fmt.<a href="fmt.html#name-wrapErrors">wrapErrors</a></i></span><span class="hidden"><i>
 			 github.com/BurntSushi/toml.<a href="github.com/BurntSushi^8859f/toml.html#name-errLexControl">errLexControl</a></i></span><span class="hidden"><i>
 			 github.com/BurntSushi/toml.<a href="github.com/BurntSushi^8859f/toml.html#name-errLexEscape">errLexEscape</a></i></span><span class="hidden"><i>
 			 github.com/BurntSushi/toml.<a href="github.com/BurntSushi^8859f/toml.html#name-errLexInlineTableNL">errLexInlineTableNL</a></i></span><span class="hidden"><i>
@@ -158,7 +161,7 @@
 		any pointer.</span>
 
 </span></div></div>
-<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 15, all are exported)</i></span></span>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 18, all are exported)</i></span></span>
 
 <div class="anchor value-res" id="name-append">	<input type='checkbox' class="fold" id="append-fold-content"><label for="append-fold-content"> func append(slice []Type, elems ...Type) []Type</label><span id='append-fold-content-docs' class="fold-docs">
 <span class="md-text">		The append built-in function appends elements to the end of a slice. If
@@ -187,6 +190,19 @@
 		For some arguments, such as a simple array expression, the result can be a
 		constant. See the Go language specification's "Length and capacity" section for
 		details.</span>
+
+</span></div><div class="anchor value-res" id="name-clear">	<input type='checkbox' class="fold" id="clear-fold-content"><label for="clear-fold-content"> func clear[T](t T)</label><span id='clear-fold-content-docs' class="fold-docs">
+
+		Type Parameters:
+			T: ~[]Type | ~map[Type]Type1
+
+<span class="md-text">		The clear built-in function clears maps and slices.
+		For maps, clear deletes all entries, resulting in an empty map.
+		For slices, clear sets all elements up to the length of the slice
+		to the zero value of the respective element type. If the argument
+		type is a type parameter, the type parameter's type set must
+		contain only map or slice types, and clear performs the operation
+		implied by the type argument.</span>
 
 </span></div><div class="anchor value-res" id="name-close">	<input type='checkbox' class="fold" id="close-fold-content"><label for="close-fold-content"> func <a href="../src/runtime/chan.go.html#line-357">close</a>(c chan&lt;- Type)</label><span id='close-fold-content-docs' class="fold-docs">
 <span class="md-text">		The close built-in function closes a channel, which must be either
@@ -258,12 +274,32 @@
 			buffer capacity. If zero, or the size is omitted, the channel is
 			unbuffered.</span>
 
+</span></div><div class="anchor value-res" id="name-max">	<input type='checkbox' class="fold" id="max-fold-content"><label for="max-fold-content"> func max[T](x T, y ...T) T</label><span id='max-fold-content-docs' class="fold-docs">
+
+		Type Parameters:
+			T: <a href="cmp.html">cmp</a>.<a href="cmp.html#name-Ordered">Ordered</a>
+
+<span class="md-text">		The max built-in function returns the largest value of a fixed number of
+		arguments of [cmp.Ordered] types. There must be at least one argument.
+		If T is a floating-point type and any of the arguments are NaNs,
+		max will return NaN.</span>
+
+</span></div><div class="anchor value-res" id="name-min">	<input type='checkbox' class="fold" id="min-fold-content"><label for="min-fold-content"> func min[T](x T, y ...T) T</label><span id='min-fold-content-docs' class="fold-docs">
+
+		Type Parameters:
+			T: <a href="cmp.html">cmp</a>.<a href="cmp.html#name-Ordered">Ordered</a>
+
+<span class="md-text">		The min built-in function returns the smallest value of a fixed number of
+		arguments of [cmp.Ordered] types. There must be at least one argument.
+		If T is a floating-point type and any of the arguments are NaNs,
+		min will return NaN.</span>
+
 </span></div><div class="anchor value-res" id="name-new">	<input type='checkbox' class="fold" id="new-fold-content"><label for="new-fold-content"> func new(Type) *Type</label><span id='new-fold-content-docs' class="fold-docs">
 <span class="md-text">		The new built-in function allocates memory. The first argument is a type,
 		not a value, and the value returned is a pointer to a newly
 		allocated zero value of that type.</span>
 
-</span></div><div class="anchor value-res" id="name-panic">	<input type='checkbox' class="fold" id="panic-fold-content"><label for="panic-fold-content"> func <a href="../src/runtime/panic.go.html#line-804">panic</a>(v <a href="#name-any">any</a>)</label><span id='panic-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor value-res" id="name-panic">	<input type='checkbox' class="fold" id="panic-fold-content"><label for="panic-fold-content"> func <a href="../src/runtime/panic.go.html#line-826">panic</a>(v <a href="#name-any">any</a>)</label><span id='panic-fold-content-docs' class="fold-docs">
 <span class="md-text">		The panic built-in function stops normal execution of the current
 		goroutine. When a function F calls panic, normal execution of F stops
 		immediately. Any functions whose execution was deferred by F are run in
@@ -273,7 +309,11 @@
 		functions in the executing goroutine have stopped, in reverse order. At
 		that point, the program is terminated with a non-zero exit code. This
 		termination sequence is called panicking and can be controlled by the
-		built-in function recover.</span>
+		built-in function recover.
+		
+		Starting in Go 1.21, calling panic with a nil interface value or an
+		untyped nil causes a run-time error (a different panic).
+		The GODEBUG setting panicnil=1 disables the run-time error.</span>
 
 </span></div><div class="anchor value-res" id="name-print">	<input type='checkbox' class="fold" id="print-fold-content"><label for="print-fold-content"> func print(args ...Type)</label><span id='print-fold-content-docs' class="fold-docs">
 <span class="md-text">		The print built-in function formats its arguments in an
@@ -292,7 +332,7 @@
 <span class="md-text">		The real built-in function returns the real part of the complex number c.
 		The return value will be floating point type corresponding to the type of c.</span>
 
-</span></div><div class="anchor value-res" id="name-recover">	<input type='checkbox' class="fold" id="recover-fold-content"><label for="recover-fold-content"> func <a href="../src/runtime/panic.go.html#line-1008">recover</a>() <a href="#name-any">any</a></label><span id='recover-fold-content-docs' class="fold-docs">
+</span></div><div class="anchor value-res" id="name-recover">	<input type='checkbox' class="fold" id="recover-fold-content"><label for="recover-fold-content"> func <a href="../src/runtime/panic.go.html#line-1038">recover</a>() <a href="#name-any">any</a></label><span id='recover-fold-content-docs' class="fold-docs">
 <span class="md-text">		The recover built-in function allows a program to manage behavior of a
 		panicking goroutine. Executing a call to recover inside a deferred
 		function (but not any function called by it) stops the panicking sequence
@@ -326,7 +366,7 @@
 
 </span></div></div></code></pre><pre id="footer">
 <table><tr><td><img src="../png/go101-twitter.png"></td>
-<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.6.6</i>. (GOOS=darwin GOARCH=arm64)
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.6.7</i>. (GOOS=darwin GOARCH=arm64)
 <b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
 PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
 Please follow <a href="https://twitter.com/go100and1">@Go100and1</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>
