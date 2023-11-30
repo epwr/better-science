@@ -4,6 +4,7 @@
 package graphs
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -13,9 +14,16 @@ func assertTrue(t *testing.T, value bool, message string) {
 	}
 }
 
+func assertError(t *testing.T, err error, message string) {
+	fmt.Println("Error:", err)
+	if err == nil {
+		t.Errorf("Assertion Failed: " + message)
+	}
+}
+
 // Assert that the graph.edge adjacency map contains exactly one reference
 // from nodeOne to nodeTwo and exactly one reference from nodeTwo to nodeOne
-func assertEdgeExistsProperly[ID comparable, Payload any](
+func assertEdgeExistsExactlyOnce[ID comparable, Payload any](
 	t *testing.T,
 	g Graph[ID, Payload],
 	nodeOne ID,
@@ -24,7 +32,7 @@ func assertEdgeExistsProperly[ID comparable, Payload any](
 
 	nodeOneNeighbours, foundNodeOne := g.edges[nodeOne]
 	nodeTwoNeighbours, foundNodeTwo := g.edges[nodeTwo]
-	assertTrue(t, !foundNodeOne || !foundNodeTwo, "A node was not found in the graph's edges.")
+	assertTrue(t, foundNodeOne && foundNodeTwo, "A node was not found in the graph's edges.")
 
 	countNodeTwoReferences := 0
 	for _, neighbour := range nodeOneNeighbours {
