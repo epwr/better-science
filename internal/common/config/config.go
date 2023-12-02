@@ -7,7 +7,7 @@ package config
 
 import (
 	"github.com/BurntSushi/toml"
-	"github.com/epwr/better-science/internal/common/eplog"
+	"github.com/epwr/better-science/internal/common/log"
 	"path/filepath"
 	"runtime"
 )

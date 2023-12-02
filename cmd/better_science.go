@@ -1,9 +1,8 @@
 package main
 
 import (
-	// TODO: should these be renamed without ep on them? Probably?
-	"github.com/epwr/better-science/internal/common/eplog" 
-	"github.com/epwr/better-science/internal/common/epconfig"
+	"github.com/epwr/better-science/internal/common/log" 
+	"github.com/epwr/better-science/internal/common/config"
 )
 
 func main(){

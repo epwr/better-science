@@ -33,6 +33,10 @@ lint:
 test:
 	$(GO) test ./...
 
+# Run tests with verbose output
+testv:
+	$(GO) test -v ./...
+
 # Install dependencies
 deps:
 	$(GO) mod download

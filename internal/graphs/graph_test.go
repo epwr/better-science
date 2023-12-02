@@ -107,3 +107,51 @@ func TestDoesNodeExistReturnsFalseWhenNodeDoesNotExist(t *testing.T) {
 
 	assertTrue(t, !found, "DoesNodeExist should return fase when the node does not exist")
 }
+
+func TestGetNodeReturnsTheNodePayload(t *testing.T) {
+
+	g := NewGraph[string, int]()
+	g.AddNode("node1", 1)
+
+	payload := g.GetNode("node1")
+	assertTrue(t, payload == 1, "GetNode should return the Payload of the node")
+}
+
+func TestNodesAreNotPassedByReference(t *testing.T) {
+
+	type NodeData struct {
+		data int
+	}
+
+	g := NewGraph[string, NodeData]()
+	node := NodeData{data: 4}
+	g.AddNode("node_id", node)
+	node_copy := g.GetNode("node_id")
+	node_copy_2 := g.GetNode("node_id")
+	
+	node.data = 3
+	node_copy_2.data = 2
+	assertTrue(t, node_copy.data == 4, "Adding a node should create a copy of the node")
+}
+
+func TestGetNeighboursReturnsAllNeighbourNodes(t *testing.T) {
+
+	g := NewGraph[string, int]()
+	g.AddNode("node1", 1)
+	g.AddNode("node2", 2)
+	g.AddNode("node3", 3)
+	g.AddNode("node4", 4)
+
+	g.AddEdge("node1", "node2")
+	g.AddEdge("node1", "node3")		
+	g.AddEdge("node2", "node3")
+
+	neighbours := g.GetNeighbours("node1")
+	
+	assertTrue(t, len(neighbours) == 2, "node1 should have 2 neighbours")
+	if len(neighbours) == 2 {
+		hasNodeTwo := neighbours[0] == "node2" || neighbours[1] == "node2"
+		hasNodeThree := neighbours[0] == "node3" || neighbours[1] == "node3"
+		assertTrue(t, hasNodeTwo && hasNodeThree, "node1 should have node2 and node3 as neighbours.")
+	}
+}

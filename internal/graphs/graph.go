@@ -15,7 +15,8 @@ type Graph[ID comparable, Payload any] struct {
 
 // Create a new Graph object with the provided ID and Payload types.
 func NewGraph[ID comparable, Payload any]() Graph[ID, Payload] {
-	return Graph[ID, Payload]{nodes: make(map[ID]Payload),
+	return Graph[ID, Payload]{
+		nodes: make(map[ID]Payload),
 		edges: make(map[ID][]ID),
 	}
 }
@@ -26,6 +27,11 @@ func NewGraph[ID comparable, Payload any]() Graph[ID, Payload] {
 // will update its payload.
 func (g *Graph[ID, Payload]) AddNode(id ID, p Payload) {
 	g.nodes[id] = p
+}
+
+// Return the payload of the node.
+func (g *Graph[ID, Payload]) GetNode(id ID) Payload{
+	return g.nodes[id]
 }
 
 // Return the number of nodes in the Graph
@@ -77,5 +83,12 @@ func (g *Graph[ID, Payload]) DoesNodeExist(nodeID ID) bool {
 
 	_, exists := g.nodes[nodeID]
 	return exists
+
+}
+
+// Returns the neighbouring nodes' IDs.
+func (g *Graph[ID, Payload]) GetNeighbours(node ID) []ID {
+
+	return g.edges[node]
 
 }
