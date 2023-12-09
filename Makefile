@@ -37,6 +37,10 @@ test:
 testv:
 	$(GO) test -v ./...
 
+# Run tests with coverage report
+coverage:
+	$(GO) test -cover ./...
+
 # Install dependencies
 deps:
 	$(GO) mod download
