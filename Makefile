@@ -1,10 +1,11 @@
 # Go variables
-GO      := go
-GOFMT   := gofmt
-GOLINT  := golint
-GOFILES := $(shell find . -name "*.go")
-OUTPUT  := bin
-DOCS	:= docs
+GO             := go
+GOFMT          := gofmt
+GOLINT         := golint
+GOFILES        := $(shell find . -name "*.go")
+OUTPUT         := bin
+DOCS	       := docs
+COVERAGE_RPRT  := coverage_report.out
 
 # Main build target
 all: build run
@@ -39,7 +40,8 @@ testv:
 
 # Run tests with coverage report
 coverage:
-	$(GO) test -cover ./...
+	$(GO) test --coverprofile=$(COVERAGE_RPRT) ./...
+	$(GO) tool cover -func=$(COVERAGE_RPRT)
 
 # Install dependencies
 deps:

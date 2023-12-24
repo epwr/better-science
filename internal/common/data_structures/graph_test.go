@@ -1,35 +1,114 @@
-package graphs
+package data_structures
 
 import (
 	"testing"
+	"fmt"
 )
 
-// Start with creating a new graph. When creating a graph, you need to pass two types. The first
-// is the graph's nodes' identifier, in this case a string. You will use this identifier to represent
-// each node. The second is a datatype that can store additional data for each node.
-func TestAddingANode(t *testing.T) {
+func TestAddingNodes(t *testing.T){
 
-	g := NewGraph[string, int]()
+	addingNodeTests := []struct{nodes []string; result []string}{
+		{[]string{"A1", "A2", "A3"}, []string{"A1", "A2", "A3"}},
+		{[]string{"A1", "A1", "A1"}, []string{"A1"}},
+		{[]string{}, []string{}},
+	}
+	
+	for _, testCase := range addingNodeTests {
+		g := NewDiGraph[string, int]()
 
-	g.AddNode("node1", 1)
+		for _, node := range testCase.nodes {
+			g.AddNode(node, 1)
+		}
 
-	assertTrue(t, g.GetNodeCount() == 1, "AddNode should add exactly one node to Graph.")
+		inputStr := fmt.Sprintf("%v", testCase.nodes)
+		expectedStr := fmt.Sprintf("%v", testCase.result)
+		gotStr := fmt.Sprintf("%v", g.GetNodes())
+		
+		assertSlicesAreSetwiseEqual(
+			t,
+			g.GetNodes(),
+			testCase.result,
+			"The input '" + inputStr + "' should result in '" + expectedStr + "' but got '" + gotStr + "'.",
+		)
+	}
 }
 
-func TestAddAnEdgeBetweenTwoNodes(t *testing.T) {
+func TestAddingEdges(t *testing.T) {
 
-	g := NewGraph[string, int]()
-	g.AddNode("node1", 1)
-	g.AddNode("node2", 2)
+	// Every test case will have the same nodes
+	nodes := []string{"A", "B", "C"}
 
-	g.AddEdge("node1", "node2")
+	// Provide a slice of edges (source, dest, source, dest...) and
+	// then a set of tests, which test is a given given edge exists.
+	testCases := []struct{
+		edges []string;
+		tests []struct{source string; dest string; result bool};
+	}{
+		{
+			[]string{"A", "B"},
+			[]struct{source string; dest string; result bool}{
+				{"A", "B", true},
+				{"B", "A", false},
+			},
+		},
+		{
+			[]string{},
+			[]struct{source string; dest string; result bool}{
+				{"A", "B", false},
+				{"B", "A", false},
+			},
+		},
+		{
+			[]string{
+				"A", "B",
+				"B", "C",
+			},
+			[]struct{source string; dest string; result bool}{
+				{"A", "B", true},
+				{"B", "A", false},
+				{"B", "C", true},
+				{"A", "C", false},
+			},
+		},
+	}
 
-	assertEdgeExistsExactlyOnce(t, g, "node1", "node2")
+	for caseIndex, testCase := range testCases {
+		g := NewDiGraph[string, int]()
+		for _, node := range nodes {
+			g.AddNode(node, 1)
+		}
+
+		for i := 0; i < len(testCase.edges); i = i+2 {
+
+			source := testCase.edges[i]
+			dest := testCase.edges[i+1]
+
+			g.AddEdge(source, dest)
+		}
+
+		for testIndex, test := range testCase.tests {
+
+			result := g.DoesEdgeExist(test.source, test.dest)
+
+			if (result != test.result) {
+				
+				t.Errorf(
+					"Case %d, test %d: Checking edge from %s to %s returned %t. Expected %t",
+					caseIndex,
+					testIndex,
+					test.source,
+					test.dest,
+					result,
+					test.result,
+				)
+			}
+		}
+	}
 }
 
 func TestGetNodeCountWorksProperly(t *testing.T) {
 
-	g := NewGraph[string, int]()
+	g := NewDiGraph[string, int]()
 	g.AddNode("node1", 1)
 	g.AddNode("node2", 2)
 
@@ -38,19 +117,19 @@ func TestGetNodeCountWorksProperly(t *testing.T) {
 
 func TestAddEdgeIsIdempotent(t *testing.T) {
 
-	g := NewGraph[string, int]()
+	g := NewDiGraph[string, int]()
 	g.AddNode("node1", 1)
 	g.AddNode("node2", 2)
 
 	g.AddEdge("node1", "node2")
 	g.AddEdge("node1", "node2")
 
-	assertEdgeExistsExactlyOnce(t, g, "node1", "node2")
+	assertDirectedEdgeExistsExactlyOnce(t, g, "node1", "node2")
 }
 
 func TestAddEdgeRequiresTheNodesExist(t *testing.T) {
 
-	g := NewGraph[string, int]()
+	g := NewDiGraph[string, int]()
 	g.AddNode("node1", 1)
 
 	error := g.AddEdge("node1", "node2")
@@ -60,7 +139,7 @@ func TestAddEdgeRequiresTheNodesExist(t *testing.T) {
 
 func TestAddEdgeDoesNotAllowCreatingSelfLoops(t *testing.T) {
 
-	g := NewGraph[string, int]()
+	g := NewDiGraph[string, int]()
 	g.AddNode("node1", 1)
 
 	error := g.AddEdge("node1", "node1")
@@ -70,7 +149,7 @@ func TestAddEdgeDoesNotAllowCreatingSelfLoops(t *testing.T) {
 
 func TestDoesEdgeExistReturnsTrueWhenEdgeExists(t *testing.T) {
 
-	g := NewGraph[string, int]()
+	g := NewDiGraph[string, int]()
 	g.AddNode("node1", 1)
 	g.AddNode("node2", 2)
 
@@ -81,7 +160,7 @@ func TestDoesEdgeExistReturnsTrueWhenEdgeExists(t *testing.T) {
 
 func TestDoesEdgeExistReturnsFalseWhenEdgeDoesNotExist(t *testing.T) {
 
-	g := NewGraph[string, int]()
+	g := NewDiGraph[string, int]()
 	g.AddNode("node1", 1)
 	g.AddNode("node2", 2)
 
@@ -90,7 +169,7 @@ func TestDoesEdgeExistReturnsFalseWhenEdgeDoesNotExist(t *testing.T) {
 
 func TestDoesNodeExistReturnsTrueWhenNodeExists(t *testing.T) {
 
-	g := NewGraph[string, int]()
+	g := NewDiGraph[string, int]()
 	g.AddNode("node1", 1)
 
 	found := g.DoesNodeExist("node1")
@@ -101,7 +180,7 @@ func TestDoesNodeExistReturnsTrueWhenNodeExists(t *testing.T) {
 
 func TestDoesNodeExistReturnsFalseWhenNodeDoesNotExist(t *testing.T) {
 
-	g := NewGraph[string, int]()
+	g := NewDiGraph[string, int]()
 
 	found := g.DoesNodeExist("node1")
 
@@ -110,7 +189,7 @@ func TestDoesNodeExistReturnsFalseWhenNodeDoesNotExist(t *testing.T) {
 
 func TestGetNodeReturnsTheNodePayload(t *testing.T) {
 
-	g := NewGraph[string, int]()
+	g := NewDiGraph[string, int]()
 	g.AddNode("node1", 1)
 
 	payload := g.GetNode("node1")
@@ -123,7 +202,7 @@ func TestNodesAreNotPassedByReference(t *testing.T) {
 		data int
 	}
 
-	g := NewGraph[string, NodeData]()
+	g := NewDiGraph[string, NodeData]()
 	node := NodeData{data: 4}
 	g.AddNode("node_id", node)
 	node_copy := g.GetNode("node_id")
@@ -136,7 +215,7 @@ func TestNodesAreNotPassedByReference(t *testing.T) {
 
 func TestGetNeighboursReturnsAllNeighbourNodes(t *testing.T) {
 
-	g := NewGraph[string, int]()
+	g := NewDiGraph[string, int]()
 	g.AddNode("node1", 1)
 	g.AddNode("node2", 2)
 	g.AddNode("node3", 3)
@@ -155,3 +234,5 @@ func TestGetNeighboursReturnsAllNeighbourNodes(t *testing.T) {
 		assertTrue(t, hasNodeTwo && hasNodeThree, "node1 should have node2 and node3 as neighbours.")
 	}
 }
+
+

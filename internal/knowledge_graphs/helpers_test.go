@@ -1,18 +1,18 @@
 // Copywrite 2023 Eric Power - All Rights Reserved
 //
 // Provides a set of helper functions for testing this package
-package data_structures
+package knowledge_graphs
 
 import (
 	"fmt"
 	"testing"
 )
 
+
 // Assert an expression is true.
 func assertTrue(t *testing.T, value bool, message string) {
-	
+
 	t.Helper()
-	
 	if !value {
 		t.Errorf("Assertion Failed: " + message)
 	}
@@ -22,7 +22,6 @@ func assertTrue(t *testing.T, value bool, message string) {
 func assertError(t *testing.T, err error, message string) {
 
 	t.Helper()
-	
 	if err == nil {
 		t.Errorf("Assertion Failed: " + message)
 	}
@@ -32,7 +31,6 @@ func assertError(t *testing.T, err error, message string) {
 func assertSlicesAreIdentical[T comparable](t *testing.T, sliceOne []T, sliceTwo []T, message string) {
 
 	t.Helper()
-	
 	assertTrue(t, len(sliceOne) == len(sliceTwo), message + " [The two slices should have the same length]")
 	if len(sliceOne) == len(sliceTwo) {
 		for i := 0; i < len(sliceOne); i++ {
@@ -50,7 +48,6 @@ func assertSlicesAreIdentical[T comparable](t *testing.T, sliceOne []T, sliceTwo
 func assertSlicesAreSetwiseEqual[T comparable](t *testing.T, sliceOne []T, sliceTwo []T, message string) {
 
 	t.Helper()
-	
 	assertTrue(t, len(sliceOne) == len(sliceTwo), message + " [The two slices should have the same length]")
 	if len(sliceOne) == len(sliceTwo) {
 		for _, element := range sliceOne {
@@ -72,60 +69,30 @@ func assertSlicesAreSetwiseEqual[T comparable](t *testing.T, sliceOne []T, slice
 			assertTrue(
 				t,
 				countOne == countTwo,
-				message + "[For element '" + elemStr + "', found " +  countOneStr +
+				message + " [For element '" + elemStr + "', found " +  countOneStr +
                 " and " + countTwoStr + " elements in each slice respectively.]",
 			)
 		}
 	}
 }
 
-
-// Assert that the graph.edge adjacency map contains exactly one reference
-// from nodeOne to nodeTwo and exactly one reference from nodeTwo to nodeOne
-func assertDirectedEdgeExistsExactlyOnce[ID comparable, Payload any](
-	t *testing.T,
-	g DiGraph[ID, Payload],
-	nodeOne ID,
-	nodeTwo ID,
-) {
+// Assert an element is in a Slice
+func assertElementIsInSlice[T comparable](t *testing.T, element T, slice []T, message string) {
 
 	t.Helper()
-	
-	nodeOneNeighbours, foundOutgoingEdges := g.edges[nodeOne]
-	assertTrue(t, foundOutgoingEdges, "A node was not found in the graph's edges.")
-	
-	_, foundNodeOne := g.nodes[nodeOne]
-	_, foundNodeTwo := g.nodes[nodeTwo]
-	assertTrue(t, foundNodeOne && foundNodeTwo, "Both nodes should exist in the graph's nodes.")
-
-	countNodeTwoReferences := 0
-	for _, neighbour := range nodeOneNeighbours {
-		if neighbour == nodeTwo {
-			countNodeTwoReferences++
-		}
+	for _, value := range slice {
+		if element == value {
+			return
+		} 
 	}
-
-	nodeOneStr := fmt.Sprintf("%v", nodeOne)
-	assertTrue(
-		t,
-		countNodeTwoReferences == 1,
-		nodeOneStr + "'s edges did not contain a reference to the other node exactly once.",
-	)
-}
-
-// Initialize a DiGraph
-func initGraph[ID comparable, Payload any](nodes []ID, edges []ID) DiGraph[ID, Payload] {
-
-	g := NewDiGraph[ID, Payload]()
-	for index := 0; index < len(nodes); index++ {
-		g.AddNode(nodes[index], *new(Payload))
-	}
-
-	for index := 0; index < len(edges); index = index + 2 {
-		g.AddEdge(edges[index], edges[index + 1])
-	}
-
-	return g
+	t.Error(message)
 }
 
 
+func assertEqualValues(t *testing.T, v1 TestValue, v2 TestValue, msg string) {
+
+	t.Helper()
+
+	assertTrue(t, v1.value == v2.value, msg + "[The .value fields were different.]")
+	assertTrue(t, v1.weight == v2.weight, msg + "[The .weight fields were different.]")
+}
