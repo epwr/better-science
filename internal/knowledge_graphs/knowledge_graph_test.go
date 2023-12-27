@@ -440,7 +440,7 @@ func TestCopyCreatesDistinctKnowledgeGraphs(t *testing.T) {
 
 	newKg.SetTerm("T3", NewTestValue(1, 4))
 	oldValue := kg.terms["T3"]
-	assertEqualValues(
+	assertEqualTestValues(
 		t, oldValue, *new(TestValue),
 		fmt.Sprintf(
 			"The original KG should not be modified by the copy's SetTerm(). \n    Orig: %+v\n    Copy: %+v",
@@ -500,7 +500,7 @@ func TestGetTermValue(t *testing.T) {
 					"Test Case #%d: Expected no error, got error %v", index + 1, err,
 				),
 			)
-			assertEqualValues(
+			assertEqualTestValues(
 				t, value, test.value,
 				fmt.Sprintf(
 					"Test Case #%d: Expected value %v, got %v", index + 1, test.value, value,

@@ -59,8 +59,10 @@ func TestCreateAKnowledgeGraph(t *testing.T) {
 	// initializing the Terms.
 	prepared_kg := kg.Copy()
 
+	// You can set the value of any number of Terms.
 	prepared_kg.SetTerm("age", NewTestValue(25, 0.2))
 
+	// When the knowledge graph is prepared, you can ask to calculate a term.
 	value, error := prepared_kg.Calculate("weight")
 	assertTrue(
 		t, error == nil,

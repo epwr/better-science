@@ -146,29 +146,73 @@ func TestKGCalculateFails(t *testing.T) {
 }
 
 
-// TODO: test that the Operation.Run() gets the required arguments.
-func TestOperationDotRunIsGivenCorrectArguments(t *testing.T) {
+// Test that the Operation.Run() gets the required arguments.
+type MockOperation struct{
+	calcs string;
+	reqs []string;
+	t *testing.T;
+	tests map[string]TestValue;
+}
 
-	type MockOperation struct{
-		value TestValue;
-		weight float64;
-		calcs string;
-		reqs string;
-		tester *testing.T;
+func (op MockOperation) Calculates() string {
+	return op.calcs
+}
+
+func (op MockOperation) Requires() []string {
+	return op.reqs
+}
+
+func (op MockOperation) Run(inputs map[string]TestValue) (TestValue, error) {
+
+	passedInputKeys := make([]string, 0)
+	for key, _ := range inputs {
+		passedInputKeys = append(passedInputKeys, key)
+	}
+	assertSlicesAreSetwiseEqual(
+		op.t, op.reqs, passedInputKeys,
+		"Run should be passed only and all values for required terms.",
+	)
+
+	for key, expectedValue := range op.tests {
+		assertEqualTestValues(
+			op.t, inputs[key], expectedValue,
+			fmt.Sprintf("Unexpected values were passed to Operation.Run() for term %v.", key),
+		)
 	}
 
-	func (op MockOperation) 
-	
-	
+	return NewTestValue(4, 0.2), nil
+}
 
-	kg := NewKnowledgeGraph[string, TestValue, MockOperation]{}
+func TestOperationDotRunIsGivenCorrectArguments(t *testing.T) {
+
+	kg := NewKnowledgeGraph[string, TestValue, MockOperation]()
 	
 	kg.AddTerm("T1")
 	kg.AddTerm("T2")
 	kg.AddTerm("T3")
+	kg.AddTerm("T4")
+	kg.AddTerm("T5")
 
-	kg
+	kg.AddOperation("O1", MockOperation{
+		calcs: "T1",
+		reqs: []string{"T2", "T4"},
+		t: t,
+		tests: map[string]TestValue{
+			"T2": NewTestValue(2, 0.2),
+			"T4": NewTestValue(4, 0.4),
+		},
+	})
 
+	kg.SetTerm("T2", NewTestValue(2, 0.2))	
+	kg.SetTerm("T3", NewTestValue(3, 0.3))
+	kg.SetTerm("T4", NewTestValue(4, 0.4))
+
+	value, err := kg.Calculate("T1")
+	assertTrue(t, err == nil, "Test should have been able to calculate T1.")
+	assertEqualTestValues(
+		t, value, NewTestValue(4, 0.2),
+		".Calculate returned a value that did not match what MockOperation.Run should return.",
+	)
 }
 
 

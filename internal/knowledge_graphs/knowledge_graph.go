@@ -6,7 +6,7 @@ import (
 	"cmp"
 )
 
-type OperationInterface[ID cmp.Ordered, Value ValueInterface[any]] interface {
+type OperationInterface[ID cmp.Ordered, Value ValueInterface] interface {
 	Calculates() ID // The Term that the Operation calculates
 	Requires() []ID // The Terms that the Operation relies on
 	Run(map[ID]Value) (Value, error) // Runs the Operation to calculate the new value
@@ -15,11 +15,11 @@ type OperationInterface[ID cmp.Ordered, Value ValueInterface[any]] interface {
 // An interface that defines a Value object. For this knowledge graph, it is important that a Value can
 // provide a weight value. This allows the Knowledge Graph to select between Operations that provide
 // differnent weights.
-type ValueInterface[ValueType any] interface {
+type ValueInterface interface {
 	GetWeight() float64 // The weight of the value.
 }
 
-type KnowledgeGraph[ID cmp.Ordered, Value ValueInterface[any], Operation OperationInterface[ID, Value]] struct {
+type KnowledgeGraph[ID cmp.Ordered, Value ValueInterface, Operation OperationInterface[ID, Value]] struct {
 	terms map[ID] Value
 	setTerms map[ID] bool // Tracks which terms have been set
 	operations map[ID] Operation
@@ -27,7 +27,7 @@ type KnowledgeGraph[ID cmp.Ordered, Value ValueInterface[any], Operation Operati
 }
 
 // Returns a new, empty, knowledge graph.
-func NewKnowledgeGraph[ID cmp.Ordered, Value ValueInterface[any], Operation OperationInterface[ID, Value]]() KnowledgeGraph[ID, Value, Operation] {
+func NewKnowledgeGraph[ID cmp.Ordered, Value ValueInterface, Operation OperationInterface[ID, Value]]() KnowledgeGraph[ID, Value, Operation] {
 
 	return KnowledgeGraph[ID, Value, Operation] {
 		terms: make(map[ID] Value),

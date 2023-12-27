@@ -89,10 +89,10 @@ func assertElementIsInSlice[T comparable](t *testing.T, element T, slice []T, me
 }
 
 
-func assertEqualValues(t *testing.T, v1 TestValue, v2 TestValue, msg string) {
+func assertEqualTestValues(t *testing.T, v1 TestValue, v2 TestValue, msg string) {
 
 	t.Helper()
 
-	assertTrue(t, v1.value == v2.value, msg + "[The .value fields were different.]")
-	assertTrue(t, v1.weight == v2.weight, msg + "[The .weight fields were different.]")
+	assertTrue(t, v1.value == v2.value, msg + " [The .value fields were different.]")
+	assertTrue(t, v1.weight == v2.weight, msg + " [The .weight fields were different.]")
 }
