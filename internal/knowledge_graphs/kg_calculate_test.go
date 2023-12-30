@@ -127,6 +127,14 @@ func TestKGCalculateFails(t *testing.T) {
 			termID: "T1",
 			initValue: []struct{id string; value TestValue}{},
 		},
+		{ // Term ID does not exist
+			kg: fixtureSimpleKG(),
+			termID: "T17",
+			initValue: []struct{id string; value TestValue}{
+				{id: "T2", value: NewTestValue(2, 0.4)},
+				{id: "T3", value: NewTestValue(3, 0.4)},
+			},
+		},
 	}
 
 	for index, testCase := range testCases {

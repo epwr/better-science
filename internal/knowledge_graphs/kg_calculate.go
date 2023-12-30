@@ -42,13 +42,9 @@ func (kg *KnowledgeGraph[ID, Value, Operation]) Calculate(goalID ID) (Value, err
 				newValue, err := operation.Run(requiredTerms)
 				if err == nil {
 					termID := operation.Calculates()
-					oldValue, exists := kg.terms[termID]
-					if exists {
-						if newValue.GetWeight() > oldValue.GetWeight() {
-							kg.SetTerm(termID, newValue)
-							updateMadeInPass = true
-						}
-					} else {
+					oldValue, _ := kg.terms[termID]
+					
+					if newValue.GetWeight() > oldValue.GetWeight() {
 						kg.SetTerm(termID, newValue)
 						updateMadeInPass = true
 					}	
